@@ -1,0 +1,1262 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"prod",
+				"product_id"
+			],
+			[
+				"getPr",
+				"getProductInventory"
+			],
+			[
+				"get",
+				"getProductById"
+			],
+			[
+				"pro",
+				"productId"
+			],
+			[
+				"mysq",
+				"mysqlEscape"
+			],
+			[
+				"tSh",
+				"tShirtY"
+			],
+			[
+				"tS",
+				"tShirtX"
+			],
+			[
+				"tShi",
+				"tShirtY"
+			],
+			[
+				"insta",
+				"cardInstallments"
+			],
+			[
+				"create",
+				"createCardTokenSuccess"
+			],
+			[
+				"createCa",
+				"createCardTokenFailure"
+			],
+			[
+				"createC",
+				"createCardTokenSuccess"
+			],
+			[
+				"cardEx",
+				"cardExpirationMonth"
+			],
+			[
+				"cred",
+				"credictCardPaymentConfirmed"
+			],
+			[
+				"res",
+				"response"
+			],
+			[
+				"getCard",
+				"getCardInstallmentsSuccess"
+			],
+			[
+				"getCar",
+				"getCardInstallmentsSuccess"
+			],
+			[
+				"getBra",
+				"getBrandSuccess"
+			],
+			[
+				"cardB",
+				"cardBrand"
+			],
+			[
+				"boleto",
+				"boletoLink"
+			],
+			[
+				"getSe",
+				"getSessionId"
+			],
+			[
+				"getS",
+				"getSessionId"
+			],
+			[
+				"se",
+				"selectedPaymentMethod"
+			],
+			[
+				"Sele",
+				"selectedPaymentMethod"
+			],
+			[
+				"resp",
+				"response"
+			],
+			[
+				"payme",
+				"paymentMethods"
+			],
+			[
+				"inpu",
+				"InputLabel"
+			],
+			[
+				"getP",
+				"getPaymentMethodsError"
+			],
+			[
+				"pay",
+				"paymentMethodsLoaded"
+			],
+			[
+				"pag",
+				"PagSeguroDirectPayment"
+			],
+			[
+				"on",
+				"onSenderHashReady"
+			],
+			[
+				"PAg",
+				"PagSeguroDirectPayment"
+			],
+			[
+				"getE",
+				"getPaymentMethods"
+			],
+			[
+				"stat",
+				"status"
+			],
+			[
+				"page",
+				"pagseguroToken"
+			],
+			[
+				"pagse",
+				"pagseguroEmail"
+			],
+			[
+				"script",
+				"scriptLoaded"
+			],
+			[
+				"marign-",
+				"margin-bottom\tproperty"
+			],
+			[
+				"error",
+				"errorMessage"
+			],
+			[
+				"margin",
+				"margin-bottom\tproperty"
+			],
+			[
+				"q",
+				"querySelector"
+			],
+			[
+				"co",
+				"color\tproperty"
+			],
+			[
+				"w",
+				"width\tproperty"
+			],
+			[
+				"align",
+				"text-align\tproperty"
+			],
+			[
+				"wra",
+				"word-wrap\tproperty"
+			],
+			[
+				"bag",
+				"BagFixedDialog"
+			],
+			[
+				"blocke",
+				"blockedPopupPass"
+			],
+			[
+				"block",
+				"blockedPopupPassTry"
+			],
+			[
+				"blocked",
+				"blockedClick"
+			],
+			[
+				"Block",
+				"blockedPopup"
+			],
+			[
+				"size",
+				"sizeId"
+			],
+			[
+				"cate",
+				"categoryId"
+			],
+			[
+				"lo",
+				"log"
+			],
+			[
+				"fil",
+				"filterDialogOpened"
+			],
+			[
+				"ship",
+				"shippingNames"
+			],
+			[
+				"places",
+				"placesTypo"
+			],
+			[
+				"FreS",
+				"Frequentes"
+			],
+			[
+				"sar",
+				"search"
+			],
+			[
+				"sear",
+				"searchRef"
+			],
+			[
+				"searc",
+				"searchRef"
+			],
+			[
+				"Tab",
+				"TableCell"
+			],
+			[
+				"item",
+				"itemId"
+			],
+			[
+				"paym",
+				"paymentNames"
+			],
+			[
+				"ge",
+				"getElementsByTagName"
+			],
+			[
+				"whats",
+				"whatsappRef"
+			],
+			[
+				"what",
+				"whatsapp"
+			],
+			[
+				"des",
+				"desiredName"
+			],
+			[
+				"name",
+				"nameRef"
+			],
+			[
+				"add",
+				"addItemToBag"
+			],
+			[
+				"added",
+				"addedToBagInfo"
+			],
+			[
+				"Catalog",
+				"CatalogData"
+			],
+			[
+				"filter",
+				"filteredCatalog"
+			],
+			[
+				"defau",
+				"defaultSort"
+			],
+			[
+				"ite",
+				"itemId"
+			],
+			[
+				"to",
+				"toggleSize"
+			],
+			[
+				"handle",
+				"handleClear"
+			],
+			[
+				"Caa",
+				"CatalogData"
+			],
+			[
+				"in",
+				"includes"
+			],
+			[
+				"Catal",
+				"CatalogData"
+			],
+			[
+				"filte",
+				"filteredCatalog"
+			],
+			[
+				"catal",
+				"CatalogData"
+			],
+			[
+				"ca",
+				"CatalogData"
+			],
+			[
+				"cookies",
+				"cookiesDialog"
+			],
+			[
+				"desc",
+				"descSectionRef"
+			],
+			[
+				"back",
+				"backgroundColor"
+			],
+			[
+				"Zoo",
+				"ZoomInIcon"
+			],
+			[
+				"ma",
+				"material-ui"
+			],
+			[
+				"close",
+				"closeCookiesDialog"
+			],
+			[
+				"cookie",
+				"cookiesDialogOpenend"
+			],
+			[
+				"pri",
+				"PrivacyPolicy"
+			],
+			[
+				"Priva",
+				"PrivacyPolicy"
+			],
+			[
+				"Dia",
+				"DialogTitle"
+			],
+			[
+				"image",
+				"imageOpen"
+			],
+			[
+				"open",
+				"openImage"
+			],
+			[
+				"opt",
+				"optgroup"
+			],
+			[
+				"ope",
+				"openWhatsapp"
+			],
+			[
+				"h",
+				"handleBack"
+			],
+			[
+				"ha",
+				"handleBack"
+			],
+			[
+				"flex",
+				"flexDirecton"
+			],
+			[
+				"handl",
+				"handleDialogClose"
+			],
+			[
+				"clo",
+				"closeFilter"
+			],
+			[
+				"set",
+				"setFilter"
+			],
+			[
+				"hand",
+				"handleFilter"
+			],
+			[
+				"op",
+				"openFilter"
+			],
+			[
+				"flter",
+				"filterDialogOpened"
+			],
+			[
+				"spa",
+				"space-around"
+			],
+			[
+				"iTem",
+				"itemData"
+			],
+			[
+				"cu",
+				"currentPage"
+			],
+			[
+				"onc",
+				"onClick"
+			],
+			[
+				"dia",
+				"dialogOpen"
+			],
+			[
+				"menu",
+				"menuAnchor"
+			],
+			[
+				"logo",
+				"Logo"
+			],
+			[
+				"Bot",
+				"BottomNavigation"
+			],
+			[
+				"Bott",
+				"BottomNav"
+			],
+			[
+				"Local",
+				"LocalMallIcon"
+			],
+			[
+				"new",
+				"newValue"
+			],
+			[
+				"ad",
+				"ad_cookie"
+			],
+			[
+				"box",
+				"box-sizing\tproperty"
+			],
+			[
+				"ene",
+				"energyVariation"
+			],
+			[
+				"ener",
+				"energyVariation"
+			],
+			[
+				"energ",
+				"energyVariation"
+			],
+			[
+				"hist",
+				"historyEl"
+			],
+			[
+				"uk-tex",
+				"uk-text-center"
+			],
+			[
+				"energy",
+				"energyVariation"
+			],
+			[
+				"up",
+				"update"
+			],
+			[
+				"lob",
+				"lobbyAction"
+			],
+			[
+				"loby",
+				"lobbyAction"
+			],
+			[
+				"lobb",
+				"lobby"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "app.js",
+			"settings":
+			{
+				"buffer_size": 741,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/SizesController.js",
+			"settings":
+			{
+				"buffer_size": 489,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/CategoriesController.js",
+			"settings":
+			{
+				"buffer_size": 499,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/ProductsController.js",
+			"settings":
+			{
+				"buffer_size": 963,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "db.js",
+			"settings":
+			{
+				"buffer_size": 3976,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Users/to/Desktop/PRV/Programming/site/src/components/Bag.jsx",
+			"settings":
+			{
+				"buffer_size": 12504,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"hex",
+				"HexViewer: Toggle Hex View"
+			],
+			[
+				"he",
+				"HexViewer: Toggle Hex View"
+			],
+			[
+				"hexvi",
+				"HexViewer: Toggle Hex View"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: List Packages"
+			],
+			[
+				"packa",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: install",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: Install Pac",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/db.js",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/LoginRoute.jsx",
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/api/ApiController.js",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/InternalPage.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/CustomAppBar.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/routes/MainRoute.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/App.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/backend/config.js",
+		"/C/Users/to/Desktop/PRV/Programming/backend/server.js",
+		"/C/Users/to/Desktop/PRV/Programming/backend/util.js",
+		"/C/Users/to/Desktop/PRV/Programming/backend/api/CatalogController.js",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/Catalog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/backend/app.js",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/routes/SoonRoute.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/config/Config.js",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/App.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/BagProduct.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/Bag.jsx",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/config/Config.js",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/FAQ.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/backend/pagseguro/PagseguroController.js",
+		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/src/routes/MainRoute.jsx",
+		"/C/www/provador/index.html",
+		"/C/Users/to/Desktop/PRV/boletoerro.json",
+		"/C/Users/to/Desktop/PRV/boleto gerado.json",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/Bag.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/backend/package.json",
+		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/package.json",
+		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/webpack.config.js",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/BagProduct.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/src/index.html",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/data/CatalogData.json",
+		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/src/App.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/routes/SoonRoute.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/routes/MainRoute.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/FilterDialog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/App.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/backend/api/PagseguroController.js",
+		"/C/Users/to/Desktop/PRV/Programming/backend/db.js",
+		"/C/Users/to/Desktop/PRV/Programming/backend/api/VerifyAdmin.js",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/AboutUs.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/webpack.config.js",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/assets/css/general.css",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/index.html",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/Product.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/BottomNav.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/ReturnPolicy.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/CustomAppBar.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/TermsOfUse.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/PrivacyPolicy.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/FreeShipping.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/InternalPage.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/ProductDialog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/BagFixedDialog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/CookiesDialog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/Catalog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/BlockedPopup.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/config/Config.js",
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/app.js",
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/util.js",
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/server.js",
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/api/VerifyAdmin.js",
+		"/C/Users/to/Desktop/PRV/Programming/CatalogData example.json",
+		"/C/Users/to/Desktop/PRV/Programming/site/package.json",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/routes/MainRoute - Copia.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/docs/CNAME",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/config/Products.json",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/manifest.webmanifest",
+		"/C/Users/to/Desktop/PRV/Programming/site/index.html",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/PrivacyPolicy - Copia.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/.git/MERGE_MSG",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/components/AppBar.jsx",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/components/LoginComponent.jsx",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/components/LoadingComponent.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/site/src/routes/PainelRoute.jsx",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/index.html",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/webpack.config.js",
+		"/C/www/AxieEnergyCalculator/index.html",
+		"/C/www/AxieEnergyCalculator/general.css",
+		"/C/www/AxieEnergyCalculator/calculator.js",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/package.json",
+		"/C/Users/to/Desktop/saveme.html",
+		"/C/Users/to/Desktop/AxieEnergyCalculator/general.css",
+		"/C/Users/to/Desktop/AxieEnergyCalculator/vanilla-cookies.js",
+		"/C/Users/to/Desktop/AxieEnergyCalculator/index.html",
+		"/C/Users/to/Desktop/AxieEnergyCalculator/calculator.js",
+		"/C/www/axie/general.css",
+		"/C/Users/to/Desktop/AxieEnergyCalculator/assets/css/general.css",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/package-lock.json",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/CustomerRoute.jsx",
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/package.json",
+		"/C/Users/to/Desktop/a.js",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/matchhistory.js",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/leaguepedia.js",
+		"/C/Users/to/Desktop/comando/build.js",
+		"/C/Users/to/Desktop/new keyboard/static/script.js",
+		"/C/Users/to/Desktop/new keyboard/static/index.html",
+		"/C/Users/to/Desktop/new keyboard/index.js",
+		"/C/Users/to/Desktop/lolalytics/server.js",
+		"/C/Users/to/Desktop/close.js",
+		"/C/Users/to/Desktop/TRASH/Omegle.js",
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/frontend/app.df82f621.js",
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/config.js",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/leagueofgraphs.js",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/draftAnalysis1.js",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/analisePorHistorico.js",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/Lck2020SpringSeasonDrafts.json",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/CBLOL2020Split1Drafts.json",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/BetwayCblol2020Split2.json",
+		"/C/Users/to/Desktop/comando/index.js",
+		"/C/Users/to/Desktop/comando/movies.json",
+		"/C/Users/to/Desktop/lolalytics/getData.js",
+		"/C/Users/to/Desktop/lolalytics/public/index.html",
+		"/C/Users/to/Desktop/lolalytics/lobbyexample.json",
+		"/C/Users/to/Desktop/lolalytics/fix.js",
+		"/C/Users/to/Desktop/lolalytics/public/champions_lol.json",
+		"/C/Users/to/Desktop/lolalytics/champions_fixed.json",
+		"/C/Users/to/Desktop/comando/src.html",
+		"/C/Users/to/Desktop/lolalytics/champions.json",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/CblolSplit1Matches.json",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/RiotAPI.js",
+		"/C/Users/to/Desktop/TRASH/lol data analysis/CblolSplit2Matches.json",
+		"/C/Users/to/eclipse-workspace/JustLaunch/src/index.html",
+		"/C/Users/to/Desktop/comando/movies - Copia.json",
+		"/C/Users/to/Desktop/comando/movies_pages.json",
+		"/C/Users/to/Desktop/TRASH/electron-quick-start/preload.js",
+		"/C/Users/to/Desktop/TRASH/electron-quick-start/renderer.js",
+		"/C/Users/to/Desktop/TRASH/electron-quick-start/main.js"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"LEFT JOIN",
+			"join",
+			"left",
+			"join",
+			"console.log",
+			"senderHash",
+			"TextField",
+			"errors",
+			"Butt",
+			"jwt",
+			"fs",
+			"Body",
+			"uuidv",
+			"uuidv4",
+			"general",
+			"stitch",
+			"desc",
+			"console.log",
+			"rep",
+			"reptile",
+			"rep",
+			"carrinho",
+			"defaultSo",
+			"bag[i].items",
+			"this.state.bag",
+			"foc",
+			"focus",
+			"auto",
+			"autoFo",
+			"Bela Lily",
+			"Bela",
+			"Pedro",
+			"\" ",
+			"reset",
+			"httpGetAsyn",
+			"httpgetAs",
+			"No magnet",
+			"No link",
+			"mainWin",
+			"calculateExtra",
+			"getDateDiff",
+			"calculate",
+			"getOrder",
+			"calculateExtra",
+			"props",
+			"calculateExtra",
+			"method",
+			"byuser",
+			"returnable",
+			"addOrder",
+			"change",
+			"photo",
+			"file",
+			"photo",
+			"orders",
+			"showName",
+			"this.getDate",
+			"console.",
+			"ORDER BY",
+			"ORDER BY creat",
+			"SELECT",
+			"userid",
+			"this.state.filte",
+			"this.state.filter.get",
+			"'\n",
+			"date",
+			"getOrders",
+			"list",
+			"get",
+			"isAdmin",
+			"returnable",
+			"delete",
+			"remove",
+			"getProductList",
+			"done",
+			"products",
+			"addUser",
+			"user",
+			"products",
+			"editingId = 4",
+			"editingId==4",
+			"editingId==5",
+			"maxLength",
+			"maxLength={100",
+			"maxLength=100",
+			"maxLength=\"100",
+			"maxLength=\"100\"",
+			"100",
+			"trying",
+			"change",
+			"editingId",
+			"handleCancelPa",
+			"this.setState",
+			"handleCancelPay",
+			"hnadleChan",
+			"hnadleCanl",
+			"getDate",
+			")}></",
+			"handle",
+			"info",
+			"userId",
+			"/orders/",
+			"/order/",
+			"console.log",
+			"log",
+			"userID",
+			"getDate",
+			"cpf",
+			"cp",
+			"cpf",
+			"this.refs[\"cpf\"",
+			"cpf",
+			"where",
+			"collate",
+			"apiURL",
+			"utf8_",
+			"collate",
+			"console.log",
+			"Cancel",
+			"console.log",
+			"handleChange",
+			"Array",
+			"...",
+			"update",
+			"hr",
+			"<span uk-icon=\"trash\"></span>",
+			"127.",
+			"actionUserName"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"bag.items[i]",
+			"<b>Bela Lily</b>",
+			"state",
+			"handleAdd",
+			"<button uk-icon=\"trash\"></button>",
+			"64",
+			"32",
+			"512",
+			"*(v+2)",
+			"*(v+1)",
+			"*v",
+			"proposicoes",
+			"case 1:\n\t\t\t\tproposicao[i].value = !proposicao[proposicao[i].values[0]].value;\n\t\t\tbreak;\n\t\t\tcase 2:\n\t\t\t\tproposicao[i].value = proposicao[proposicao[i].values[0]].value && proposicao[proposicao[i].values[1]].value;\n\t\t\tbreak;\n\t\t\tcase 3:\n\t\t\t\tproposicao[i].value = proposicao[proposicao[i].values[0]].value || proposicao[proposicao[i].values[1]].value;\n\t\t\tbreak;\n\t\t\tcase 4:\n\t\t\t\tproposicao[i].value = !proposicao[proposicao[i].values[0]].value || proposicao[proposicao[i].values[1]].value;\n\t\t\tbreak;\n\t\t\tcase 5:\n\t\t\t\tproposicao[i].value = proposicao[proposicao[i].values[0]].value == proposicao[proposicao[i].values[1]].value;\n\t\t\tbreak;",
+			"cod",
+			"data-characterid",
+			"data-characgterid='${characterid}'",
+			"\"afterDraft\"",
+			"\"preDraft\"",
+			"https:",
+			"\"0\",",
+			"\"1\",",
+			"https",
+			"iframeId",
+			"Mean",
+			": \"[pt_br]",
+			"bonusIcon",
+			": \"[pt_br]",
+			".origin",
+			"_origin",
+			"h2",
+			"h3",
+			"TFTBUILDER",
+			"recursion",
+			"nergies",
+			"neededSynergys",
+			"",
+			"this.props.result.page",
+			"button2",
+			".props",
+			".oricla",
+			"synergy",
+			"each",
+			"search",
+			"unicode",
+			"DAUNTLESSCOMBINER.TK",
+			"UsedPerks",
+			"setUsedPerks",
+			"l",
+			"class",
+			"c_classes",
+			"c_origins",
+			"this",
+			"perk",
+			".addPerkOptions ",
+			"addPerk",
+			"./assets",
+			"",
+			"Roboto",
+			"Roboto ",
+			"perks",
+			"weapons",
+			"armours",
+			"cells",
+			"armours"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "app.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 741,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								741,
+								741
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "api/SizesController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 489,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								454,
+								454
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "api/CategoriesController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 499,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								499,
+								499
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "api/ProductsController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 963,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								881,
+								881
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "db.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3976,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3607,
+								3607
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1025.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/C/Users/to/Desktop/PRV/Programming/site/src/components/Bag.jsx",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12504,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Babel/JavaScript (Babel).sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 947.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 38.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.hex_viewer_inspector":
+	{
+		"height": 226.0
+	},
+	"pinned_build_system": "",
+	"project": "",
+	"replace":
+	{
+		"height": 70.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 232.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
