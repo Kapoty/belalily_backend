@@ -35,6 +35,9 @@ function handleDisconnect() {
 handleDisconnect();
 
 function mysqlEscape(stringToEscape){
+	if (typeof stringToEscape == 'number')
+		stringToEscape = stringToEscape.toString();
+
     if(stringToEscape == '') {
         return stringToEscape;
     }
@@ -106,8 +109,25 @@ function getSizesList(callback) {
     });
 }
 
+/* Customers */
+
+function getCustomerByLogin(login, callback) {
+    conn.query(`SELECT id, password FROM customers WHERE cpf = '${mysqlEscape(login)}' OR email = '${mysqlEscape(login)}';`, (error, results, fields) => {
+        if (error || results.length < 1) callback(error.code)
+        else callback(null, results[0]);
+    });
+}
+
+function getCustomerBasicInfo(customerId, callback) {
+	conn.query(`SELECT desired_name FROM customers WHERE id = ${mysqlEscape(customerId)};`, (error, results, fields) => {
+        if (error || results.length < 1) callback(error.code)
+        else callback(null, results[0]);
+    });
+}
+
 module.exports = {
     getCategoriesList,
     getProductsList, getProductById, getProductInventoryBySize,
-    getSizesList
+    getSizesList,
+    getCustomerByLogin, getCustomerBasicInfo,
 }; 	
