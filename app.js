@@ -8,6 +8,9 @@ global.__root   = __dirname + '/';
 var CategoriesController = require(__root + 'api/CategoriesController');
 var ProductsController = require(__root + 'api/ProductsController');
 var SizesController = require(__root + 'api/SizesController');
+var CitiesController = require(__root + 'api/CitiesController');
+var DistrictsController = require(__root + 'api/DistrictsController');
+var SecretQuestionsController = require(__root + 'api/SecretQuestionsController');
 var CustomersController = require(__root + 'api/CustomersController');
 var PagseguroController = require(__root + 'pagseguro/PagseguroController');
 
@@ -25,6 +28,9 @@ app.use(cors());
 app.use('/api/categories/', CategoriesController);
 app.use('/api/products/', ProductsController);
 app.use('/api/sizes/', SizesController);
+app.use('/api/cities/', CitiesController);
+app.use('/api/districts/', DistrictsController);
+app.use('/api/secret-questions/', SecretQuestionsController);
 app.use('/api/customers/', CustomersController);
 app.use('/pagseguro/', PagseguroController);
 

@@ -113,15 +113,65 @@ function getSizesList(callback) {
 
 function getCustomerByLogin(login, callback) {
     conn.query(`SELECT id, password FROM customers WHERE cpf = '${mysqlEscape(login)}' OR email = '${mysqlEscape(login)}';`, (error, results, fields) => {
-        if (error || results.length < 1) callback(error.code)
+        if (error) return callback(error.code)
+        if (results.length < 1) return callback("no customer matches given cpf/email")
         else callback(null, results[0]);
     });
 }
 
 function getCustomerBasicInfo(customerId, callback) {
 	conn.query(`SELECT desired_name FROM customers WHERE id = ${mysqlEscape(customerId)};`, (error, results, fields) => {
-        if (error || results.length < 1) callback(error.code)
+        if (error) return callback(error.code)
+        if (results.length < 1) return callback("no customer matches given id")
         else callback(null, results[0]);
+    });
+}
+
+function registerCustomer(name, desired_name, cpf, birthday_day, birthday_month, birthday_year, mobile, whatsapp,
+	cep, district_id, street, number, complement, address_observation, email, password,
+	secret_question_id, secret_answer, allow_email, allow_whatsapp, consultant_code, callback
+	) {
+
+	conn.query(`
+			INSERT INTO customers(name, desired_name, cpf, birthday, registration_datetime, email, password, consultant_id,
+			whatsapp, mobile, district_id, cep, street, complement, number,
+			address_observation, secret_question_id, secret_answer, allow_email, allow_whatsapp)
+			VALUES ('${mysqlEscape(name)}', '${mysqlEscape(desired_name)}', '${mysqlEscape(cpf)}', '${mysqlEscape(birthday_year + '-' + String(parseInt(birthday_month)+1).padStart(2, '0') + '-' + String(birthday_day).padStart(2, '0'))}',
+			NOW(), '${mysqlEscape(email)}', '${mysqlEscape(password)}', (SELECT id FROM consultants WHERE consultants.code = '${mysqlEscape(consultant_code)}'),
+			'${mysqlEscape(whatsapp)}', '${mysqlEscape(mobile)}', '${mysqlEscape(district_id)}', '${mysqlEscape(cep)}', '${mysqlEscape(street)}', '${mysqlEscape(complement)}',
+			'${mysqlEscape(number)}', '${mysqlEscape(address_observation)}', '${mysqlEscape(secret_question_id)}', '${mysqlEscape(secret_answer)}', ${allow_email},
+			${allow_whatsapp});
+	   `, (error, results, fields) => {
+        if (error) return callback(error)
+        if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+        else callback(null, results.insertId);
+    });
+}
+
+/* Cities */
+
+function getCitiesList(callback) {
+    conn.query(`SELECT * FROM cities WHERE 1;`, (error, results, fields) => {
+        if (error) callback(error.code)
+        else callback(null, results);
+    });
+}
+
+/* Districts */
+
+function getDistrictsList(callback) {
+    conn.query(`SELECT * FROM districts WHERE 1;`, (error, results, fields) => {
+        if (error) callback(error.code)
+        else callback(null, results);
+    });
+}
+
+/* Secret Questions */
+
+function getSecretQuestionsList(callback) {
+    conn.query(`SELECT * FROM secret_questions WHERE 1;`, (error, results, fields) => {
+        if (error) callback(error.code)
+        else callback(null, results);
     });
 }
 
@@ -129,5 +179,8 @@ module.exports = {
     getCategoriesList,
     getProductsList, getProductById, getProductInventoryBySize,
     getSizesList,
-    getCustomerByLogin, getCustomerBasicInfo,
+    getCitiesList,
+    getDistrictsList,
+    getSecretQuestionsList,
+    getCustomerByLogin, getCustomerBasicInfo, registerCustomer,
 }; 	
