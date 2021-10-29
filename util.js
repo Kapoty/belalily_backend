@@ -54,7 +54,7 @@ function isValidBirthday(day, month, year) {
 }
 
 function isValidPhoneNumber(phoneNumber) {
-	if (phoneNumber == null || phoneNumber == '')
+	if (phoneNumber == null || phoneNumber == '' || !/^(\d)+$/.test(phoneNumber))
 		return false;
 	phoneNumber = phoneNumber.replace(/[^\d]+/g,'');
 	if (phoneNumber.length != 11)
@@ -63,7 +63,7 @@ function isValidPhoneNumber(phoneNumber) {
 }
 
 function isValidCep(cep) {
-	if (cep == null || cep == '')
+	if (cep == null || cep == '' || !/^(\d)+$/.test(cep))
 		return false;
 	cep = cep.replace(/[^\d]+/g,'');
 	if (cep.length != 8)

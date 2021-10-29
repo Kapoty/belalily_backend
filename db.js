@@ -119,8 +119,8 @@ function getCustomerByLogin(login, callback) {
     });
 }
 
-function getCustomerBasicInfo(customerId, callback) {
-	conn.query(`SELECT desired_name FROM customers WHERE id = ${mysqlEscape(customerId)};`, (error, results, fields) => {
+function getCustomerInfo(customerId, callback) {
+	conn.query(`SELECT name, desired_name, cpf, birthday, email, whatsapp, mobile, district_id, cep, street, complement, number, address_observation, secret_question_id, allow_email, allow_whatsapp FROM customers WHERE id = ${mysqlEscape(customerId)};`, (error, results, fields) => {
         if (error) return callback(error.code)
         if (results.length < 1) return callback("no customer matches given id")
         else callback(null, results[0]);
@@ -145,6 +145,33 @@ function registerCustomer(name, desired_name, cpf, birthday_day, birthday_month,
         if (error) return callback(error)
         if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
         else callback(null, results.insertId);
+    });
+}
+
+function getCustomerForResetPassword(cpf, birthday_day, birthday_month, birthday_year, secret_question_id, callback) {
+    conn.query(`SELECT id, secret_answer FROM customers WHERE cpf = '${mysqlEscape(cpf)}' AND secret_question_id = '${mysqlEscape(secret_question_id)}' AND birthday = '${mysqlEscape(birthday_year + '-' + String(parseInt(birthday_month)+1).padStart(2, '0') + '-' + String(birthday_day).padStart(2, '0'))}';`, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.length < 1) return callback("wrong information")
+        else callback(null, results[0]);
+    });
+};
+
+function resetCustomerPassword(id, password, callback) {
+    conn.query(`UPDATE customers SET password='${mysqlEscape(password)}' WHERE id = '${mysqlEscape(id)}'`, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.affectedRows == 0) return callback('wrong information');
+        else callback(null, results);
+    });
+}
+
+function updateCustomerPersonalInfo(id, name, desired_name, birthday_day, birthday_month, birthday_year, mobile, whatsapp, callback) {
+    conn.query(`UPDATE customers SET name='${mysqlEscape(name)}', desired_name='${mysqlEscape(desired_name)}',
+        birthday='${mysqlEscape(birthday_year + '-' + String(parseInt(birthday_month)+1).padStart(2, '0') + '-' + String(birthday_day).padStart(2, '0'))}',
+        mobile='${mysqlEscape(mobile)}', whatsapp='${mysqlEscape(whatsapp)}'
+     WHERE id = '${mysqlEscape(id)}'`, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.affectedRows == 0) return callback('unexpected error');
+        else callback(null, results);
     });
 }
 
@@ -182,5 +209,6 @@ module.exports = {
     getCitiesList,
     getDistrictsList,
     getSecretQuestionsList,
-    getCustomerByLogin, getCustomerBasicInfo, registerCustomer,
+    getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
+        updateCustomerPersonalInfo
 }; 	
