@@ -156,19 +156,56 @@ function getCustomerForResetPassword(cpf, birthday_day, birthday_month, birthday
     });
 };
 
-function resetCustomerPassword(id, password, callback) {
-    conn.query(`UPDATE customers SET password='${mysqlEscape(password)}' WHERE id = '${mysqlEscape(id)}'`, (error, results, fields) => {
+function resetCustomerPassword(customerId, password, callback) {
+    conn.query(`UPDATE customers SET password='${mysqlEscape(password)}' WHERE id = '${mysqlEscape(customerId)}'`, (error, results, fields) => {
         if (error) return callback(error.code)
         if (results.affectedRows == 0) return callback('wrong information');
         else callback(null, results);
     });
 }
 
-function updateCustomerPersonalInfo(id, name, desired_name, birthday_day, birthday_month, birthday_year, mobile, whatsapp, callback) {
+function updateCustomerPersonalInfo(customerId, name, desired_name, birthday_day, birthday_month, birthday_year, mobile, whatsapp, callback) {
     conn.query(`UPDATE customers SET name='${mysqlEscape(name)}', desired_name='${mysqlEscape(desired_name)}',
         birthday='${mysqlEscape(birthday_year + '-' + String(parseInt(birthday_month)+1).padStart(2, '0') + '-' + String(birthday_day).padStart(2, '0'))}',
         mobile='${mysqlEscape(mobile)}', whatsapp='${mysqlEscape(whatsapp)}'
-     WHERE id = '${mysqlEscape(id)}'`, (error, results, fields) => {
+     WHERE id = '${mysqlEscape(customerId)}'`, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.affectedRows == 0) return callback('unexpected error');
+        else callback(null, results);
+    });
+}
+
+function updateCustomerAddress(customerId, cep, district_id, street, number, complement, address_observation, callback) {
+    conn.query(`UPDATE customers SET cep='${mysqlEscape(cep)}', district_id='${mysqlEscape(district_id)}',
+        street='${mysqlEscape(street)}', number='${mysqlEscape(number)}',
+        complement='${mysqlEscape(complement)}', address_observation='${mysqlEscape(address_observation)}'
+     WHERE id = '${mysqlEscape(customerId)}'`, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.affectedRows == 0) return callback('unexpected error');
+        else callback(null, results);
+    });
+}
+
+function getCustomerForUpdatePassword(customerId, callback) {
+    conn.query(`SELECT password FROM customers WHERE id = '${mysqlEscape(customerId)}';`, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.length < 1) return callback("no customer matches given id")
+        else callback(null, results[0]);
+    });
+}
+
+function updateCustomerRecover(customerId, secret_question_id, secret_answer, callback) {
+    conn.query(`UPDATE customers SET secret_question_id='${mysqlEscape(secret_question_id)}', secret_answer='${mysqlEscape(secret_answer)}'
+     WHERE id = '${mysqlEscape(customerId)}'`, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.affectedRows == 0) return callback('unexpected error');
+        else callback(null, results);
+    });
+}
+
+function updateCustomerNotification(customerId, allow_email, allow_whatsapp, callback) {
+    conn.query(`UPDATE customers SET allow_email=${allow_email}, allow_whatsapp=${allow_whatsapp}
+     WHERE id = '${mysqlEscape(customerId)}'`, (error, results, fields) => {
         if (error) return callback(error.code)
         if (results.affectedRows == 0) return callback('unexpected error');
         else callback(null, results);
@@ -210,5 +247,6 @@ module.exports = {
     getDistrictsList,
     getSecretQuestionsList,
     getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
-        updateCustomerPersonalInfo
+        updateCustomerPersonalInfo, updateCustomerAddress, getCustomerForUpdatePassword, updateCustomerRecover,
+        updateCustomerNotification
 }; 	

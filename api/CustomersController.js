@@ -118,7 +118,7 @@ router.post('/register', function(req, res) {
 
 	if (street == null || String(street).length < 1)
 		return res.status(500).send({error:"street too short"});
-	if (street.length > 30)
+	if (String(street).length > 30)
 		return res.status(500).send({error:"street too long"});
 
 	//number
@@ -182,10 +182,8 @@ router.post('/register', function(req, res) {
 
 	// allow email and allow whatsapp
 
-	if (typeof allow_email != 'boolean')
-		allow_email = false;
-	if (typeof allow_whatsapp != 'boolean')
-		allow_whatsapp = false;
+	allow_email = Boolean(allow_email);
+	allow_whatsapp = Boolean(allow_whatsapp);
 
 	// consultant_code
 
@@ -212,7 +210,7 @@ router.post('/register', function(req, res) {
 	});
 });
 
-router.post('/me/reset-password', function(req, res) {
+router.post('/reset-password', function(req, res) {
 
 	let cpf = req.body.cpf;
 	let birthday_day = req.body.birthday_day;
@@ -242,18 +240,18 @@ router.post('/me/reset-password', function(req, res) {
 
 	//secret_answer
 
-	if (secret_answer == null || secret_answer.length < 5)
+	if (secret_answer == null || String(secret_answer).length < 5)
 		return res.status(500).send({error:"secret_answer too short"});
-	if (secret_answer.length > 15)
+	if (String(secret_answer).length > 15)
 		return res.status(500).send({error:"secret_answer too long"});
 	if (!util.isValidSecretAnswer(secret_answer))
 		return res.status(500).send({error:"secret_answer invalid"});
 
 	//password
 
-	if (password == null || password.length < 8)
+	if (password == null || String(password).length < 8)
 		return res.status(500).send({error:"password too short"});
-	if (password.length > 15)
+	if (String(password).length > 15)
 		return res.status(500).send({error:"password too long"});
 	if (!util.isValidPassword(password))
 		return res.status(500).send({error:"password invalid"});
@@ -274,7 +272,7 @@ router.post('/me/reset-password', function(req, res) {
 	
 		db.resetCustomerPassword(results.id, bcrypt.hashSync(password, 8), (error, results) => {
 			if (error)
-				return res.status(500).send({error: "unexpected error"});
+				return res.status(500).send({error: error});
 
 			return res.status(200).send({sucess: true});
 		});
@@ -341,6 +339,164 @@ router.patch('/me/personal-info', VerifyCustomerToken, function(req, res) {
 
 		res.status(200).send({success: true});
 	});
+});
+
+router.patch('/me/address', VerifyCustomerToken, function(req, res) {
+
+	let cep = req.body.cep;
+	let district_id = req.body.district_id;
+	let street = req.body.street;
+	let number = req.body.number;
+	let complement = req.body.complement;
+	let address_observation = req.body.address_observation;
+
+	// validações
+
+	//cep
+
+	if (!util.isValidCep(cep))
+		return res.status(500).send({error:"cep invalid"});
+
+	//district
+
+	if (district_id == null || isNaN(parseInt(district_id)) || district_id < 0)
+		return res.status(500).send({error:"district invalid"});
+
+	//street
+
+	if (street == null || String(street).length < 1)
+		return res.status(500).send({error:"street too short"});
+	if (String(street).length > 30)
+		return res.status(500).send({error:"street too long"});
+
+	//number
+
+	if (number == null || String(number).length < 1)
+		return res.status(500).send({error:"number too short"});
+	if (number.length > 10)
+		return res.status(500).send({error:"number too long"});
+
+	//complement
+
+	if (complement == null)
+		complement = '';
+	if (String(complement).length > 30)
+		return res.status(500).send({error:"complement too long"});
+
+	//address_observation
+
+	if (address_observation == null)
+		address_observation = '';
+	if (String(address_observation).length > 50)
+		return res.status(500).send({error:"address_observation too long"});
+
+	db.updateCustomerAddress(req.customerId, cep, district_id, String(street), String(number), String(complement), String(address_observation), (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+
+		res.status(200).send({success: true});
+	});
+});
+
+router.post('/me/update-password', VerifyCustomerToken, function(req, res) {
+
+	let password = req.body.password;
+	let new_password = req.body.new_password;
+	let new_password_confirm = req.body.new_password_confirm;
+
+	// validações
+
+	//password
+
+	if (password == null || String(password).length < 8)
+		return res.status(500).send({error:"password too short"});
+	if (String(password).length > 15)
+		return res.status(500).send({error:"password too long"});
+	if (!util.isValidPassword(password))
+		return res.status(500).send({error:"password invalid"});
+
+	//new_password
+
+	if (new_password == null || String(new_password).length < 8)
+		return res.status(500).send({error:"new_password too short"});
+	if (String(new_password).length > 15)
+		return res.status(500).send({error:"new_password too long"});
+	if (!util.isValidPassword(new_password))
+		return res.status(500).send({error:"new_password invalid"});
+
+	//new_password_confirm
+
+	if (new_password_confirm == null || new_password_confirm !== new_password)
+		return res.status(500).send({error:"new_password_confirm not match"});
+
+	db.getCustomerForUpdatePassword(req.customerId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+
+		let passwordIsValid = bcrypt.compareSync(password, results.password);
+
+		if (!passwordIsValid)
+			return res.status(200).send({error:"password incorrect"});
+	
+		db.resetCustomerPassword(req.customerId, bcrypt.hashSync(new_password, 8), (error, results) => {
+			if (error)
+				return res.status(500).send({error: error});
+
+			return res.status(200).send({sucess: true});
+		});
+
+	});
+});
+
+router.post('/me/update-recover', VerifyCustomerToken, function(req, res) {
+
+	let secret_question_id = req.body.secret_question_id;
+	let secret_answer = req.body.secret_answer;
+
+	// validações
+
+	//secret_question
+
+	if (secret_question_id == null || isNaN(parseInt(secret_question_id)) || secret_question_id < 0)
+		return res.status(500).send({error:"secret_question invalid"});
+
+	//secret_answer
+
+	if (secret_answer == null || String(secret_answer).length < 5)
+		return res.status(500).send({error:"secret_answer too short"});
+	if (String(secret_answer).length > 15)
+		return res.status(500).send({error:"secret_answer too long"});
+	if (!util.isValidSecretAnswer(secret_answer))
+		return res.status(500).send({error:"secret_answer invalid"});
+
+	db.updateCustomerRecover(req.customerId, secret_question_id, bcrypt.hashSync(secret_answer, 8), (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+
+		res.status(200).send({success: true});
+	});
+
+});
+
+router.post('/me/update-notification', VerifyCustomerToken, function(req, res) {
+
+	let allow_email = req.body.allow_email;
+	let allow_whatsapp = req.body.allow_whatsapp;
+	
+	// validações
+
+	// allow email and allow whatsapp
+
+	allow_email = Boolean(allow_email);
+	allow_whatsapp = Boolean(allow_whatsapp);
+
+	db.updateCustomerNotification(req.customerId, allow_email, allow_whatsapp, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+
+		res.status(200).send({success: true});
+	});
+
 });
 
 module.exports = router;
