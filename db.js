@@ -212,6 +212,72 @@ function updateCustomerNotification(customerId, allow_email, allow_whatsapp, cal
     });
 }
 
+function getCustomerWishlist(customerId, callback) {
+    conn.query(`
+        SELECT
+            customer_wishlist.id,
+            customer_wishlist.product_id,
+            customer_wishlist.size_id,
+            customer_wishlist.favorited_datetime,
+            products.id AS product_id,
+            products.name AS product_name,
+            products.img_number AS product_img_number,
+            EXISTS
+                (
+                SELECT
+                    id
+                FROM
+                    product_inventory
+                WHERE
+                    product_inventory.product_id = customer_wishlist.product_id AND product_inventory.size_id = customer_wishlist.size_id AND
+                    product_inventory.status = 0
+                LIMIT 1
+            ) AS product_isAvailable
+        FROM
+            customer_wishlist
+        LEFT JOIN products ON products.id = customer_wishlist.product_id
+        WHERE
+            customer_id = ${mysqlEscape(customerId)};
+    `, (error, results, fields) => {
+        if (error) return callback(error.code)
+        else callback(null, results);
+    });
+}
+
+function addProductToCustomerWishlist(customerId, productId, sizeId, callback) {
+    conn.query(` 
+        INSERT INTO
+            customer_wishlist(
+                customer_id,
+                product_id,
+                size_id,
+                favorited_datetime
+            )
+        VALUES(
+            '${mysqlEscape(customerId)}',
+            '${mysqlEscape(productId)}',
+            '${mysqlEscape(sizeId)}',
+            NOW()
+        )
+    `, (error, results, fields) => {
+        if (error) return callback(error.code)
+        else callback(null, results);
+    });
+}
+
+function deleteProductFromCustomerWishlist(customerId, productId, sizeId, callback) {
+    conn.query(` 
+        DELETE FROM customer_wishlist
+        WHERE
+            customer_id = '${mysqlEscape(customerId)}'
+            AND product_id = '${mysqlEscape(productId)}'
+            AND size_id = '${mysqlEscape(sizeId)}';
+    `, (error, results, fields) => {
+        if (error) return callback(error.code)
+        else callback(null, results);
+    });
+}
+
 /* Cities */
 
 function getCitiesList(callback) {
@@ -248,5 +314,5 @@ module.exports = {
     getSecretQuestionsList,
     getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
         updateCustomerPersonalInfo, updateCustomerAddress, getCustomerForUpdatePassword, updateCustomerRecover,
-        updateCustomerNotification
+        updateCustomerNotification, getCustomerWishlist, deleteProductFromCustomerWishlist, addProductToCustomerWishlist
 }; 	

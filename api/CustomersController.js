@@ -499,4 +499,40 @@ router.post('/me/update-notification', VerifyCustomerToken, function(req, res) {
 
 });
 
+router.get('/me/wishlist', VerifyCustomerToken, function(req, res) {
+
+	db.getCustomerWishlist(req.customerId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({wishlist: results});
+	});
+
+});
+
+router.delete('/me/wishlist', VerifyCustomerToken, function(req, res) {
+
+	let productId = req.body.productId;
+	let sizeId = req.body.sizeId;
+
+	db.deleteProductFromCustomerWishlist(req.customerId, productId, sizeId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({success: true});
+	});
+
+});
+
+router.post('/me/wishlist', VerifyCustomerToken, function(req, res) {
+
+	let productId = req.body.productId;
+	let sizeId = req.body.sizeId;
+
+	db.addProductToCustomerWishlist(req.customerId, productId, sizeId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({success: true});
+	});
+
+});
+
 module.exports = router;
