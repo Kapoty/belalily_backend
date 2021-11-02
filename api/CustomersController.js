@@ -535,4 +535,8 @@ router.post('/me/wishlist', VerifyCustomerToken, function(req, res) {
 
 });
 
+router.get('/me/pre-order', VerifyCustomerToken, function(req, res) {
+	res.status(200).send({preOrder: null});
+});
+
 module.exports = router;

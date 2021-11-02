@@ -68,7 +68,7 @@ function getCategoriesList(callback) {
 /* Products */
 
 function getProductsList(callback) {
-    conn.query(`SELECT id, name, price, img_number, position,
+    conn.query(`SELECT id, name, price, price_in_cash, img_number, position,
         (SELECT GROUP_CONCAT(c.category_id) FROM product_categories c WHERE c.product_id = products.id)
          AS categories,
          (SELECT GROUP_CONCAT(s.size_id) FROM product_sizes s WHERE s.product_id = products.id)
