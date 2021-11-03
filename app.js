@@ -12,6 +12,7 @@ var CitiesController = require(__root + 'api/CitiesController');
 var DistrictsController = require(__root + 'api/DistrictsController');
 var SecretQuestionsController = require(__root + 'api/SecretQuestionsController');
 var CustomersController = require(__root + 'api/CustomersController');
+var OrdersController = require(__root + 'api/OrdersController');
 var PagseguroController = require(__root + 'pagseguro/PagseguroController');
 
 function errorLogger(error, req, res, next) {
@@ -32,6 +33,7 @@ app.use('/api/cities/', CitiesController);
 app.use('/api/districts/', DistrictsController);
 app.use('/api/secret-questions/', SecretQuestionsController);
 app.use('/api/customers/', CustomersController);
+app.use('/api/orders/', OrdersController);
 app.use('/pagseguro/', PagseguroController);
 
 app.use('/media', express.static(__dirname + '/media'));

@@ -305,6 +305,32 @@ function getSecretQuestionsList(callback) {
     });
 }
 
+/* Orders */
+
+function getProductsForPreOrder(productsIds, callback) {
+    conn.query(`SELECT id, name, price, price_in_cash FROM products WHERE FIND_IN_SET(id, '${mysqlEscape(productsIds)}');`, (error, results, fields) => {
+        if (error) callback(error.code)
+        else callback(null, results);
+    });
+}
+
+function getDistrictForPreOrder(customerId, callback) {
+     conn.query(`SELECT customers.district_id, districts.shipping_free_available, districts.shipping_express_price, districts.shipping_normal_price FROM customers LEFT JOIN districts ON districts.id = customers.district_id WHERE customers.id = '${mysqlEscape(customerId)}';`, (error, results, fields) => {
+        if (error) callback(error.code)
+        if (results.length < 1) return callback("no customer matches given id")
+        else callback(null, results[0]);
+    });
+}
+
+/* Coupon */
+
+function getCouponByCode(code, callback) {
+     conn.query(`SELECT * FROM coupons WHERE LOWER(code) = LOWER('${mysqlEscape(code)}');`, (error, results, fields) => {
+        if (error) callback(error.code)
+        else callback(null, results);
+    });
+}
+
 module.exports = {
     getCategoriesList,
     getProductsList, getProductById, getProductInventoryBySize,
@@ -314,5 +340,7 @@ module.exports = {
     getSecretQuestionsList,
     getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
         updateCustomerPersonalInfo, updateCustomerAddress, getCustomerForUpdatePassword, updateCustomerRecover,
-        updateCustomerNotification, getCustomerWishlist, deleteProductFromCustomerWishlist, addProductToCustomerWishlist
+        updateCustomerNotification, getCustomerWishlist, deleteProductFromCustomerWishlist, addProductToCustomerWishlist,
+    getProductsForPreOrder, getDistrictForPreOrder,
+    getCouponByCode,
 }; 	
