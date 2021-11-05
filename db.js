@@ -339,15 +339,15 @@ function getCustomerInfoForOrder(customerId, callback) {
     });
 }
 
-function createOrder(customer_id, subtotal, extra_amount, coupon_discount, shipping_cost,
+function createOrder(customer_id, subtotal, extra_amount, coupon_discount, shipping_cost, fees,
                             total, shipping_type, shipping_district_id, shipping_cep, shipping_street,
-                            shipping_complement, shipping_number, shipping_address_observation,
+                            shipping_complement, shipping_number, shipping_address_observation, payment_status,
                             payment_method, payment_in_cash, payment_pagseguro,
                             coupon_id, products, callback) {
     conn.query(`
-        CALL createOrder('${mysqlEscape(customer_id)}', '${mysqlEscape(subtotal)}', '${mysqlEscape(extra_amount)}', '${mysqlEscape(coupon_discount)}', '${mysqlEscape(shipping_cost)}',
+        CALL createOrder('${mysqlEscape(customer_id)}', '${mysqlEscape(subtotal)}', '${mysqlEscape(extra_amount)}', '${mysqlEscape(coupon_discount)}', '${mysqlEscape(shipping_cost)}', '${mysqlEscape(fees)}',
                             '${mysqlEscape(total)}', '${mysqlEscape(shipping_type)}', '${mysqlEscape(shipping_district_id)}', '${mysqlEscape(shipping_cep)}', '${mysqlEscape(shipping_street)}',
-                            '${mysqlEscape(shipping_complement)}', '${mysqlEscape(shipping_number)}', '${mysqlEscape(shipping_address_observation)}',
+                            '${mysqlEscape(shipping_complement)}', '${mysqlEscape(shipping_number)}', '${mysqlEscape(shipping_address_observation)}', '${mysqlEscape(payment_status)}',
                             '${mysqlEscape(payment_method)}', ${payment_in_cash ? 1 : 0}, ${mysqlEscape(payment_pagseguro ? 1 : 0)},
                             ${typeof coupon_id == 'number' ? coupon_id : null}, '${mysqlEscape(products)}');
         `, (error, results, fields) => {
@@ -357,6 +357,39 @@ function createOrder(customer_id, subtotal, extra_amount, coupon_discount, shipp
         }
         if (results.length < 1) return callback("couldnt create order")
         else callback(null, results[0][0]);
+    });
+}
+
+function deleteOrder(order_id, callback) {
+    conn.query(`
+        CALL deleteOrder('${mysqlEscape(order_id)}');
+        `, (error, results, fields) => {
+        if (error) 
+            return callback(error.code)
+        if (results.length < 1) return callback("couldnt delete order")
+        else callback(null, results[0][0]);
+    });
+}
+
+function startOrderByBoleto(order_id, payment_pagseguro_code, payment_boleto_link, callback) {
+    conn.query(`
+        UPDATE orders SET payment_pagseguro_code = '${mysqlEscape(payment_pagseguro_code)}', payment_boleto_link = '${mysqlEscape(payment_boleto_link)}', payment_status = 'STARTED'
+        WHERE orders.id = '${mysqlEscape(order_id)}';
+        `, (error, results, fields) => {
+        if (error) 
+            return callback(error.code)
+        else callback(null, true);
+    });
+}
+
+function startOrderByCredit(order_id, payment_pagseguro_code, callback) {
+    conn.query(`
+        UPDATE orders SET payment_pagseguro_code = '${mysqlEscape(payment_pagseguro_code)}', payment_status = 'STARTED'
+        WHERE orders.id = '${mysqlEscape(order_id)}';
+        `, (error, results, fields) => {
+        if (error) 
+            return callback(error.code)
+        else callback(null, true);
     });
 }
 
@@ -379,6 +412,7 @@ module.exports = {
     getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
         updateCustomerPersonalInfo, updateCustomerAddress, getCustomerForUpdatePassword, updateCustomerRecover,
         updateCustomerNotification, getCustomerWishlist, deleteProductFromCustomerWishlist, addProductToCustomerWishlist,
-    getProductsForPreOrder, getDistrictForPreOrder, getCustomerInfoForOrder, createOrder,
+    getProductsForPreOrder, getDistrictForPreOrder, getCustomerInfoForOrder, createOrder, deleteOrder, startOrderByBoleto,
+        startOrderByCredit,
     getCouponByCode,
 }; 	

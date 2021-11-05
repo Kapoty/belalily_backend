@@ -46,6 +46,7 @@ router.post('/me/pre-order', VerifyCustomerToken, function(req, res) {
 	// validar produtos
 	let productsIdsSet = new Set();
 	let productsIds = '';
+	let productsUnique = new Set();
 
 	// criar lista de ids dos produtos para consulta no banco de dados
 	try {
@@ -55,9 +56,13 @@ router.post('/me/pre-order', VerifyCustomerToken, function(req, res) {
 				typeof req.body.products[i].size_id != 'number' )
 				throw "error";
 			productsIdsSet.add(req.body.products[i].id);
+			productsUnique.add(`${req.body.products[i].id}_${req.body.products[i].size_id}`);
 			// aproveito para acrescentar a quantidade de unidades do pedido
 			r_products_units += req.body.products[i].desiredQuantity;
 		}
+		// verifico se todos são únicos
+		if (productsUnique.size != req.body.products.length)
+			throw 'error';
 		productsIds = Array.from(productsIdsSet).join(',');
 	} catch (e) {
 		return res.status(500).send({error: 'products invalid'});
@@ -279,9 +284,14 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 	let _total = 0;
 	let coupon_id = null;
 	let productsForDb = {};
+	let payment_status = '';
+	let fees = 0;
 
 	let order_id = 0;
 	let payment_pagseguro_reference = '';
+
+	let payment_pagseguro_code = '';
+	let payment_boleto_link	= '';
 
 	// validar produtos
 
@@ -293,6 +303,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 	// validar produtos
 	let productsIdsSet = new Set();
 	let productsIds = '';
+	let productsUnique = new Set();
 
 	// criar lista de ids dos produtos para consulta no banco de dados
 	try {
@@ -305,9 +316,13 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 				typeof req.body.products[i].price_in_cash != 'number' )
 				throw "error";
 			productsIdsSet.add(req.body.products[i].id);
+			productsUnique.add(`${req.body.products[i].id}_${req.body.products[i].size_id}`);
 			// aproveito para acrescentar a quantidade de unidades do pedido
 			products_units += req.body.products[i].desiredQuantity;
 		}
+		// verifico se todos são únicos
+		if (productsUnique.size != req.body.products.length)
+			throw 'error';
 		productsIds = Array.from(productsIdsSet).join(',');
 	} catch (e) {
 		return res.status(500).send({error: 'products invalid'});
@@ -518,15 +533,21 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 								(typeof req.body.senderHash !== 'string' ||
 								typeof req.body.cardToken !== 'string' ||
 								typeof req.body.installmentQuantity !== 'number' ||
-								typeof req.body.installmentValue !== 'number'))
+								typeof req.body.installmentValue !== 'number' ||
+								typeof req.body.installmentTotalAmount !== 'number'))
 							throw 'error';
 						payment_method = req.body.paymentType;
 						if (payment_method == 'PIX' || payment_method == 'BOLETO')
 							payment_in_cash = true;
 						else payment_in_cash = false;
-						if (payment_method == 'BOLETO' || payment_method == 'CREDIT')
+						if (payment_method == 'BOLETO' || payment_method == 'CREDIT') {
 							payment_pagseguro = true;
-						else payment_pagseguro = false;
+							payment_status = 'NOT_STARTED';
+						}
+						else {
+							payment_pagseguro = false;
+							payment_status = 'STARTED';
+						}
 					} catch(e) {
 						return res.status(500).send({error: 'payment invalid'});
 					}
@@ -571,29 +592,245 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 
 						_total = subtotal + extra_amount + shipping_cost - _coupon_discount;
 
+						if (payment_method == 'CREDIT')
+							fees = parseFloat((req.body.installmentTotalAmount - _total).toFixed(2));
+						else
+							fees = 0;
+
+						_total = _total + fees;
+
 						if (payment_in_cash && _total != total_in_cash ||
-							!payment_in_cash && _total != total)
+							!payment_in_cash && _total != parseFloat(total) + fees)
 							return res.status(500).send({error: 'values invalid'});
 
-						db.createOrder(customer.id, subtotal, extra_amount, _coupon_discount, shipping_cost,
+						db.createOrder(customer.id, subtotal, extra_amount, _coupon_discount, shipping_cost, fees,
 							_total, shipping_type, customer.district_id, customer.cep, customer.street,
-							customer.complement, customer.number, customer.address_observation,
+							customer.complement, customer.number, customer.address_observation, payment_status,
 							payment_method, payment_in_cash, payment_pagseguro,
 							coupon_id, JSON.stringify(productsForDb), (error, results) => {
 							if (error) 
 								return res.status(500).send({error: 'products invalid'});
 
-							console.log(results);
-
 							order_id = results.order_id;
 							payment_pagseguro_reference = results.payment_pagseguro_reference;
 
-							return res.status(200).send({
-								orderInfo: {
-									order_id: order_id,
-									payment_pagseguro_reference: payment_pagseguro_reference,
+							if (payment_method == 'PIX')
+								return res.status(200).send({
+									orderInfo: {
+										order_id: order_id,
+										payment_method: 'PIX',
+										total: _total,
+									}
+								});
+							else if (payment_method == 'BOLETO') {
+
+							/* INICIO PAGSEGURO BOLETO */
+
+								var urlencoded = new URLSearchParams();
+								urlencoded.append("paymentMode", "DEFAULT");
+								urlencoded.append("paymentMethod", "boleto");
+								urlencoded.append("receiverEmail", "diretoriaprv@gmail.com");
+								urlencoded.append("currency", "BRL");
+								urlencoded.append("extraAmount", (extra_amount - _coupon_discount - 1).toFixed(2));
+
+								for (let i=0; i<products.length; i++) {
+									urlencoded.append("itemId"+(i+1), products[i].id+'_'+products[i].size_id);
+									urlencoded.append("itemDescription"+(i+1), products[i].name.substr(0, 100));
+									urlencoded.append("itemAmount"+(i+1), products[i].price.toFixed(2));
+									urlencoded.append("itemQuantity"+(i+1), products[i].desiredQuantity);
 								}
-							});
+
+								urlencoded.append("notificationURL", "https://sualoja.com.br/notifica.html");
+								urlencoded.append("reference", payment_pagseguro_reference);
+
+								urlencoded.append("senderName", customer.name.substr(0, 50));
+								urlencoded.append("senderCPF", customer.cpf);
+								urlencoded.append("senderAreaCode", customer.mobile.substr(0, 2));
+								urlencoded.append("senderPhone", customer.mobile.substr(2, 9));
+								urlencoded.append("senderEmail", customer.email.substr(0, 60));
+								urlencoded.append("senderHash", req.body.senderHash);
+
+								urlencoded.append("shippingAddressRequired", "true");
+								urlencoded.append("shippingAddressStreet", customer.street.substr(0, 80));
+								urlencoded.append("shippingAddressNumber", customer.number.substr(0, 20));
+								urlencoded.append("shippingAddressComplement", customer.complement.substr(0, 40));
+								urlencoded.append("shippingAddressDistrict", customer.district_name.substr(0, 60));
+								urlencoded.append("shippingAddressPostalCode", customer.cep);
+								urlencoded.append("shippingAddressCity", customer.city_name.substr(0, 60));
+								urlencoded.append("shippingAddressState", customer.city_uf);
+								urlencoded.append("shippingAddressCountry", 'BRA');
+
+								urlencoded.append("shippingCost", shipping_cost.toFixed(2));
+
+								console.log(urlencoded);
+
+								fetch(`${pagseguro.APIUrl}v2/transactions?email=${pagseguro.Email}&token=${pagseguro.Token}`, {
+									method: 'POST',
+									headers: {
+										"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+									},
+										body: urlencoded,
+										redirect: 'follow'
+								})
+								.then(response => response.text())
+								.then(result => {
+									xml2js.parseString(result, function (err, result) {
+										if (err == null) {
+											if ("transaction" in result) {
+												// pedido foi gerado no pagseguro
+												payment_boleto_link = result.transaction.paymentLink[0];
+												payment_pagseguro_code = result.transaction.code[0];
+												db.startOrderByBoleto(order_id, payment_pagseguro_code, payment_boleto_link, (error, results) => {
+													return res.status(200).send({
+														orderInfo: {
+															order_id: order_id,
+															total: _total,
+															payment_method: 'BOLETO',
+															payment_boleto_link: payment_boleto_link,
+														}
+													});
+												});
+											}
+											else {
+												// erro ao gerar pedido no pagseguro
+												db.deleteOrder(order_id, (error, results) => {
+													return res.status(500).send({error: 'pagseguro error:' + result.errors.error[0].message[0]});
+												});
+											}
+										}
+										else {
+											// erro na resposta do pagseguro - pedido não deveria ser gerado no pagseguro
+											db.deleteOrder(order_id, (error, results) => {
+												return res.status(500).send({error: 'pagseguro error'});
+											});
+										}
+									});
+								})
+								.catch(error => {
+									// erro requisição http - pedido não foi gerado no pagseguro
+									db.deleteOrder(order_id, (error, results) => {
+										return res.status(500).send({error: 'pagseguro error'});
+									});
+								});
+
+							/* FIM PAGSEGURO BOLETO */
+
+							} else if (payment_method == 'CREDIT') {
+
+							/* INICIO PAGSEGURO CREDITO */
+
+							var urlencoded = new URLSearchParams();
+								urlencoded.append("paymentMode", "DEFAULT");
+								urlencoded.append("paymentMethod", "creditCard");
+								urlencoded.append("receiverEmail", "diretoriaprv@gmail.com");
+								urlencoded.append("currency", "BRL");
+								urlencoded.append("extraAmount", (extra_amount - _coupon_discount).toFixed(2));
+
+								for (let i=0; i<products.length; i++) {
+									urlencoded.append("itemId"+(i+1), products[i].id+'_'+products[i].size_id);
+									urlencoded.append("itemDescription"+(i+1), products[i].name.substr(0, 100));
+									urlencoded.append("itemAmount"+(i+1), products[i].price.toFixed(2));
+									urlencoded.append("itemQuantity"+(i+1), products[i].desiredQuantity);
+								}
+
+								urlencoded.append("notificationURL", "https://sualoja.com.br/notifica.html");
+								urlencoded.append("reference", payment_pagseguro_reference);
+
+								urlencoded.append("senderName", customer.name.substr(0, 50));
+								urlencoded.append("senderCPF", customer.cpf);
+								urlencoded.append("senderAreaCode", customer.mobile.substr(0, 2));
+								urlencoded.append("senderPhone", customer.mobile.substr(2, 9));
+								urlencoded.append("senderEmail", customer.email.substr(0, 60));
+								urlencoded.append("senderHash", req.body.senderHash);
+
+								urlencoded.append("shippingAddressRequired", "true");
+								urlencoded.append("shippingAddressStreet", customer.street.substr(0, 80));
+								urlencoded.append("shippingAddressNumber", customer.number.substr(0, 20));
+								urlencoded.append("shippingAddressComplement", customer.complement.substr(0, 40));
+								urlencoded.append("shippingAddressDistrict", customer.district_name.substr(0, 60));
+								urlencoded.append("shippingAddressPostalCode", customer.cep);
+								urlencoded.append("shippingAddressCity", customer.city_name.substr(0, 60));
+								urlencoded.append("shippingAddressState", customer.city_uf);
+								urlencoded.append("shippingAddressCountry", 'BRA');
+
+								urlencoded.append("shippingCost", shipping_cost.toFixed(2));
+
+								urlencoded.append("creditCardToken", req.body.cardToken);
+								urlencoded.append("installmentQuantity", req.body.installmentQuantity);
+								urlencoded.append("installmentValue", req.body.installmentValue.toFixed(2));
+								if (_total >= 100)
+									urlencoded.append("noInterestInstallmentQuantity", 3);
+								urlencoded.append("creditCardHolderName", customer.name.substr(0, 50));
+								urlencoded.append("creditCardHolderCPF", customer.cpf);
+								urlencoded.append("creditCardHolderBirthDate",
+									new Date(customer.birthday).toLocaleString('pt-br', {year: 'numeric', month: '2-digit', day: '2-digit'}));
+								urlencoded.append("creditCardHolderAreaCode", customer.mobile.substr(0, 2));
+								urlencoded.append("creditCardHolderPhone", customer.mobile.substr(2, 9));
+
+								urlencoded.append("billingAddressStreet", customer.street.substr(0, 80));
+								urlencoded.append("billingAddressNumber", customer.number.substr(0, 20));
+								urlencoded.append("billingAddressComplement", customer.complement.substr(0, 40));
+								urlencoded.append("billingAddressDistrict", customer.district_name.substr(0, 60));
+								urlencoded.append("billingAddressPostalCode", customer.cep);
+								urlencoded.append("billingAddressCity", customer.city_name.substr(0, 60));
+								urlencoded.append("billingAddressState", customer.city_uf);
+								urlencoded.append("billingAddressCountry", 'BRA');
+
+								console.log(urlencoded);
+
+								fetch(`${pagseguro.APIUrl}v2/transactions?email=${pagseguro.Email}&token=${pagseguro.Token}`, {
+									method: 'POST',
+									headers: {
+										"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+									},
+										body: urlencoded,
+										redirect: 'follow'
+								})
+								.then(response => response.text())
+								.then(result => {
+									xml2js.parseString(result, function (err, result) {
+										if (err == null) {
+											if ("transaction" in result) {
+												// pedido foi gerado no pagseguro
+												payment_pagseguro_code = result.transaction.code[0];
+												db.startOrderByCredit(order_id, payment_pagseguro_code, (error, results) => {
+													return res.status(200).send({
+														orderInfo: {
+															order_id: order_id,
+															total: _total,
+															payment_method: 'CREDIT',
+															installmentQuantity: req.body.installmentQuantity,
+															installmentValue: req.body.installmentValue,
+															fees: fees,
+														}
+													});
+												});
+											}
+											else {
+												// erro ao gerar pedido no pagseguro
+												db.deleteOrder(order_id, (error, results) => {
+													return res.status(500).send({error: 'pagseguro error:' + result.errors.error[0].message[0]});
+												});
+											}
+										}
+										else {
+											// erro na resposta do pagseguro - pedido não deveria ser gerado no pagseguro
+											db.deleteOrder(order_id, (error, results) => {
+												return res.status(500).send({error: 'pagseguro error'});
+											});
+										}
+									});
+								})
+								.catch(error => {
+									// erro requisição http - pedido não foi gerado no pagseguro
+									db.deleteOrder(order_id, (error, results) => {
+										return res.status(500).send({error: 'pagseguro error'});
+									});
+								});
+
+							/* FIM PAGSEGURO CREDITO */
+
+							}
 
 						});
 

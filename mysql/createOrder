@@ -2,7 +2,7 @@ DROP PROCEDURE IF EXISTS createOrder;
 
 DELIMITER $$
 
-CREATE PROCEDURE createOrder ( customer_id INT, subtotal DECIMAL(10,2), extra_amount DECIMAL(10,2), coupon_discount DECIMAL(10,2), shipping_cost DECIMAL(10,2), total DECIMAL(10,2), shipping_type ENUM('FREE', 'NORMAL', 'EXPRESS'), shipping_district_id INT, shipping_cep VARCHAR(8), shipping_street VARCHAR(15), shipping_complement VARCHAR(20), shipping_number VARCHAR(10), shipping_address_observation VARCHAR(50), payment_method ENUM('PIX', 'BOLETO', 'CREDIT'), payment_in_cash BOOLEAN, payment_pagseguro BOOLEAN, coupon_id INT, products VARCHAR(1000) )
+CREATE PROCEDURE createOrder ( customer_id INT, subtotal DECIMAL(10,2), extra_amount DECIMAL(10,2), coupon_discount DECIMAL(10,2), shipping_cost DECIMAL(10,2), fees DECIMAL(10,2), total DECIMAL(10,2), shipping_type ENUM('FREE', 'NORMAL', 'EXPRESS'), shipping_district_id INT, shipping_cep VARCHAR(8), shipping_street VARCHAR(15), shipping_complement VARCHAR(20), shipping_number VARCHAR(10), shipping_address_observation VARCHAR(50), payment_status ENUM('NOT_STARTED','STARTED'), payment_method ENUM('PIX', 'BOLETO', 'CREDIT'), payment_in_cash BOOLEAN, payment_pagseguro BOOLEAN, coupon_id INT, products VARCHAR(1000) )
 
 BEGIN
 
@@ -50,7 +50,7 @@ BEGIN
         
         # criar pedido
         
-        INSERT INTO `orders`(`customer_id`, `subtotal`, `extra_amount`, `coupon_discount`, `shipping_cost`, `total`, `creation_datetime`, `shipping_type`, `shipping_district_id`, `shipping_cep`, `shipping_street`, `shipping_complement`, `shipping_number`, `shipping_address_observation`, `status`, `payment_status`, `shipping_status`, `payment_method`, `payment_in_cash`, `payment_pagseguro`, `payment_pagseguro_reference`, `coupon_id`) VALUES (customer_id, subtotal, extra_amount, coupon_discount, shipping_cost, total, NOW(), shipping_type, shipping_district_id, shipping_cep, shipping_street, shipping_complement, shipping_number, shipping_address_observation, 'IN_PROGRESS', 'NAO_INICIADO', 'NAO_INICIADO', payment_method, payment_in_cash, payment_pagseguro, payment_pagseguro_reference, coupon_id);
+        INSERT INTO `orders`(`customer_id`, `subtotal`, `extra_amount`, `coupon_discount`, `shipping_cost`, `fees`, `total`, `creation_datetime`, `shipping_type`, `shipping_district_id`, `shipping_cep`, `shipping_street`, `shipping_complement`, `shipping_number`, `shipping_address_observation`, `status`, `payment_status`, `shipping_status`, `payment_method`, `payment_in_cash`, `payment_pagseguro`, `payment_pagseguro_reference`, `coupon_id`) VALUES (customer_id, subtotal, extra_amount, coupon_discount, shipping_cost, fees, total, NOW(), shipping_type, shipping_district_id, shipping_cep, shipping_street, shipping_complement, shipping_number, shipping_address_observation, 'IN_PROGRESS', payment_status, 'NOT_STARTED', payment_method, payment_in_cash, payment_pagseguro, payment_pagseguro_reference, coupon_id);
         
         SET order_id = LAST_INSERT_ID();
         SET payment_pagseguro_reference = CONCAT('REF', order_id);
@@ -90,6 +90,12 @@ BEGIN
 
             SET i = i + 1;
         END WHILE loop3;
+
+        # incrementar usos do cupom, se houver cupom
+
+        IF coupon_id IS NOT NULL THEN
+            UPDATE coupons SET coupons.uses = (coupons.uses + 1) WHERE coupons.id = coupon_id;
+        END IF;
         
         SET success = TRUE; 
         COMMIT;

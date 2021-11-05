@@ -1,8 +1,8 @@
-DROP PROCEDURE IF EXISTS cancelOrder;
+DROP PROCEDURE IF EXISTS deleteOrder;
 
 DELIMITER $$
 
-CREATE PROCEDURE cancelOrder ( order_id INT )
+CREATE PROCEDURE deleteOrder ( order_id INT )
 
 BEGIN
 
@@ -24,12 +24,14 @@ BEGIN
                 LIMIT 1
                 )
              THEN
-        UPDATE orders SET status = 'CANCELED' WHERE orders.id = order_id;
-        UPDATE product_inventory SET status = 'AVAILABLE', product_inventory.order_id = NULL WHERE product_inventory.order_id = order_id;
         SELECT orders.coupon_id INTO coupon_id FROM orders WHERE orders.id = order_id;
         IF coupon_id IS NOT NULL THEN
             UPDATE coupons SET coupons.uses = (coupons.uses - 1) WHERE coupons.id = coupon_id;
         END IF;
+        DELETE FROM order_products WHERE order_products.order_id = order_id;
+        UPDATE product_inventory SET status = 'AVAILABLE', product_inventory.order_id = NULL WHERE product_inventory.order_id = order_id;
+        DELETE FROM orders WHERE orders.id = order_id;
+        
         COMMIT;
         SET success = TRUE;
     ELSE
@@ -43,5 +45,3 @@ BEGIN
 END; $$
 
 DELIMITER ;
-
-CALL cancelOrder(2);
