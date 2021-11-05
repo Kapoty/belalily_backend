@@ -1,0 +1,42 @@
+DROP PROCEDURE IF EXISTS cancelOrder;
+
+DELIMITER $$
+
+CREATE PROCEDURE cancelOrder ( order_id INT )
+
+BEGIN
+
+	DECLARE success BOOLEAN DEFAULT FALSE;
+    
+    START TRANSACTION;
+    
+    IF EXISTS
+                (
+                SELECT
+                    orders.id
+                FROM
+                    orders
+                WHERE
+                    orders.id = order_id AND
+                    orders.status = 'IN_PROGRESS' AND
+                    orders.payment_status = 'NAO_INICIADO'
+                LIMIT 1
+                )
+             THEN
+        UPDATE orders SET status = 'CANCELED' WHERE orders.id = order_id;
+        UPDATE product_inventory SET status = 'AVAILABLE' WHERE product_inventory.order_id = order_id;
+        COMMIT;
+        SET success = TRUE;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'order not found';
+        ROLLBACK;
+    END IF;
+    
+    SELECT success;
+
+END; $$
+
+DELIMITER ;
+
+CALL cancelOrder(2);

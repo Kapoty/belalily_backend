@@ -94,7 +94,7 @@ function getProductById(productId, callback) {
 
 function getProductInventoryBySize(productId, sizeId, callback) {
     conn.query(`SELECT COUNT(*) FROM product_inventory WHERE product_id = ${mysqlEscape(productId)}
-        AND size_id = ${mysqlEscape(sizeId)} AND status = 0;`, (error, results, fields) => {
+        AND size_id = ${mysqlEscape(sizeId)} AND status = 'AVAILABLE';`, (error, results, fields) => {
         if (error) callback(error.code)
         else callback(null, results[0]['COUNT(*)']);
     });
@@ -230,7 +230,7 @@ function getCustomerWishlist(customerId, callback) {
                     product_inventory
                 WHERE
                     product_inventory.product_id = customer_wishlist.product_id AND product_inventory.size_id = customer_wishlist.size_id AND
-                    product_inventory.status = 0
+                    product_inventory.status = 'AVAILABLE'
                 LIMIT 1
             ) AS product_isAvailable
         FROM
@@ -322,6 +322,44 @@ function getDistrictForPreOrder(customerId, callback) {
     });
 }
 
+function getCustomerInfoForOrder(customerId, callback) {
+    conn.query(`
+        SELECT customers.id, customers.name, customers.cpf, customers.birthday, customers.email, customers.mobile, customers.district_id,
+        customers.cep, customers.street, customers.complement, customers.number, customers.address_observation,
+        districts.name AS district_name, districts.city_id,
+        cities.name AS city_name, cities.uf AS city_uf
+        FROM customers
+        LEFT JOIN districts ON districts.id = customers.district_id
+        LEFT JOIN cities ON cities.id = districts.city_id
+        WHERE customers.id = ${mysqlEscape(customerId)};
+        `, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.length < 1) return callback("no customer matches given id")
+        else callback(null, results[0]);
+    });
+}
+
+function createOrder(customer_id, subtotal, extra_amount, coupon_discount, shipping_cost,
+                            total, shipping_type, shipping_district_id, shipping_cep, shipping_street,
+                            shipping_complement, shipping_number, shipping_address_observation,
+                            payment_method, payment_in_cash, payment_pagseguro,
+                            coupon_id, products, callback) {
+    conn.query(`
+        CALL createOrder('${mysqlEscape(customer_id)}', '${mysqlEscape(subtotal)}', '${mysqlEscape(extra_amount)}', '${mysqlEscape(coupon_discount)}', '${mysqlEscape(shipping_cost)}',
+                            '${mysqlEscape(total)}', '${mysqlEscape(shipping_type)}', '${mysqlEscape(shipping_district_id)}', '${mysqlEscape(shipping_cep)}', '${mysqlEscape(shipping_street)}',
+                            '${mysqlEscape(shipping_complement)}', '${mysqlEscape(shipping_number)}', '${mysqlEscape(shipping_address_observation)}',
+                            '${mysqlEscape(payment_method)}', ${payment_in_cash ? 1 : 0}, ${mysqlEscape(payment_pagseguro ? 1 : 0)},
+                            ${typeof coupon_id == 'number' ? coupon_id : null}, '${mysqlEscape(products)}');
+        `, (error, results, fields) => {
+        if (error) {
+            console.log(error);
+            return callback(error.code)
+        }
+        if (results.length < 1) return callback("couldnt create order")
+        else callback(null, results[0][0]);
+    });
+}
+
 /* Coupon */
 
 function getCouponByCode(code, callback) {
@@ -341,6 +379,6 @@ module.exports = {
     getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
         updateCustomerPersonalInfo, updateCustomerAddress, getCustomerForUpdatePassword, updateCustomerRecover,
         updateCustomerNotification, getCustomerWishlist, deleteProductFromCustomerWishlist, addProductToCustomerWishlist,
-    getProductsForPreOrder, getDistrictForPreOrder,
+    getProductsForPreOrder, getDistrictForPreOrder, getCustomerInfoForOrder, createOrder,
     getCouponByCode,
 }; 	

@@ -1,0 +1,104 @@
+DROP PROCEDURE IF EXISTS createOrder;
+
+DELIMITER $$
+
+CREATE PROCEDURE createOrder ( customer_id INT, subtotal DECIMAL(10,2), extra_amount DECIMAL(10,2), coupon_discount DECIMAL(10,2), shipping_cost DECIMAL(10,2), total DECIMAL(10,2), shipping_type ENUM('FREE', 'NORMAL', 'EXPRESS'), shipping_district_id INT, shipping_cep VARCHAR(8), shipping_street VARCHAR(15), shipping_complement VARCHAR(20), shipping_number VARCHAR(10), shipping_address_observation VARCHAR(50), payment_method ENUM('PIX', 'BOLETO', 'CREDIT'), payment_in_cash BOOLEAN, payment_pagseguro BOOLEAN, coupon_id INT, products VARCHAR(1000) )
+
+BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE order_id INT DEFAULT 0;
+    DECLARE payment_pagseguro_reference VARCHAR(10);
+    
+    DECLARE numberOfProducts INT;
+    DECLARE product_id INT;
+    DECLARE size_id INT;
+    DECLARE quantity INT;
+    
+    DECLARE price DECIMAL(10,2);
+    DECLARE price_in_cash DECIMAL(10,2);
+    
+    DECLARE i INT default 0;
+    
+    START TRANSACTION;
+    
+    SET numberOfProducts = JSON_EXTRACT(products, "$.numberOfProducts");
+    
+    # verificar se existe estoque suficiente
+    
+    SET i = 1;
+
+    loop1: WHILE i <= numberOfProducts DO
+    
+        SET product_id = JSON_EXTRACT(products, CONCAT("$.p", i, ".id"));
+        SET size_id = JSON_EXTRACT(products, CONCAT("$.p", i, ".size_id"));
+        SET quantity = JSON_EXTRACT(products, CONCAT("$.p", i, ".quantity"));
+        IF (SELECT COUNT(*) FROM product_inventory WHERE product_inventory.product_id = product_id AND product_inventory.size_id = size_id AND product_inventory.status = 'AVAILABLE') < quantity THEN
+            LEAVE loop1;
+        END IF;
+        
+        SET i = i + 1;
+    END WHILE loop1;
+        
+    IF i <= numberOfProducts THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'not enough inventory';
+        ROLLBACK;
+    ELSE
+    
+        # tem estoque suficiente
+        
+        # criar pedido
+        
+        INSERT INTO `orders`(`customer_id`, `subtotal`, `extra_amount`, `coupon_discount`, `shipping_cost`, `total`, `creation_datetime`, `shipping_type`, `shipping_district_id`, `shipping_cep`, `shipping_street`, `shipping_complement`, `shipping_number`, `shipping_address_observation`, `status`, `payment_status`, `shipping_status`, `payment_method`, `payment_in_cash`, `payment_pagseguro`, `payment_pagseguro_reference`, `coupon_id`) VALUES (customer_id, subtotal, extra_amount, coupon_discount, shipping_cost, total, NOW(), shipping_type, shipping_district_id, shipping_cep, shipping_street, shipping_complement, shipping_number, shipping_address_observation, 'IN_PROGRESS', 'NAO_INICIADO', 'NAO_INICIADO', payment_method, payment_in_cash, payment_pagseguro, payment_pagseguro_reference, coupon_id);
+        
+        SET order_id = LAST_INSERT_ID();
+        SET payment_pagseguro_reference = CONCAT('REF', order_id);
+
+        UPDATE orders SET orders.payment_pagseguro_reference = payment_pagseguro_reference WHERE orders.id = order_id;
+        
+        # criar order_products
+        
+        SET i = 1;
+
+        loop2: WHILE i <= numberOfProducts DO
+
+            SET product_id = JSON_EXTRACT(products, CONCAT("$.p", i, ".id"));
+            SET size_id = JSON_EXTRACT(products, CONCAT("$.p", i, ".size_id"));
+            SET quantity = JSON_EXTRACT(products, CONCAT("$.p", i, ".quantity"));
+            SET price = JSON_EXTRACT(products, CONCAT("$.p", i, ".price"));
+            SET price_in_cash = JSON_EXTRACT(products, CONCAT("$.p", i, ".price_in_cash"));
+            
+            INSERT INTO `order_products`(`order_id`, `product_id`, `size_id`, `price`, `price_in_cash`, `quantity`) VALUES (order_id, product_id, size_id, price, price_in_cash, quantity);
+
+            SET i = i + 1;
+        END WHILE loop2;
+        
+        # alterar estado dos product_inventory
+        
+        SET i = 1;
+
+        loop3: WHILE i <= numberOfProducts DO
+
+            SET product_id = JSON_EXTRACT(products, CONCAT("$.p", i, ".id"));
+            SET size_id = JSON_EXTRACT(products, CONCAT("$.p", i, ".size_id"));
+            SET quantity = JSON_EXTRACT(products, CONCAT("$.p", i, ".quantity"));
+            SET price = JSON_EXTRACT(products, CONCAT("$.p", i, ".price"));
+            SET price_in_cash = JSON_EXTRACT(products, CONCAT("$.p", i, ".price_in_cash"));
+            
+            UPDATE product_inventory SET `order_id`=order_id,`status`='IN_ORDER' WHERE product_inventory.product_id = product_id AND product_inventory.size_id = size_id AND product_inventory.status = 'AVAILABLE' LIMIT quantity;
+
+            SET i = i + 1;
+        END WHILE loop3;
+        
+        SET success = TRUE; 
+        COMMIT;
+    END IF;
+    
+    SELECT success, order_id, payment_pagseguro_reference;
+
+END; $$
+
+DELIMITER ;
+
+CALL createOrder(1, 10, 1, 2, 3, 4, 'FREE', 1, '74730190', 'Rua 11', 'Quadra 22', 's/n', 'Obs', 'PIX', true, true, 1, '{"numberOfProducts": 1, "p1": {"id": 2, "size_id": 4, "quantity": 1, "price": 3, "price_in_cash": 2}, "p2": {"id": 1, "size_id": 2, "quantity": 1, "price": 1, "price_in_cash": 2}}');

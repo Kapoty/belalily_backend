@@ -4,6 +4,190 @@
 		"selected_items":
 		[
 			[
+				"produ",
+				"productsForDb"
+			],
+			[
+				"des",
+				"desiredQuantity"
+			],
+			[
+				"pay",
+				"payment_in_cash"
+			],
+			[
+				"coupo",
+				"coupon_id"
+			],
+			[
+				"coupon",
+				"coupon_applied"
+			],
+			[
+				"coupon_d",
+				"coupon_discount"
+			],
+			[
+				"coupon_di",
+				"coupon_discount_in_cash"
+			],
+			[
+				"products_tota",
+				"products_total_in_cash"
+			],
+			[
+				"products_t",
+				"products_total"
+			],
+			[
+				"paym",
+				"payment_in_cash"
+			],
+			[
+				"pagseguro",
+				"payment_pagseguro_reference"
+			],
+			[
+				"paymen",
+				"payment_method"
+			],
+			[
+				"distr",
+				"districts"
+			],
+			[
+				"getCustomerInf",
+				"getCustomerInfoForOrder"
+			],
+			[
+				"in",
+				"installmentQuantity"
+			],
+			[
+				"insta",
+				"installmentValue"
+			],
+			[
+				"sen",
+				"senderHash"
+			],
+			[
+				"cou",
+				"coupon_applied"
+			],
+			[
+				"shi",
+				"shipping_cost"
+			],
+			[
+				"shipp",
+				"shipping_cost"
+			],
+			[
+				"products_to",
+				"products_total_in_cash"
+			],
+			[
+				"r_prod",
+				"r_products_units"
+			],
+			[
+				"r_cou",
+				"r_coupon_applied"
+			],
+			[
+				"le",
+				"length"
+			],
+			[
+				"r_pr",
+				"r_products_total"
+			],
+			[
+				"r_c",
+				"r_coupon"
+			],
+			[
+				"r_co",
+				"r_coupon_discount"
+			],
+			[
+				"r_tota",
+				"r_products_total"
+			],
+			[
+				"r_coupo",
+				"r_coupon_discount"
+			],
+			[
+				"r_ta",
+				"r_total_in_cash"
+			],
+			[
+				"r",
+				"r_coupon"
+			],
+			[
+				"r_sh",
+				"r_shipping_cost"
+			],
+			[
+				"r_pro",
+				"r_products_total_in_cash"
+			],
+			[
+				"r_total",
+				"r_total_in_cash"
+			],
+			[
+				"r_coup",
+				"r_coupon_error"
+			],
+			[
+				"r_produ",
+				"r_products_total"
+			],
+			[
+				"r_shi",
+				"r_shipping_type"
+			],
+			[
+				"sh",
+				"shippingType"
+			],
+			[
+				"produc",
+				"productsIds"
+			],
+			[
+				"prid",
+				"db_productsById"
+			],
+			[
+				"r_to",
+				"r_total_in_cash"
+			],
+			[
+				"total",
+				"total_in_cash"
+			],
+			[
+				"price",
+				"price_in_cash"
+			],
+			[
+				"products",
+				"productsUnits"
+			],
+			[
+				"Produc",
+				"productsIds"
+			],
+			[
+				"getPro",
+				"getProductsForPreOrder"
+			],
+			[
 				"all",
 				"allow_whatsapp"
 			],
@@ -152,10 +336,6 @@
 				"tShirtY"
 			],
 			[
-				"insta",
-				"cardInstallments"
-			],
-			[
 				"create",
 				"createCardTokenSuccess"
 			],
@@ -226,10 +406,6 @@
 			[
 				"getP",
 				"getPaymentMethodsError"
-			],
-			[
-				"pay",
-				"paymentMethodsLoaded"
 			],
 			[
 				"pag",
@@ -338,182 +514,6 @@
 			[
 				"places",
 				"placesTypo"
-			],
-			[
-				"FreS",
-				"Frequentes"
-			],
-			[
-				"sar",
-				"search"
-			],
-			[
-				"sear",
-				"searchRef"
-			],
-			[
-				"searc",
-				"searchRef"
-			],
-			[
-				"Tab",
-				"TableCell"
-			],
-			[
-				"item",
-				"itemId"
-			],
-			[
-				"paym",
-				"paymentNames"
-			],
-			[
-				"ge",
-				"getElementsByTagName"
-			],
-			[
-				"whats",
-				"whatsappRef"
-			],
-			[
-				"what",
-				"whatsapp"
-			],
-			[
-				"des",
-				"desiredName"
-			],
-			[
-				"name",
-				"nameRef"
-			],
-			[
-				"added",
-				"addedToBagInfo"
-			],
-			[
-				"Catalog",
-				"CatalogData"
-			],
-			[
-				"filter",
-				"filteredCatalog"
-			],
-			[
-				"defau",
-				"defaultSort"
-			],
-			[
-				"ite",
-				"itemId"
-			],
-			[
-				"to",
-				"toggleSize"
-			],
-			[
-				"handle",
-				"handleClear"
-			],
-			[
-				"Caa",
-				"CatalogData"
-			],
-			[
-				"in",
-				"includes"
-			],
-			[
-				"Catal",
-				"CatalogData"
-			],
-			[
-				"filte",
-				"filteredCatalog"
-			],
-			[
-				"catal",
-				"CatalogData"
-			],
-			[
-				"ca",
-				"CatalogData"
-			],
-			[
-				"cookies",
-				"cookiesDialog"
-			],
-			[
-				"desc",
-				"descSectionRef"
-			],
-			[
-				"back",
-				"backgroundColor"
-			],
-			[
-				"Zoo",
-				"ZoomInIcon"
-			],
-			[
-				"ma",
-				"material-ui"
-			],
-			[
-				"close",
-				"closeCookiesDialog"
-			],
-			[
-				"cookie",
-				"cookiesDialogOpenend"
-			],
-			[
-				"pri",
-				"PrivacyPolicy"
-			],
-			[
-				"Priva",
-				"PrivacyPolicy"
-			],
-			[
-				"Dia",
-				"DialogTitle"
-			],
-			[
-				"image",
-				"imageOpen"
-			],
-			[
-				"open",
-				"openImage"
-			],
-			[
-				"opt",
-				"optgroup"
-			],
-			[
-				"ope",
-				"openWhatsapp"
-			],
-			[
-				"h",
-				"handleBack"
-			],
-			[
-				"ha",
-				"handleBack"
-			],
-			[
-				"flex",
-				"flexDirecton"
-			],
-			[
-				"handl",
-				"handleDialogClose"
-			],
-			[
-				"clo",
-				"closeFilter"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "app.js",
 			"settings":
 			{
-				"buffer_size": 1500,
+				"buffer_size": 1608,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -559,9 +559,36 @@
 			"file": "api/CustomersController.js",
 			"settings":
 			{
-				"buffer_size": 16456,
+				"buffer_size": 16340,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "config.js",
+			"settings":
+			{
+				"buffer_size": 198,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/OrdersController.js",
+			"settings":
+			{
+				"buffer_size": 21218,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "mysql/createOrder",
+			"settings":
+			{
+				"buffer_size": 5062,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -570,6 +597,15 @@
 			{
 				"buffer_size": 6641,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "db.js",
+			"settings":
+			{
+				"buffer_size": 17223,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -587,15 +623,6 @@
 			{
 				"buffer_size": 510,
 				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "db.js",
-			"settings":
-			{
-				"buffer_size": 13623,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
 			}
 		},
 		{
@@ -694,6 +721,11 @@
 	},
 	"file_history":
 	[
+		"/C/Users/to/Desktop/PRV/Programming/backend/mysql/cancelOrder",
+		"/C/Users/to/Desktop/PRV/Programming/backend/mysql/createOrder",
+		"/C/Users/to/Desktop/PRV/Programming/backend/createOrder",
+		"/C/Users/to/Desktop/PRV/Programming/backend/cancelOrder",
+		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/src/routes/MainRoute.jsx",
 		"/C/Users/to/Desktop/Patins e Cia/BackEnd/db.js",
 		"/C/Users/to/Desktop/PRV/Programming/backend/api/CustomersController.js",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/ProfileDialog.jsx",
@@ -731,7 +763,6 @@
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/config/Config.js",
 		"/C/Users/to/Desktop/PRV/Programming/site/src/components/FAQ.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/pagseguro/PagseguroController.js",
-		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/src/routes/MainRoute.jsx",
 		"/C/www/provador/index.html",
 		"/C/Users/to/Desktop/PRV/boletoerro.json",
 		"/C/Users/to/Desktop/PRV/boleto gerado.json",
@@ -817,11 +848,7 @@
 		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/BetwayCblol2020Split2.json",
 		"/C/Users/to/Desktop/comando/index.js",
 		"/C/Users/to/Desktop/comando/movies.json",
-		"/C/Users/to/Desktop/lolalytics/getData.js",
-		"/C/Users/to/Desktop/lolalytics/public/index.html",
-		"/C/Users/to/Desktop/lolalytics/lobbyexample.json",
-		"/C/Users/to/Desktop/lolalytics/fix.js",
-		"/C/Users/to/Desktop/lolalytics/public/champions_lol.json"
+		"/C/Users/to/Desktop/lolalytics/getData.js"
 	],
 	"find":
 	{
@@ -839,6 +866,35 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"coupon_id",
+			"parseInt",
+			"Boolean",
+			"false",
+			"true",
+			"parseInt",
+			"payment_in_cash",
+			"getCustomerInfoForOrder",
+			"payment_pagseguro_reference",
+			"getCouponByCode",
+			"coupon_id",
+			"shipping_cost",
+			"DISPONIVEL",
+			"getProductInven",
+			"Inventory",
+			"insertId",
+			"getDistrict",
+			"LEFT JOIN",
+			"req.customerId",
+			"code",
+			"r_products_units",
+			"percent",
+			"status",
+			"values",
+			"productsUnits",
+			"desired_quantity",
+			"desiredQ",
+			"invalid products 3",
+			"/me/",
 			"districtws",
 			"allow_ema",
 			"allow_email",
@@ -937,36 +993,7 @@
 			"maxLength=\"100",
 			"maxLength=\"100\"",
 			"100",
-			"trying",
-			"change",
-			"editingId",
-			"handleCancelPa",
-			"this.setState",
-			"handleCancelPay",
-			"hnadleChan",
-			"hnadleCanl",
-			"getDate",
-			")}></",
-			"handle",
-			"info",
-			"userId",
-			"/orders/",
-			"/order/",
-			"console.log",
-			"log",
-			"userID",
-			"getDate",
-			"cpf",
-			"cp",
-			"cpf",
-			"this.refs[\"cpf\"",
-			"cpf",
-			"where",
-			"collate",
-			"apiURL",
-			"utf8_",
-			"collate",
-			"console.log"
+			"trying"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -974,6 +1001,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"desiredQuantity",
 			"bag.items[i]",
 			"<b>Bela Lily</b>",
 			"state",
@@ -1048,7 +1076,7 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 9,
 			"sheets":
 			[
 				{
@@ -1057,15 +1085,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1500,
+						"buffer_size": 1608,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1210,
-								1210
+								1367,
+								1367
 							]
 						],
 						"settings":
@@ -1073,10 +1101,10 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 41.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -1104,7 +1132,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1132,7 +1160,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -1162,7 +1190,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1171,15 +1199,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16456,
+						"buffer_size": 16340,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								16423,
-								16423
+								9172,
+								9069
 							]
 						],
 						"settings":
@@ -1188,14 +1216,101 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7763.0,
+						"translation.y": 4025.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "config.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 198,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								154,
+								154
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "api/OrdersController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21218,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20028,
+								20028
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 8431.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "mysql/createOrder",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5062,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4989,
+								5057
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1560.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 8,
 					"file": "pagseguro/PagseguroController.js",
 					"semi_transient": false,
 					"settings":
@@ -1207,23 +1322,54 @@
 						"selection":
 						[
 							[
-								3597,
-								3597
+								208,
+								175
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 9735.0,
+						"translation.y": 1327.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "db.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17223,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								16290,
+								16290
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1327.0,
+						"translation.y": 5091.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 10,
 					"file": "util.js",
 					"semi_transient": false,
 					"settings":
@@ -1248,11 +1394,11 @@
 						"translation.y": 720.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 11,
 					"file": "api/SecretQuestionsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1276,41 +1422,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
-					"file": "db.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 13623,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2498,
-								2498
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1025.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
+					"buffer": 12,
 					"file": "api/SizesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1334,11 +1450,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 13,
 					"file": "api/CategoriesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1362,11 +1478,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 14,
 					"file": "api/ProductsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1391,7 +1507,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				}
 			]
@@ -1440,7 +1556,7 @@
 	"project": "",
 	"replace":
 	{
-		"height": 52.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":
