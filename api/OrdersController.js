@@ -275,6 +275,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 	let payment_method = '';
 	let payment_in_cash = false;
 	let payment_pagseguro = false;
+	let payment_installment_quantity = null;
 
 	let customer = {};
 
@@ -548,6 +549,8 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 							payment_pagseguro = false;
 							payment_status = 'STARTED';
 						}
+						if (payment_method == 'CREDIT')
+							payment_installment_quantity = req.body.installmentQuantity;
 					} catch(e) {
 						return res.status(500).send({error: 'payment invalid'});
 					}
@@ -606,7 +609,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 						db.createOrder(customer.id, subtotal, extra_amount, _coupon_discount, shipping_cost, fees,
 							_total, shipping_type, customer.district_id, customer.cep, customer.street,
 							customer.complement, customer.number, customer.address_observation, payment_status,
-							payment_method, payment_in_cash, payment_pagseguro,
+							payment_method, payment_installment_quantity, payment_in_cash, payment_pagseguro,
 							coupon_id, JSON.stringify(productsForDb), (error, results) => {
 							if (error) 
 								return res.status(500).send({error: 'products invalid'});
@@ -847,55 +850,3 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 });
 
 module.exports = router;
-
-/*
-{
-	"products":[
-		{
-			"id":2,
-			"name":"Cropped Exemplo",
-			"price":25,
-			"price_in_cash":20,
-			"size_id":4,
-			"desiredQuantity":1
-		},
-		{
-			"id":1,
-			"name":"T-Shirt Exemplo",
-			"price":35,
-			"price_in_cash":30,
-			"size_id":2,
-			"desiredQuantity":1
-		}
-	],
-	"products_units":2,
-	"products_total":60,
-	"products_total_in_cash":50,
-	"shipping_type":"EXPRESS",
-	"shipping_cost":10,
-	"coupon":{
-		"code":"5PORCENTO",
-		"type":"PERCENT",
-		"value":5,
-		"minimum_amount":40,
-		"max_units":6
-	},
-	"coupon_applied":true,
-	"coupon_discount":"3.00",
-	"coupon_discount_in_cash":"2.50",
-	"coupon_error":"",
-	"total":"67.00",
-	"total_in_cash":"57.50",
-
-	"paymentType":"PIX"
-
-	"paymentType":"BOLETO",
-	"senderHash":"c73800b7ac8c828901bfc54157a790fb1631dad1638542eb29e35a0e3736c05e"
-
-	"paymentType":"CREDIT",
-	"senderHash":"c73800b7ac8c828901bfc54157a790fb1631dad1638542eb29e35a0e3736c05e"
-	"cardToken":"78bb23e88b2c4a34a4f2335e912fdf86",
-	"installmentQuantity":1,
-	"installmentValue":70
-}
-*/

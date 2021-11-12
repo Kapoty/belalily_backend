@@ -278,6 +278,50 @@ function deleteProductFromCustomerWishlist(customerId, productId, sizeId, callba
     });
 }
 
+function getCustomerOrdersList(customerId, callback) {
+    conn.query(`
+        SELECT id, total, status, payment_status, payment_method, creation_datetime, payment_installment_quantity
+        FROM orders
+        WHERE
+            customer_id = ${mysqlEscape(customerId)}
+        ORDER BY creation_datetime DESC;
+    `, (error, results, fields) => {
+        if (error) return callback(error.code)
+        else callback(null, results);
+    });
+}
+
+function getCustomerOrderById(customerId, orderId, callback) {
+    conn.query(`
+        SELECT o.id, o.total, o.subtotal, o.extra_amount, o.coupon_discount, o.shipping_cost, o.fees,
+        o.status, o.payment_status, o.payment_method,
+        o.creation_datetime, o.payment_installment_quantity,
+        o.shipping_status,
+        o.shipping_type, d.name AS shipping_district_name,
+        c.name AS shipping_city_name, c.uf AS shipping_city_uf,
+        o.shipping_cep, o.shipping_street, o.shipping_complement,
+        o.shipping_number, o.shipping_address_observation,
+        o.payment_boleto_link,
+        cp.code AS coupon_code,
+        (SELECT GROUP_CONCAT(p.product_id) FROM order_products p WHERE p.order_id = o.id ORDER BY p.id ASC) AS products_product_id,
+        (SELECT GROUP_CONCAT(pp.name ORDER BY p.id ASC) FROM order_products p LEFT JOIN products pp ON pp.id = p.product_id WHERE p.order_id = o.id) AS products_product_name,
+        (SELECT GROUP_CONCAT(s.name ORDER BY p.id ASC) FROM order_products p LEFT JOIN sizes s ON s.id = p.size_id WHERE p.order_id = o.id) AS products_size_name,
+        (SELECT GROUP_CONCAT(p.price) FROM order_products p WHERE p.order_id = o.id ORDER BY p.id ASC) AS products_product_price,
+        (SELECT GROUP_CONCAT(p.quantity) FROM order_products p WHERE p.order_id = o.id ORDER BY p.id ASC) AS products_product_quantity
+        FROM orders o
+        LEFT JOIN districts d ON d.id = o.shipping_district_id
+        LEFT JOIN cities c on c.id = d.city_id
+        LEFT JOIN coupons cp on cp.id = o.coupon_id
+        WHERE
+            o.customer_id = ${mysqlEscape(customerId)} AND
+            o.id = ${mysqlEscape(orderId)};
+    `, (error, results, fields) => {
+        if (error) return callback(error.code)
+        if (results.length < 1) return callback("no order matches given id")
+        else callback(null, results[0]);
+    });
+}
+
 /* Cities */
 
 function getCitiesList(callback) {
@@ -342,13 +386,13 @@ function getCustomerInfoForOrder(customerId, callback) {
 function createOrder(customer_id, subtotal, extra_amount, coupon_discount, shipping_cost, fees,
                             total, shipping_type, shipping_district_id, shipping_cep, shipping_street,
                             shipping_complement, shipping_number, shipping_address_observation, payment_status,
-                            payment_method, payment_in_cash, payment_pagseguro,
+                            payment_method, payment_installment_quantity, payment_in_cash, payment_pagseguro,
                             coupon_id, products, callback) {
     conn.query(`
         CALL createOrder('${mysqlEscape(customer_id)}', '${mysqlEscape(subtotal)}', '${mysqlEscape(extra_amount)}', '${mysqlEscape(coupon_discount)}', '${mysqlEscape(shipping_cost)}', '${mysqlEscape(fees)}',
                             '${mysqlEscape(total)}', '${mysqlEscape(shipping_type)}', '${mysqlEscape(shipping_district_id)}', '${mysqlEscape(shipping_cep)}', '${mysqlEscape(shipping_street)}',
                             '${mysqlEscape(shipping_complement)}', '${mysqlEscape(shipping_number)}', '${mysqlEscape(shipping_address_observation)}', '${mysqlEscape(payment_status)}',
-                            '${mysqlEscape(payment_method)}', ${payment_in_cash ? 1 : 0}, ${mysqlEscape(payment_pagseguro ? 1 : 0)},
+                            '${mysqlEscape(payment_method)}',${typeof payment_installment_quantity == 'number' ? payment_installment_quantity : null}, ${payment_in_cash ? 1 : 0}, ${mysqlEscape(payment_pagseguro ? 1 : 0)},
                             ${typeof coupon_id == 'number' ? coupon_id : null}, '${mysqlEscape(products)}');
         `, (error, results, fields) => {
         if (error) {
@@ -373,7 +417,7 @@ function deleteOrder(order_id, callback) {
 
 function startOrderByBoleto(order_id, payment_pagseguro_code, payment_boleto_link, callback) {
     conn.query(`
-        UPDATE orders SET payment_pagseguro_code = '${mysqlEscape(payment_pagseguro_code)}', payment_boleto_link = '${mysqlEscape(payment_boleto_link)}', payment_status = 'STARTED'
+        UPDATE orders SET payment_pagseguro_code = '${mysqlEscape(payment_pagseguro_code)}', payment_boleto_link = '${mysqlEscape(payment_boleto_link)}', payment_status = 'AWAITING_PAYMENT'
         WHERE orders.id = '${mysqlEscape(order_id)}';
         `, (error, results, fields) => {
         if (error) 
@@ -384,7 +428,7 @@ function startOrderByBoleto(order_id, payment_pagseguro_code, payment_boleto_lin
 
 function startOrderByCredit(order_id, payment_pagseguro_code, callback) {
     conn.query(`
-        UPDATE orders SET payment_pagseguro_code = '${mysqlEscape(payment_pagseguro_code)}', payment_status = 'STARTED'
+        UPDATE orders SET payment_pagseguro_code = '${mysqlEscape(payment_pagseguro_code)}', payment_status = 'AWAITING_PAYMENT'
         WHERE orders.id = '${mysqlEscape(order_id)}';
         `, (error, results, fields) => {
         if (error) 
@@ -412,6 +456,7 @@ module.exports = {
     getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
         updateCustomerPersonalInfo, updateCustomerAddress, getCustomerForUpdatePassword, updateCustomerRecover,
         updateCustomerNotification, getCustomerWishlist, deleteProductFromCustomerWishlist, addProductToCustomerWishlist,
+        getCustomerOrdersList, getCustomerOrderById,
     getProductsForPreOrder, getDistrictForPreOrder, getCustomerInfoForOrder, createOrder, deleteOrder, startOrderByBoleto,
         startOrderByCredit,
     getCouponByCode,

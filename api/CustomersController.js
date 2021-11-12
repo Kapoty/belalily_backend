@@ -535,4 +535,20 @@ router.post('/me/wishlist', VerifyCustomerToken, function(req, res) {
 
 });
 
+router.get('/me/orders', VerifyCustomerToken, function(req, res) {
+	db.getCustomerOrdersList(req.customerId ,(error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({orders: results});
+	});
+});
+
+router.get('/me/orders/:id', VerifyCustomerToken, function(req, res) {
+	db.getCustomerOrderById(req.customerId, req.params.id,(error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({order: results});
+	});
+});
+
 module.exports = router;
