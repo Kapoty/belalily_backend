@@ -1,5 +1,6 @@
 var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('../config'); // get our config file
+var db = require("../db");
 
 function verifyUserToken(req, res, next) {
 
@@ -15,7 +16,10 @@ function verifyUserToken(req, res, next) {
 
     // if everything is good, save to request for use in other routes
     req.userId = decoded.userId;
-    next();
+    db.getUserForVerify(req.userId, (error, results) => {
+      if (error) return res.status(500).send({auth: false});
+      next();
+    });
   });
 
 }

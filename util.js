@@ -92,4 +92,11 @@ function isValidSecretAnswer(answer) {
     return re.test(String(answer));
 }
 
-module.exports = {isValidCpf , isValidBirthday, isValidPhoneNumber, isValidCep, isValidEmail, isValidPassword, isValidSecretAnswer};
+function isValidUsername(username) {
+	if (username == null || username == '')
+		return false;
+	let re = /^[a-zA-Z][A-Za-z0-9_]*$/;
+	return re.test(String(username).toLowerCase());
+}
+
+module.exports = {isValidCpf , isValidBirthday, isValidPhoneNumber, isValidCep, isValidEmail, isValidPassword, isValidSecretAnswer, isValidUsername};

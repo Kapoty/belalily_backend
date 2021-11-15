@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"get",
+				"getUserProfile"
+			],
+			[
+				"profile",
+				"profile_id"
+			],
+			[
+				"profi",
+				"profile_id"
+			],
+			[
+				"isVa",
+				"isValidUsername"
+			],
+			[
+				"pass",
+				"password_confirm"
+			],
+			[
+				"passwo",
+				"password_confirm"
+			],
+			[
+				"getUserB",
+				"getUserById"
+			],
+			[
+				"req",
+				"require"
+			],
+			[
 				"shi",
 				"shipping_street"
 			],
@@ -320,14 +352,6 @@
 				"consultant_id"
 			],
 			[
-				"pass",
-				"password"
-			],
-			[
-				"isVa",
-				"isValidPassword"
-			],
-			[
 				"district",
 				"district_id"
 			],
@@ -354,10 +378,6 @@
 			[
 				"getPr",
 				"getProductInventory"
-			],
-			[
-				"get",
-				"getProductById"
 			],
 			[
 				"pro",
@@ -494,26 +514,6 @@
 			[
 				"co",
 				"color\tproperty"
-			],
-			[
-				"w",
-				"width\tproperty"
-			],
-			[
-				"align",
-				"text-align\tproperty"
-			],
-			[
-				"wra",
-				"word-wrap\tproperty"
-			],
-			[
-				"bag",
-				"BagFixedDialog"
-			],
-			[
-				"blocke",
-				"blockedPopupPass"
 			]
 		]
 	},
@@ -523,7 +523,34 @@
 			"file": "app.js",
 			"settings":
 			{
-				"buffer_size": 1608,
+				"buffer_size": 1828,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/UsersController.js",
+			"settings":
+			{
+				"buffer_size": 6410,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/ProfilesController.js",
+			"settings":
+			{
+				"buffer_size": 929,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/VerifyUserToken.js",
+			"settings":
+			{
+				"buffer_size": 838,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -594,16 +621,25 @@
 			"file": "db.js",
 			"settings":
 			{
-				"buffer_size": 21161,
+				"buffer_size": 22656,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "api/GetUserProfile.js",
+			"settings":
+			{
+				"buffer_size": 345,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
 			}
 		},
 		{
 			"file": "util.js",
 			"settings":
 			{
-				"buffer_size": 2674,
+				"buffer_size": 2874,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -712,6 +748,9 @@
 	},
 	"file_history":
 	[
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/UsersRoute.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/backend/api/GetUserPermissions.js",
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/App.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/OrdersProductsTable.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/mysql/deleteOrder",
 		"/C/Users/to/Desktop/PRV/Programming/backend/mysql/cancelOrder",
@@ -836,10 +875,7 @@
 		"/C/Users/to/Desktop/TRASH/lol data analysis/leagueofgraphs.js",
 		"/C/Users/to/Desktop/TRASH/lol data analysis/draftAnalysis1.js",
 		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/analisePorHistorico.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/Lck2020SpringSeasonDrafts.json",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/CBLOL2020Split1Drafts.json",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/BetwayCblol2020Split2.json",
-		"/C/Users/to/Desktop/comando/index.js"
+		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/Lck2020SpringSeasonDrafts.json"
 	],
 	"find":
 	{
@@ -857,6 +893,18 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"cryp",
+			"getUserById",
+			"updateCustomerRec",
+			"updateCustomer",
+			"getCustomer",
+			"registerC",
+			"CategoriesList",
+			"List",
+			"getCustomerInfo",
+			".get",
+			"verify",
+			"getCustomerByLog",
 			"getCustomerOrderBy",
 			"getCustomerOrderB",
 			"district",
@@ -972,19 +1020,7 @@
 			"showName",
 			"this.getDate",
 			"console.",
-			"ORDER BY",
-			"ORDER BY creat",
-			"SELECT",
-			"userid",
-			"this.state.filte",
-			"this.state.filter.get",
-			"'\n",
-			"date",
-			"getOrders",
-			"list",
-			"get",
-			"isAdmin",
-			"returnable"
+			"ORDER BY"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1062,12 +1098,12 @@
 		"show_context": true,
 		"use_buffer2": true,
 		"whole_word": false,
-		"wrap": true
+		"wrap": false
 	},
 	"groups":
 	[
 		{
-			"selected": 8,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -1076,15 +1112,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1608,
+						"buffer_size": 1828,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1367,
-								1367
+								790,
+								790
 							]
 						],
 						"settings":
@@ -1092,14 +1128,102 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 101.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "api/UsersController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6410,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6244,
+								6244
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2545.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "api/ProfilesController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 929,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								475,
+								475
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "api/VerifyUserToken.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 838,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								677,
+								677
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "api/CitiesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1123,11 +1247,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 5,
 					"file": "api/DistrictsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1151,11 +1275,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 6,
 					"file": "api/VerifyCustomerToken.js",
 					"semi_transient": false,
 					"settings":
@@ -1167,8 +1291,8 @@
 						"selection":
 						[
 							[
-								642,
-								642
+								524,
+								511
 							]
 						],
 						"settings":
@@ -1181,11 +1305,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 7,
 					"file": "api/CustomersController.js",
 					"semi_transient": false,
 					"settings":
@@ -1197,8 +1321,8 @@
 						"selection":
 						[
 							[
-								16799,
-								16799
+								13878,
+								13874
 							]
 						],
 						"settings":
@@ -1207,14 +1331,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7915.0,
+						"translation.y": 6180.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 8,
 					"file": "config.js",
 					"semi_transient": false,
 					"settings":
@@ -1238,11 +1362,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 9,
 					"file": "api/OrdersController.js",
 					"semi_transient": false,
 					"settings":
@@ -1264,14 +1388,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7894.0,
+						"translation.y": 4593.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 10,
 					"file": "pagseguro/PagseguroController.js",
 					"semi_transient": false,
 					"settings":
@@ -1283,8 +1407,8 @@
 						"selection":
 						[
 							[
-								6538,
-								6538
+								28,
+								2
 							]
 						],
 						"settings":
@@ -1293,57 +1417,85 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1372.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 11,
 					"file": "db.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 21161,
+						"buffer_size": 22656,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								13186,
-								13186
+								21355,
+								21355
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 4115.0,
+						"translation.y": 7553.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "util.js",
+					"buffer": 12,
+					"file": "api/GetUserProfile.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2674,
+						"buffer_size": 345,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1549,
-								1549
+								155,
+								309
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "util.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2874,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2872,
+								2872
 							]
 						],
 						"settings":
@@ -1351,15 +1503,15 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 0.0,
-						"translation.y": 720.0,
+						"translation.x": 204.0,
+						"translation.y": 990.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 14,
 					"file": "api/SecretQuestionsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1383,11 +1535,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 15,
 					"file": "api/SizesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1411,11 +1563,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 16,
 					"file": "api/CategoriesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1427,8 +1579,8 @@
 						"selection":
 						[
 							[
-								499,
-								499
+								474,
+								276
 							]
 						],
 						"settings":
@@ -1439,11 +1591,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 17,
 					"file": "api/ProductsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1468,7 +1620,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 13,
 					"type": "text"
 				}
 			]
