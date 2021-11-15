@@ -95,8 +95,15 @@ function isValidSecretAnswer(answer) {
 function isValidUsername(username) {
 	if (username == null || username == '')
 		return false;
-	let re = /^[a-zA-Z][A-Za-z0-9_]*$/;
-	return re.test(String(username).toLowerCase());
+	let re = /^[a-z][a-z0-9_]*$/;
+	return re.test(String(username));
 }
 
-module.exports = {isValidCpf , isValidBirthday, isValidPhoneNumber, isValidCep, isValidEmail, isValidPassword, isValidSecretAnswer, isValidUsername};
+function isValidProfileName(name) {
+	if (name == null || name == '')
+		return false;
+	let re = /^[A-Za-z0-9_\ ]+$/;
+	return re.test(String(name));
+}
+
+module.exports = {isValidCpf , isValidBirthday, isValidPhoneNumber, isValidCep, isValidEmail, isValidPassword, isValidSecretAnswer, isValidUsername, isValidProfileName};

@@ -4,15 +4,31 @@
 		"selected_items":
 		[
 			[
+				"profil",
+				"profiles_module"
+			],
+			[
+				"users",
+				"users_module"
+			],
+			[
+				"getProfi",
+				"getProfileInfo"
+			],
+			[
+				"profi",
+				"profiles_module"
+			],
+			[
+				"profiles",
+				"profiles_module"
+			],
+			[
 				"get",
 				"getUserProfile"
 			],
 			[
 				"profile",
-				"profile_id"
-			],
-			[
-				"profi",
 				"profile_id"
 			],
 			[
@@ -498,22 +514,6 @@
 			[
 				"marign-",
 				"margin-bottom\tproperty"
-			],
-			[
-				"error",
-				"errorMessage"
-			],
-			[
-				"margin",
-				"margin-bottom\tproperty"
-			],
-			[
-				"q",
-				"querySelector"
-			],
-			[
-				"co",
-				"color\tproperty"
 			]
 		]
 	},
@@ -532,7 +532,7 @@
 			"file": "api/UsersController.js",
 			"settings":
 			{
-				"buffer_size": 6410,
+				"buffer_size": 6596,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -541,7 +541,7 @@
 			"file": "api/ProfilesController.js",
 			"settings":
 			{
-				"buffer_size": 929,
+				"buffer_size": 3723,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -621,7 +621,7 @@
 			"file": "db.js",
 			"settings":
 			{
-				"buffer_size": 22656,
+				"buffer_size": 24315,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -639,7 +639,7 @@
 			"file": "util.js",
 			"settings":
 			{
-				"buffer_size": 2874,
+				"buffer_size": 3024,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -748,6 +748,7 @@
 	},
 	"file_history":
 	[
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/components/EditProfileDialog.jsx",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/UsersRoute.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/api/GetUserPermissions.js",
 		"/C/Users/to/Desktop/PRV/Programming/erp/src/App.jsx",
@@ -874,8 +875,7 @@
 		"/C/Users/to/Desktop/Patins e Cia/BackEnd/config.js",
 		"/C/Users/to/Desktop/TRASH/lol data analysis/leagueofgraphs.js",
 		"/C/Users/to/Desktop/TRASH/lol data analysis/draftAnalysis1.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/analisePorHistorico.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/dados/Lck2020SpringSeasonDrafts.json"
+		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/analisePorHistorico.js"
 	],
 	"find":
 	{
@@ -893,6 +893,8 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"getUserInfo",
+			"updateUserBy",
 			"cryp",
 			"getUserById",
 			"updateCustomerRec",
@@ -1018,9 +1020,7 @@
 			"photo",
 			"orders",
 			"showName",
-			"this.getDate",
-			"console.",
-			"ORDER BY"
+			"this.getDate"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1098,7 +1098,7 @@
 		"show_context": true,
 		"use_buffer2": true,
 		"whole_word": false,
-		"wrap": false
+		"wrap": true
 	},
 	"groups":
 	[
@@ -1140,15 +1140,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6410,
+						"buffer_size": 6596,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6244,
-								6244
+								4653,
+								4653
 							]
 						],
 						"settings":
@@ -1157,7 +1157,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2545.0,
+						"translation.y": 1842.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -1169,15 +1169,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 929,
+						"buffer_size": 3723,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								475,
-								475
+								2139,
+								2139
 							]
 						],
 						"settings":
@@ -1247,7 +1247,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1334,7 +1334,7 @@
 						"translation.y": 6180.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -1391,7 +1391,7 @@
 						"translation.y": 4593.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1420,7 +1420,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -1429,15 +1429,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 22656,
+						"buffer_size": 24315,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								21355,
-								21355
+								22543,
+								22543
 							]
 						],
 						"settings":
@@ -1447,10 +1447,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 7553.0,
+						"translation.y": 7870.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
@@ -1487,15 +1487,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2874,
+						"buffer_size": 3024,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2872,
-								2872
+								2699,
+								2699
 							]
 						],
 						"settings":
@@ -1503,11 +1503,11 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 204.0,
-						"translation.y": 990.0,
+						"translation.x": 0.0,
+						"translation.y": 1127.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{

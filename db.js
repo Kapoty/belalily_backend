@@ -511,8 +511,8 @@ function updateUserById(userId, username, profile_id, active, callback) {
 	conn.query(`UPDATE users SET username='${mysqlEscape(username)}',profile_id='${mysqlEscape(profile_id)}',
 		active=${Boolean(active)}
 	 WHERE id = '${mysqlEscape(userId)}'`, (error, results, fields) => {
-		if (error) return callback(error.code)
-		if (results.affectedRows == 0) return callback('unexpected error');
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
 		else callback(null, results);
 	});
 }
@@ -535,6 +535,44 @@ function getProfilesList(callback) {
 	});
 }
 
+function addProfile(name, users_module, profiles_module, callback) {
+
+	conn.query(`
+			INSERT INTO profiles(name, users_module, profiles_module)
+			VALUES ('${mysqlEscape(name)}', ${Boolean(users_module)}, ${Boolean(profiles_module)});
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteProfileById(profileId, callback) {
+	conn.query(`DELETE FROM profiles WHERE id = '${mysqlEscape(profileId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no profile matches given id")
+		else callback(null, null);
+	});
+}
+
+function getProfileInfo(profileId, callback) {
+	conn.query(`SELECT name, users_module, profiles_module FROM profiles WHERE id = '${mysqlEscape(profileId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no profile matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateProfileById(profileId, name, users_module, profiles_module, callback) {
+	conn.query(`UPDATE profiles SET name='${mysqlEscape(name)}',users_module=${Boolean(users_module)},
+		profiles_module=${Boolean(profiles_module)}
+	 WHERE id = '${mysqlEscape(profileId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
+		else callback(null, results);
+	});
+}
+
 module.exports = {
 	getCategoriesList,
 	getProductsList, getProductById, getProductInventoryBySize,
@@ -551,5 +589,5 @@ module.exports = {
 	getCouponByCode,
 	getUserByLogin, getUserProfile, getUsersList, getUserForVerify, addUser, deleteUserById, getUserInfo, updateUserById,
 		updateUserPassword,
-	getProfilesList,
+	getProfilesList, addProfile, deleteProfileById, getProfileInfo, updateProfileById,
 }; 	

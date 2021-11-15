@@ -69,7 +69,7 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 	if (!req.userProfile['users_module'])
 		return res.status(500).send({error: 'permission denied'});
 
-	let username = req.body.username;
+	let username = String(req.body.username).toLowerCase();
 	let password = req.body.password;
 	let password_confirm = req.body.password_confirm;
 	let profile_id = req.body.profile_id;
@@ -141,7 +141,7 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 	if (!req.userProfile['users_module'])
 		return res.status(500).send({error: 'permission denied'});
 
-	let username = req.body.username;
+	let username = String(req.body.username).toLowerCase();
 	let profile_id = req.body.profile_id;
 	let active = req.body.active;
 	
@@ -166,8 +166,11 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 	active = Boolean(active);
 
 	db.updateUserById(req.params.id, String(username), profile_id, active, (error, results) => {
-		if (error)
-			return res.status(500).send({error: error});
+		if (error) {
+			if (/(^ER_DUP_ENTRY)[\s\S]+('username'$)/g.test(error.message))
+				return res.status(500).send({error: 'username duplicate'});
+			return res.status(500).send({error: error.code});
+		}
 		res.status(200).send({success: true});
 	});
 });
