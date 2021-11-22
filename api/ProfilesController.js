@@ -31,6 +31,16 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 	let name = req.body.name;
 	let users_module = req.body.users_module;
 	let profiles_module = req.body.profiles_module;
+	let products_module = req.body.products_module;
+	let product_categories_module = req.body.product_categories_module;
+	let sizes_module = req.body.sizes_module;
+	let product_inventory_module = req.body.product_inventory_module;
+	let customers_module = req.body.customers_module;
+	let orders_module = req.body.orders_module;
+	let cities_module = req.body.cities_module;
+	let districts_module = req.body.districts_module;
+	let coupons_module = req.body.coupons_module;
+	let consultants_module = req.body.consultants_module;
 	
 	// validações
 
@@ -47,8 +57,20 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 
 	users_module = Boolean(users_module);
 	profiles_module = Boolean(profiles_module);
+	products_module = Boolean(products_module);
+	product_categories_module = Boolean(product_categories_module);
+	sizes_module = Boolean(sizes_module);
+	product_inventory_module = Boolean(product_inventory_module);
+	customers_module = Boolean(customers_module);
+	orders_module = Boolean(orders_module);
+	cities_module = Boolean(cities_module);
+	districts_module = Boolean(districts_module);
+	coupons_module = Boolean(coupons_module);
+	consultants_module = Boolean(consultants_module);
 
-	db.addProfile(String(name), users_module, profiles_module, (error, results) => {
+	db.addProfile(String(name), users_module, profiles_module, products_module, product_categories_module,
+	sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+	districts_module, coupons_module, consultants_module, (error, results) => {
 
 		if (error) {
 			if (/(^ER_DUP_ENTRY)[\s\S]+('name'$)/g.test(error.message))
@@ -86,6 +108,16 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 	let name = req.body.name;
 	let users_module = req.body.users_module;
 	let profiles_module = req.body.profiles_module;
+	let products_module = req.body.products_module;
+	let product_categories_module = req.body.product_categories_module;
+	let sizes_module = req.body.sizes_module;
+	let product_inventory_module = req.body.product_inventory_module;
+	let customers_module = req.body.customers_module;
+	let orders_module = req.body.orders_module;
+	let cities_module = req.body.cities_module;
+	let districts_module = req.body.districts_module;
+	let coupons_module = req.body.coupons_module;
+	let consultants_module = req.body.consultants_module;
 	
 	// validações
 
@@ -102,8 +134,20 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 
 	users_module = Boolean(users_module);
 	profiles_module = Boolean(profiles_module);
+	products_module = Boolean(products_module);
+	product_categories_module = Boolean(product_categories_module);
+	sizes_module = Boolean(sizes_module);
+	product_inventory_module = Boolean(product_inventory_module);
+	customers_module = Boolean(customers_module);
+	orders_module = Boolean(orders_module);
+	cities_module = Boolean(cities_module);
+	districts_module = Boolean(districts_module);
+	coupons_module = Boolean(coupons_module);
+	consultants_module = Boolean(consultants_module);
 
-	db.updateProfileById(req.params.id, String(name), users_module, profiles_module, (error, results) => {
+	db.updateProfileById(req.params.id, String(name), users_module, profiles_module, products_module, product_categories_module,
+	sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+	districts_module, coupons_module, consultants_module, (error, results) => {
 
 		if (error) {
 			if (/(^ER_DUP_ENTRY)[\s\S]+('name'$)/g.test(error.message))

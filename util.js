@@ -106,4 +106,14 @@ function isValidProfileName(name) {
 	return re.test(String(name));
 }
 
-module.exports = {isValidCpf , isValidBirthday, isValidPhoneNumber, isValidCep, isValidEmail, isValidPassword, isValidSecretAnswer, isValidUsername, isValidProfileName};
+module.exports = {
+	isValidCpf,
+	isValidBirthday,
+	isValidPhoneNumber,
+	isValidCep,
+	isValidEmail,
+	isValidPassword,
+	isValidSecretAnswer,
+	isValidUsername,
+	isValidProfileName,
+};

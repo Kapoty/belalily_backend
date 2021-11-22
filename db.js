@@ -65,6 +65,57 @@ function getCategoriesList(callback) {
 	});
 }
 
+function getCategoriesListForModule(callback) {
+	conn.query(`SELECT id, name, position, visible FROM categories WHERE 1;`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function getCategoriesListAll(callback) {
+	conn.query(`SELECT id, name, position FROM categories WHERE 1;`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addCategory(name, position, callback) {
+
+	conn.query(`
+			INSERT INTO categories(name, visible, position)
+			VALUES ('${mysqlEscape(name)}', 0, '${mysqlEscape(position)}');
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteCategoryById(categoryId, callback) {
+	conn.query(`DELETE FROM categories WHERE id = '${mysqlEscape(categoryId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no category matches given id")
+		else callback(null, null);
+	});
+}
+
+function getCategoryInfo(categoryId, callback) {
+	conn.query(`SELECT name, visible, position FROM categories WHERE id = '${mysqlEscape(categoryId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no category matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateCategoryById(categoryId, name, visible, position, callback) {
+	conn.query(`UPDATE categories SET name='${mysqlEscape(name)}',visible=${Boolean(visible)},position='${mysqlEscape(position)}'
+	 WHERE id = '${mysqlEscape(categoryId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
+		else callback(null, results);
+	});
+}
+
 /* Products */
 
 function getProductsList(callback) {
@@ -100,11 +151,170 @@ function getProductInventoryBySize(productId, sizeId, callback) {
 	});
 }
 
+function getProductsListWithFilter(text, callback) {
+	conn.query(`SELECT id, name, visible FROM products WHERE LOWER(name) LIKE LOWER('%${mysqlEscape(text)}%') OR id LIKE '%${mysqlEscape(text)}%';`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addProduct(name, price, price_in_cash, description, position, callback) {
+	conn.query(`
+			INSERT INTO products(name, price, price_in_cash, description, position, visible)
+			VALUES ('${mysqlEscape(name)}', ${mysqlEscape(price)}, ${mysqlEscape(price_in_cash)},
+			'${mysqlEscape(description)}', ${mysqlEscape(position)}, 0);
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteProductById(productId, callback) {
+	conn.query(`DELETE FROM products WHERE id = '${mysqlEscape(productId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no product matches given id")
+		else callback(null, null);
+	});
+}
+
+function updateProductById(productId, name, price, price_in_cash, description, position, visible, callback) {
+	conn.query(`UPDATE products SET name='${mysqlEscape(name)}',price=${mysqlEscape(price)},price_in_cash='${mysqlEscape(price_in_cash)}',
+		description='${mysqlEscape(description)}',position='${mysqlEscape(position)}',visible=${Boolean(visible)}
+	 WHERE id = '${mysqlEscape(productId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
+		else callback(null, results);
+	});
+}
+
+function getProductCategories(productId, callback) {
+	conn.query(`SELECT * FROM product_categories WHERE product_id = '${mysqlEscape(productId)}';`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addProductCategory(productId, category_id, callback) {
+	conn.query(`
+			INSERT INTO product_categories(product_id, category_id)
+			VALUES ('${mysqlEscape(productId)}', ${mysqlEscape(category_id)});
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteProductCategory(productId, category_id, callback) {
+	conn.query(`DELETE FROM product_categories WHERE product_id = '${mysqlEscape(productId)}' AND category_id = '${mysqlEscape(category_id)}';`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no product's category matches given id")
+		else callback(null, null);
+	});
+}
+
+function getProductSizes(productId, callback) {
+	conn.query(`SELECT * FROM product_sizes WHERE product_id = '${mysqlEscape(productId)}';`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addProductSize(productId, size_id, callback) {
+	conn.query(`
+			INSERT INTO product_sizes(product_id, size_id)
+			VALUES ('${mysqlEscape(productId)}', ${mysqlEscape(size_id)});
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteProductSize(productId, size_id, callback) {
+	conn.query(`DELETE FROM product_sizes WHERE product_id = '${mysqlEscape(productId)}' AND size_id = '${mysqlEscape(size_id)}';`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no product's size matches given id")
+		else callback(null, null);
+	});
+}
+
+function getProductImages(productId, callback) {
+	conn.query(`SELECT img_number FROM products WHERE id = '${mysqlEscape(productId)}';`, (error, results, fields) => {
+		if (error) callback(error.code)
+		if (results.length < 1) return callback("no product matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function existsProductById(productId, callback) {
+	conn.query(`SELECT id FROM products WHERE id = '${mysqlEscape(productId)}';`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no product matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateProductImages(productId, img_number, callback) {
+	conn.query(`UPDATE products SET img_number='${mysqlEscape(img_number)}'
+	 WHERE id = '${mysqlEscape(productId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
+		else callback(null, results);
+	});
+}
+
+
 /* Sizes */
 
 function getSizesList(callback) {
-	conn.query(`SELECT id, name FROM sizes WHERE 1;`, (error, results, fields) => {
+	conn.query(`SELECT id, name FROM sizes WHERE 1 ORDER BY id ASC;`, (error, results, fields) => {
 		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function getSizesListForModule(callback) {
+	conn.query(`SELECT id, name FROM sizes WHERE 1 ORDER BY id ASC;`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addSize(name, callback) {
+
+	conn.query(`
+			INSERT INTO sizes(name)
+			VALUES ('${mysqlEscape(name)}');
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteSizeById(sizeId, callback) {
+	conn.query(`DELETE FROM sizes WHERE id = '${mysqlEscape(sizeId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no size matches given id")
+		else callback(null, null);
+	});
+}
+
+function getSizeInfo(sizeId, callback) {
+	conn.query(`SELECT name FROM sizes WHERE id = '${mysqlEscape(sizeId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no size matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateSizeById(sizeId, name, callback) {
+	conn.query(`UPDATE sizes SET name='${mysqlEscape(name)}'
+	 WHERE id = '${mysqlEscape(sizeId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
 		else callback(null, results);
 	});
 }
@@ -331,11 +541,100 @@ function getCitiesList(callback) {
 	});
 }
 
+function getCitiesListForModule(callback) {
+	conn.query(`SELECT id, name, uf FROM cities WHERE 1 ORDER BY id ASC;`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addCity(name, uf, callback) {
+
+	conn.query(`
+			INSERT INTO cities(name, uf)
+			VALUES ('${mysqlEscape(name)}', '${mysqlEscape(uf)}');
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteCityById(cityId, callback) {
+	conn.query(`DELETE FROM cities WHERE id = '${mysqlEscape(cityId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no city matches given id")
+		else callback(null, null);
+	});
+}
+
+function getCityInfo(cityId, callback) {
+	conn.query(`SELECT name, uf FROM cities WHERE id = '${mysqlEscape(cityId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no city matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateCityById(cityId, name, uf, callback) {
+	conn.query(`UPDATE cities SET name='${mysqlEscape(name)}', uf='${mysqlEscape(uf)}'
+	 WHERE id = '${mysqlEscape(cityId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
+		else callback(null, results);
+	});
+}
+
 /* Districts */
 
 function getDistrictsList(callback) {
 	conn.query(`SELECT * FROM districts WHERE 1;`, (error, results, fields) => {
 		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function getDistrictsListWithFilter(text, callback) {
+	conn.query(`SELECT id, name, city_id FROM districts WHERE LOWER(name) LIKE LOWER('%${mysqlEscape(text)}%') OR id LIKE '%${mysqlEscape(text)}%';`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addDistrict(name, city_id, api_name, shipping_free_available, shipping_normal_price, shipping_express_price, callback) {
+	conn.query(`
+			INSERT INTO districts(name, city_id, api_name, shipping_free_available, shipping_normal_price, shipping_express_price)
+			VALUES ('${mysqlEscape(name)}', '${mysqlEscape(city_id)}', '${mysqlEscape(api_name)}',
+			${Boolean(shipping_free_available)}, ${mysqlEscape(shipping_normal_price)}, ${mysqlEscape(shipping_express_price)});
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteDistrictById(districtId, callback) {
+	conn.query(`DELETE FROM districts WHERE id = '${mysqlEscape(districtId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no district matches given id")
+		else callback(null, null);
+	});
+}
+
+function getDistrictInfo(districtId, callback) {
+	conn.query(`SELECT name, city_id, api_name, shipping_free_available, shipping_normal_price, shipping_express_price FROM districts WHERE id = '${mysqlEscape(districtId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no district matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateDistrictById(districtId, name, city_id, api_name, shipping_free_available, shipping_normal_price, shipping_express_price, callback) {
+	conn.query(`UPDATE districts SET name='${mysqlEscape(name)}', city_id='${mysqlEscape(city_id)}', api_name='${mysqlEscape(api_name)}',
+		shipping_free_available=${Boolean(shipping_free_available)}, shipping_normal_price=${mysqlEscape(shipping_normal_price)}, shipping_express_price=${mysqlEscape(shipping_express_price)}
+	 WHERE id = '${mysqlEscape(districtId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
 		else callback(null, results);
 	});
 }
@@ -396,7 +695,6 @@ function createOrder(customer_id, subtotal, extra_amount, coupon_discount, shipp
 							${typeof coupon_id == 'number' ? coupon_id : null}, '${mysqlEscape(products)}');
 		`, (error, results, fields) => {
 		if (error) {
-			console.log(error);
 			return callback(error.code)
 		}
 		if (results.length < 1) return callback("couldnt create order")
@@ -535,11 +833,17 @@ function getProfilesList(callback) {
 	});
 }
 
-function addProfile(name, users_module, profiles_module, callback) {
+function addProfile(name, users_module, profiles_module, products_module, product_categories_module,
+sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+districts_module, coupons_module, consultants_module, callback) {
 
 	conn.query(`
-			INSERT INTO profiles(name, users_module, profiles_module)
-			VALUES ('${mysqlEscape(name)}', ${Boolean(users_module)}, ${Boolean(profiles_module)});
+			INSERT INTO profiles(name, users_module, profiles_module, products_module, product_categories_module,
+			sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+			districts_module, coupons_module, consultants_module)
+			VALUES ('${mysqlEscape(name)}', ${Boolean(users_module)}, ${Boolean(profiles_module)}, ${Boolean(products_module)}, ${Boolean(product_categories_module)},
+			${Boolean(sizes_module)}, ${Boolean(product_inventory_module)}, ${Boolean(customers_module)}, ${Boolean(orders_module)}, ${Boolean(cities_module)},
+			${Boolean(districts_module)}, ${Boolean(coupons_module)}, ${Boolean(consultants_module)});
 	   `, (error, results, fields) => {
 		if (error) return callback(error)
 		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
@@ -556,16 +860,22 @@ function deleteProfileById(profileId, callback) {
 }
 
 function getProfileInfo(profileId, callback) {
-	conn.query(`SELECT name, users_module, profiles_module FROM profiles WHERE id = '${mysqlEscape(profileId)}'`, (error, results, fields) => {
+	conn.query(`SELECT name, users_module, profiles_module, products_module, product_categories_module,
+	sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+	districts_module, coupons_module, consultants_module FROM profiles WHERE id = '${mysqlEscape(profileId)}'`, (error, results, fields) => {
 		if (error) return callback(error.code)
 		if (results.length < 1) return callback("no profile matches given id")
 		else callback(null, results[0]);
 	});
 }
 
-function updateProfileById(profileId, name, users_module, profiles_module, callback) {
+function updateProfileById(profileId, name, users_module, profiles_module, products_module, product_categories_module,
+sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+districts_module, coupons_module, consultants_module, callback) {
 	conn.query(`UPDATE profiles SET name='${mysqlEscape(name)}',users_module=${Boolean(users_module)},
-		profiles_module=${Boolean(profiles_module)}
+		profiles_module=${Boolean(profiles_module)},products_module=${Boolean(products_module)},product_categories_module=${Boolean(product_categories_module)},
+		sizes_module=${Boolean(sizes_module)},product_inventory_module=${Boolean(product_inventory_module)},customers_module=${Boolean(customers_module)},orders_module=${Boolean(orders_module)},cities_module=${Boolean(cities_module)},
+		districts_module=${Boolean(districts_module)},coupons_module=${Boolean(coupons_module)},consultants_module=${Boolean(consultants_module)}
 	 WHERE id = '${mysqlEscape(profileId)}'`, (error, results, fields) => {
 		if (error) return callback(error)
 		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
@@ -574,11 +884,14 @@ function updateProfileById(profileId, name, users_module, profiles_module, callb
 }
 
 module.exports = {
-	getCategoriesList,
-	getProductsList, getProductById, getProductInventoryBySize,
-	getSizesList,
-	getCitiesList,
-	getDistrictsList,
+	getCategoriesList, getCategoriesListAll, addCategory, getCategoriesListForModule, deleteCategoryById, getCategoryInfo,
+		updateCategoryById,
+	getProductsList, getProductById, getProductInventoryBySize, getProductsListWithFilter, addProduct,
+		deleteProductById, updateProductById, getProductCategories, addProductCategory, deleteProductCategory,
+		getProductSizes, addProductSize, deleteProductSize, getProductImages, existsProductById, updateProductImages,
+	getSizesList, getSizesListForModule, addSize, deleteSizeById, getSizeInfo, updateSizeById,
+	getCitiesList, getCitiesListForModule, addCity, deleteCityById, getCityInfo, updateCityById,
+	getDistrictsList, getDistrictsListWithFilter, addDistrict, deleteDistrictById, getDistrictInfo, updateDistrictById,
 	getSecretQuestionsList,
 	getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
 		updateCustomerPersonalInfo, updateCustomerAddress, getCustomerForUpdatePassword, updateCustomerRecover,

@@ -4,6 +4,66 @@
 		"selected_items":
 		[
 			[
+				"getsize",
+				"getSizesListForModule"
+			],
+			[
+				"img",
+				"img_number"
+			],
+			[
+				"delete",
+				"deleteProductCategory"
+			],
+			[
+				"product_cate",
+				"product_categories"
+			],
+			[
+				"product_cat",
+				"product_categories"
+			],
+			[
+				"categor",
+				"category_id"
+			],
+			[
+				"to",
+				"toFixed"
+			],
+			[
+				"con",
+				"consultants_module"
+			],
+			[
+				"produ",
+				"product_inventory_module"
+			],
+			[
+				"product",
+				"product_inventory_module"
+			],
+			[
+				"cun",
+				"consultants_module"
+			],
+			[
+				"product_inve",
+				"product_inventory_module"
+			],
+			[
+				"sizes",
+				"sizes_module"
+			],
+			[
+				"consulta",
+				"consultants_module"
+			],
+			[
+				"produc_in",
+				"product_inventory_module"
+			],
+			[
 				"profil",
 				"profiles_module"
 			],
@@ -117,10 +177,6 @@
 			],
 			[
 				"produc",
-				"productsUnique"
-			],
-			[
-				"produ",
 				"productsUnique"
 			],
 			[
@@ -458,62 +514,6 @@
 			[
 				"getS",
 				"getSessionId"
-			],
-			[
-				"se",
-				"selectedPaymentMethod"
-			],
-			[
-				"Sele",
-				"selectedPaymentMethod"
-			],
-			[
-				"resp",
-				"response"
-			],
-			[
-				"inpu",
-				"InputLabel"
-			],
-			[
-				"getP",
-				"getPaymentMethodsError"
-			],
-			[
-				"pag",
-				"PagSeguroDirectPayment"
-			],
-			[
-				"on",
-				"onSenderHashReady"
-			],
-			[
-				"PAg",
-				"PagSeguroDirectPayment"
-			],
-			[
-				"getE",
-				"getPaymentMethods"
-			],
-			[
-				"stat",
-				"status"
-			],
-			[
-				"page",
-				"pagseguroToken"
-			],
-			[
-				"pagse",
-				"pagseguroEmail"
-			],
-			[
-				"script",
-				"scriptLoaded"
-			],
-			[
-				"marign-",
-				"margin-bottom\tproperty"
 			]
 		]
 	},
@@ -541,7 +541,16 @@
 			"file": "api/ProfilesController.js",
 			"settings":
 			{
-				"buffer_size": 3723,
+				"buffer_size": 6107,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/ProductsController.js",
+			"settings":
+			{
+				"buffer_size": 10215,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -621,7 +630,7 @@
 			"file": "db.js",
 			"settings":
 			{
-				"buffer_size": 24315,
+				"buffer_size": 34558,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -639,7 +648,7 @@
 			"file": "util.js",
 			"settings":
 			{
-				"buffer_size": 3024,
+				"buffer_size": 3035,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -656,7 +665,7 @@
 			"file": "api/SizesController.js",
 			"settings":
 			{
-				"buffer_size": 489,
+				"buffer_size": 3073,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -665,16 +674,7 @@
 			"file": "api/CategoriesController.js",
 			"settings":
 			{
-				"buffer_size": 499,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "api/ProductsController.js",
-			"settings":
-			{
-				"buffer_size": 963,
+				"buffer_size": 3846,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -748,6 +748,9 @@
 	},
 	"file_history":
 	[
+		"/C/Users/to/Desktop/Patins e Cia/BackEnd/api/ApiController.js",
+		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/CustomerRoute.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/routes/ProductsRoute.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/erp/src/components/EditProfileDialog.jsx",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/UsersRoute.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/api/GetUserPermissions.js",
@@ -766,7 +769,6 @@
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/ProfileDialog.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/LoginDialog.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/site/src/data/CatalogData.json",
-		"/C/Users/to/Desktop/Patins e Cia/BackEnd/api/ApiController.js",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/ProductDialog.jsx",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/components/AddOrderComponent.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/api/VerifyCustomerToken.js",
@@ -859,7 +861,6 @@
 		"/C/www/axie/general.css",
 		"/C/Users/to/Desktop/AxieEnergyCalculator/assets/css/general.css",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/package-lock.json",
-		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/CustomerRoute.jsx",
 		"/C/Users/to/Desktop/Patins e Cia/BackEnd/package.json",
 		"/C/Users/to/Desktop/a.js",
 		"/C/Users/to/Desktop/TRASH/lol data analysis/matchhistory.js",
@@ -874,8 +875,7 @@
 		"/C/Users/to/Desktop/Patins e Cia/BackEnd/frontend/app.df82f621.js",
 		"/C/Users/to/Desktop/Patins e Cia/BackEnd/config.js",
 		"/C/Users/to/Desktop/TRASH/lol data analysis/leagueofgraphs.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/draftAnalysis1.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/Analise Por Historico League Pedia/analisePorHistorico.js"
+		"/C/Users/to/Desktop/TRASH/lol data analysis/draftAnalysis1.js"
 	],
 	"find":
 	{
@@ -893,6 +893,42 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"getSiz",
+			"updateCateg",
+			"getSiz",
+			"getCategoryInfo",
+			"getSiz",
+			"deleteCateg",
+			"getSiz",
+			"addCatego",
+			"/* Siz",
+			"addCate",
+			"getCategor",
+			"updateProfile",
+			"getCate",
+			"getProfileInfo",
+			"getCategoriesL",
+			"getCategoriesListComplete",
+			"getCateg",
+			"deleteProfileBy",
+			"getCategories",
+			"/* Cate",
+			"addProfile",
+			"updateProductImages",
+			"exists",
+			"getProductById",
+			"addProductIm",
+			"addProductI",
+			"addProductIma",
+			"addProductCategor",
+			"console",
+			"addProduct",
+			"updateProfileBy",
+			"addProduct",
+			"addP",
+			"getProductsList",
+			"getProductList",
+			"roducts_module, product_categories_module,\nsizes_module, product_inventory_module, customers_module, orders_module, cities_module,\ndistricts_module, coupons_module, consultants_module",
 			"getUserInfo",
 			"updateUserBy",
 			"cryp",
@@ -984,45 +1020,9 @@
 			"console.log",
 			"rep",
 			"reptile",
-			"rep",
-			"carrinho",
-			"defaultSo",
-			"bag[i].items",
-			"this.state.bag",
-			"foc",
-			"focus",
-			"auto",
-			"autoFo",
-			"Bela Lily",
-			"Bela",
-			"Pedro",
-			"\" ",
-			"reset",
-			"httpGetAsyn",
-			"httpgetAs",
-			"No magnet",
-			"No link",
-			"mainWin",
-			"calculateExtra",
-			"getDateDiff",
-			"calculate",
-			"getOrder",
-			"calculateExtra",
-			"props",
-			"calculateExtra",
-			"method",
-			"byuser",
-			"returnable",
-			"addOrder",
-			"change",
-			"photo",
-			"file",
-			"photo",
-			"orders",
-			"showName",
-			"this.getDate"
+			"rep"
 		],
-		"highlight": true,
+		"highlight": false,
 		"in_selection": false,
 		"preserve_case": false,
 		"regex": false,
@@ -1103,7 +1103,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 16,
 			"sheets":
 			[
 				{
@@ -1131,7 +1131,7 @@
 						"translation.y": 101.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
@@ -1147,8 +1147,8 @@
 						"selection":
 						[
 							[
-								4653,
-								4653
+								2355,
+								2660
 							]
 						],
 						"settings":
@@ -1157,10 +1157,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1842.0,
+						"translation.y": 934.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -1169,15 +1169,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3723,
+						"buffer_size": 6107,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2139,
-								2139
+								3832,
+								6081
 							]
 						],
 						"settings":
@@ -1186,14 +1186,43 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1840.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
 					"buffer": 3,
+					"file": "api/ProductsController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10215,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2690,
+								2690
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1037.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
 					"file": "api/VerifyUserToken.js",
 					"semi_transient": false,
 					"settings":
@@ -1219,11 +1248,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "api/CitiesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1247,11 +1276,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "api/DistrictsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1275,11 +1304,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "api/VerifyCustomerToken.js",
 					"semi_transient": false,
 					"settings":
@@ -1305,11 +1334,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "api/CustomersController.js",
 					"semi_transient": false,
 					"settings":
@@ -1331,14 +1360,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 6180.0,
+						"translation.y": 2459.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 9,
 					"file": "config.js",
 					"semi_transient": false,
 					"settings":
@@ -1362,11 +1391,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 10,
 					"file": "api/OrdersController.js",
 					"semi_transient": false,
 					"settings":
@@ -1391,11 +1420,11 @@
 						"translation.y": 4593.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 11,
 					"file": "pagseguro/PagseguroController.js",
 					"semi_transient": false,
 					"settings":
@@ -1420,24 +1449,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 12,
 					"file": "db.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 24315,
+						"buffer_size": 34558,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								22543,
-								22543
+								11732,
+								11732
 							]
 						],
 						"settings":
@@ -1446,15 +1475,15 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 0.0,
-						"translation.y": 7870.0,
+						"translation.x": 13.0,
+						"translation.y": 4360.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 13,
 					"file": "api/GetUserProfile.js",
 					"semi_transient": false,
 					"settings":
@@ -1478,24 +1507,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 14,
 					"file": "util.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3024,
+						"buffer_size": 3035,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2699,
-								2699
+								3032,
+								3032
 							]
 						],
 						"settings":
@@ -1504,14 +1533,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1127.0,
+						"translation.y": 1270.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 15,
 					"file": "api/SecretQuestionsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1535,52 +1564,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
-					"type": "text"
-				},
-				{
-					"buffer": 15,
-					"file": "api/SizesController.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 489,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								459,
-								314
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 16,
-					"file": "api/CategoriesController.js",
+					"file": "api/SizesController.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 499,
+						"buffer_size": 3073,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								474,
-								276
+								2728,
+								2728
 							]
 						],
 						"settings":
@@ -1588,39 +1589,38 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 805.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 17,
-					"file": "api/ProductsController.js",
+					"file": "api/CategoriesController.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 963,
+						"buffer_size": 3846,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								26,
-								26
+								3820,
+								2810
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1365.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]
