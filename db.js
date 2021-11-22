@@ -744,6 +744,46 @@ function getCouponByCode(code, callback) {
 	});
 }
 
+function addCoupon(code, type, value, minimum_amount, max_uses, max_units, consultant_id, callback) {
+
+	conn.query(`
+			INSERT INTO coupons(code, type, value, minimum_amount, max_uses, max_units, consultant_id)
+			VALUES ('${mysqlEscape(code)}', '${mysqlEscape(type)}', ${mysqlEscape(value)}, ${mysqlEscape(minimum_amount)},
+			${mysqlEscape(max_uses)}, ${mysqlEscape(max_units)}, ${(consultant_id == null) ? 'null' : mysqlEscape(consultant_id)});
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteCouponById(couponId, callback) {
+	conn.query(`DELETE FROM coupons WHERE id = '${mysqlEscape(couponId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no coupon matches given id")
+		else callback(null, null);
+	});
+}
+
+function getCouponInfo(couponId, callback) {
+	conn.query(`SELECT code, type, value, minimum_amount, max_uses, max_units, consultant_id FROM coupons WHERE id = '${mysqlEscape(couponId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no coupon matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateCouponById(couponId, code, type, value, minimum_amount, max_uses, max_units, consultant_id, callback) {
+	conn.query(`UPDATE coupons SET code='${mysqlEscape(code)}', type='${mysqlEscape(type)}', value=${mysqlEscape(value)},
+		 minimum_amount=${mysqlEscape(minimum_amount)}, max_uses=${mysqlEscape(max_uses)}, max_units=${mysqlEscape(max_units)},
+		 consultant_id=${(consultant_id == null) ? 'null' : mysqlEscape(consultant_id)}
+	 WHERE id = '${mysqlEscape(couponId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
+		else callback(null, results);
+	});
+}
+
 /* Users */
 
 function getUserByLogin(login, callback) {
@@ -883,6 +923,24 @@ districts_module, coupons_module, consultants_module, callback) {
 	});
 }
 
+/* Coupons */
+
+function getCouponsListForModule(callback) {
+	conn.query(`SELECT id, code, type, value FROM coupons WHERE 1 ORDER BY id ASC;`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+/* Consultants */
+
+function getConsultantsListForModule(callback) {
+	conn.query(`SELECT id, name, code FROM consultants WHERE 1 ORDER BY id ASC;`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
 module.exports = {
 	getCategoriesList, getCategoriesListAll, addCategory, getCategoriesListForModule, deleteCategoryById, getCategoryInfo,
 		updateCategoryById,
@@ -903,4 +961,6 @@ module.exports = {
 	getUserByLogin, getUserProfile, getUsersList, getUserForVerify, addUser, deleteUserById, getUserInfo, updateUserById,
 		updateUserPassword,
 	getProfilesList, addProfile, deleteProfileById, getProfileInfo, updateProfileById,
+	getCouponsListForModule, addCoupon, deleteCouponById, getCouponInfo, updateCouponById,
+	getConsultantsListForModule,
 }; 	

@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"max",
+				"max_units"
+			],
+			[
+				"consultant",
+				"consultant_id"
+			],
+			[
+				"max_",
+				"max_units"
+			],
+			[
+				"shi",
+				"shipping_free_available"
+			],
+			[
 				"getsize",
 				"getSizesListForModule"
 			],
@@ -110,10 +126,6 @@
 			[
 				"req",
 				"require"
-			],
-			[
-				"shi",
-				"shipping_street"
 			],
 			[
 				"disc",
@@ -502,18 +514,6 @@
 			[
 				"cardB",
 				"cardBrand"
-			],
-			[
-				"boleto",
-				"boletoLink"
-			],
-			[
-				"getSe",
-				"getSessionId"
-			],
-			[
-				"getS",
-				"getSessionId"
 			]
 		]
 	},
@@ -523,7 +523,7 @@
 			"file": "app.js",
 			"settings":
 			{
-				"buffer_size": 1828,
+				"buffer_size": 2068,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -550,7 +550,7 @@
 			"file": "api/ProductsController.js",
 			"settings":
 			{
-				"buffer_size": 10215,
+				"buffer_size": 10352,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -568,7 +568,7 @@
 			"file": "api/CitiesController.js",
 			"settings":
 			{
-				"buffer_size": 491,
+				"buffer_size": 3565,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -577,7 +577,7 @@
 			"file": "api/DistrictsController.js",
 			"settings":
 			{
-				"buffer_size": 497,
+				"buffer_size": 5746,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -630,9 +630,18 @@
 			"file": "db.js",
 			"settings":
 			{
-				"buffer_size": 34558,
+				"buffer_size": 41340,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "api/ConsultantsController.js",
+			"settings":
+			{
+				"buffer_size": 801,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
 			}
 		},
 		{
@@ -666,6 +675,15 @@
 			"settings":
 			{
 				"buffer_size": 3073,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/CouponsController.js",
+			"settings":
+			{
+				"buffer_size": 5478,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -748,6 +766,10 @@
 	},
 	"file_history":
 	[
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/components/EditCouponDialog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/routes/CouponsRoute.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/routes/DistrictsRoute.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/components/AddCityDialog.jsx",
 		"/C/Users/to/Desktop/Patins e Cia/BackEnd/api/ApiController.js",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/CustomerRoute.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/erp/src/routes/ProductsRoute.jsx",
@@ -871,11 +893,7 @@
 		"/C/Users/to/Desktop/new keyboard/index.js",
 		"/C/Users/to/Desktop/lolalytics/server.js",
 		"/C/Users/to/Desktop/close.js",
-		"/C/Users/to/Desktop/TRASH/Omegle.js",
-		"/C/Users/to/Desktop/Patins e Cia/BackEnd/frontend/app.df82f621.js",
-		"/C/Users/to/Desktop/Patins e Cia/BackEnd/config.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/leagueofgraphs.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/draftAnalysis1.js"
+		"/C/Users/to/Desktop/TRASH/Omegle.js"
 	],
 	"find":
 	{
@@ -893,6 +911,53 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"getCou",
+			"updateSizeBy",
+			"getCou",
+			"getSizeInf",
+			"getCou",
+			"deleteSizeBy",
+			"addCo",
+			"getCou",
+			"addSize",
+			"getSizesListFor",
+			"console.log",
+			"updateCity",
+			"getDis",
+			"getCityInfo",
+			"addDis",
+			"deleteCity",
+			"addUser",
+			"addProduct",
+			"addDistrict",
+			"WithFilter",
+			"with-filter",
+			"addDistrict",
+			"addProduct",
+			"addDistr",
+			"Boolean",
+			"getDis",
+			"addProduct",
+			"with-filter",
+			"Dis",
+			"getProductsLis",
+			"getProducts",
+			"getProductList",
+			"with",
+			"addCity",
+			"updateCityById",
+			"updateCity",
+			"updateSize",
+			"addCit",
+			"getSizeInfo",
+			"getCities",
+			"getCity",
+			"deleteSize",
+			"getCi",
+			"addSize",
+			"getCi",
+			"getSizesList",
+			"getSizeList",
 			"getSiz",
 			"updateCateg",
 			"getSiz",
@@ -973,54 +1038,7 @@
 			"getCouponByCode",
 			"coupon_id",
 			"shipping_cost",
-			"DISPONIVEL",
-			"getProductInven",
-			"Inventory",
-			"insertId",
-			"getDistrict",
-			"LEFT JOIN",
-			"req.customerId",
-			"code",
-			"r_products_units",
-			"percent",
-			"status",
-			"values",
-			"productsUnits",
-			"desired_quantity",
-			"desiredQ",
-			"invalid products 3",
-			"/me/",
-			"districtws",
-			"allow_ema",
-			"allow_email",
-			"allow",
-			"compareS",
-			"Transition",
-			"console.log",
-			"code",
-			"whats",
-			"var",
-			"LEFT JOIN",
-			"join",
-			"left",
-			"join",
-			"console.log",
-			"senderHash",
-			"TextField",
-			"errors",
-			"Butt",
-			"jwt",
-			"fs",
-			"Body",
-			"uuidv",
-			"uuidv4",
-			"general",
-			"stitch",
-			"desc",
-			"console.log",
-			"rep",
-			"reptile",
-			"rep"
+			"DISPONIVEL"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1103,7 +1121,7 @@
 	"groups":
 	[
 		{
-			"selected": 16,
+			"selected": 12,
 			"sheets":
 			[
 				{
@@ -1112,15 +1130,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1828,
+						"buffer_size": 2068,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								790,
-								790
+								975,
+								975
 							]
 						],
 						"settings":
@@ -1128,10 +1146,10 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 101.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1147,8 +1165,8 @@
 						"selection":
 						[
 							[
-								2355,
-								2660
+								3284,
+								3153
 							]
 						],
 						"settings":
@@ -1157,10 +1175,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 934.0,
+						"translation.y": 1390.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -1176,8 +1194,8 @@
 						"selection":
 						[
 							[
-								3832,
-								6081
+								4999,
+								4999
 							]
 						],
 						"settings":
@@ -1186,10 +1204,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1840.0,
+						"translation.y": 731.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
@@ -1198,15 +1216,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10215,
+						"buffer_size": 10352,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2690,
-								2690
+								2576,
+								2551
 							]
 						],
 						"settings":
@@ -1215,10 +1233,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1037.0,
+						"translation.y": 995.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1248,7 +1266,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
@@ -1257,15 +1275,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 491,
+						"buffer_size": 3565,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								465,
-								465
+								2576,
+								2239
 							]
 						],
 						"settings":
@@ -1273,10 +1291,10 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 855.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -1285,15 +1303,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 497,
+						"buffer_size": 5746,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								416,
-								416
+								5708,
+								5708
 							]
 						],
 						"settings":
@@ -1301,10 +1319,10 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2065.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -1334,7 +1352,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -1360,10 +1378,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2459.0,
+						"translation.y": 336.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
@@ -1391,7 +1409,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
@@ -1420,7 +1438,7 @@
 						"translation.y": 4593.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -1449,7 +1467,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -1458,15 +1476,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 34558,
+						"buffer_size": 41340,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								11732,
-								11732
+								32244,
+								32244
 							]
 						],
 						"settings":
@@ -1475,15 +1493,43 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": false
 						},
-						"translation.x": 13.0,
-						"translation.y": 4360.0,
+						"translation.x": 27.0,
+						"translation.y": 11300.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
 					"buffer": 13,
+					"file": "api/ConsultantsController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 801,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								754,
+								754
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
 					"file": "api/GetUserProfile.js",
 					"semi_transient": false,
 					"settings":
@@ -1507,11 +1553,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 15,
 					"file": "util.js",
 					"semi_transient": false,
 					"settings":
@@ -1533,14 +1579,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1270.0,
+						"translation.y": 1196.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 16,
 					"file": "api/SecretQuestionsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1564,11 +1610,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 17,
 					"file": "api/SizesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1580,23 +1626,53 @@
 						"selection":
 						[
 							[
-								2728,
-								2728
+								2307,
+								1971
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 805.0,
+						"translation.y": 585.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 18,
+					"file": "api/CouponsController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5478,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5096,
+								5096
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2115.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 19,
 					"file": "api/CategoriesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1614,13 +1690,14 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 1365.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 15,
 					"type": "text"
 				}
 			]
