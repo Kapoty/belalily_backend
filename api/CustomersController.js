@@ -8,7 +8,9 @@ const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
 const bcrypt = require('bcryptjs');
 const config = require('../config'); 
-const VerifyCustomerToken = require('./VerifyCustomerToken')
+const VerifyCustomerToken = require('./VerifyCustomerToken');
+const VerifyUserToken = require('./VerifyUserToken');
+const GetUserProfile = require('./GetUserProfile');
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json({limit: '50mb'}));
@@ -548,6 +550,30 @@ router.get('/me/orders/:id', VerifyCustomerToken, function(req, res) {
 		if (error)
 			return res.status(500).send({error: error});
 		res.status(200).send({order: results});
+	});
+});
+
+router.post('/with-filter', VerifyUserToken, GetUserProfile, function(req, res) {
+
+	if (!req.userProfile['customers_module'])
+		return res.status(500).send({error: 'permission denied'});
+
+	let text = String(req.body.text);
+
+	db.getCustomersListWithFilter(text, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({customers: results});
+	});
+});
+
+router.get('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!req.userProfile['customers_module'])
+		return res.status(500).send({error: 'permission denied'});
+	db.getCustomerInfoForModule(req.params.id ,(error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({customer: results});
 	});
 });
 

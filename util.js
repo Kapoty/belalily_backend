@@ -106,6 +106,20 @@ function isValidProfileName(name) {
 	return re.test(String(name));
 }
 
+function isValidCouponCode(code) {
+	if (code == null || code == '')
+		return false;
+	let re = /^[A-Za-z0-9]+$/;
+	return re.test(String(code));
+}
+
+function isValidConsultantCode(code) {
+	if (code == null || code == '')
+		return false;
+	let re = /^[A-Za-z0-9]+$/;
+	return re.test(String(code));
+}
+
 module.exports = {
 	isValidCpf,
 	isValidBirthday,
@@ -116,4 +130,6 @@ module.exports = {
 	isValidSecretAnswer,
 	isValidUsername,
 	isValidProfileName,
+	isValidCouponCode,
+	isValidConsultantCode,
 };

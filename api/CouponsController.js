@@ -41,6 +41,8 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 		return res.status(500).send({error:"code too short"});
 	if (String(code).length > 20)
 		return res.status(500).send({error:"code too long"});
+	if (!util.isValidCouponCode(code))
+		return res.status(500).send({error:"code invalid"});
 
 	//type
 
@@ -123,6 +125,8 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 		return res.status(500).send({error:"code too short"});
 	if (String(code).length > 20)
 		return res.status(500).send({error:"code too long"});
+	if (!util.isValidCouponCode(code))
+		return res.status(500).send({error:"code invalid"});
 
 	//type
 

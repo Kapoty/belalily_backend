@@ -532,6 +532,30 @@ function getCustomerOrderById(customerId, orderId, callback) {
 	});
 }
 
+function getCustomersListWithFilter(text, callback) {
+	conn.query(`SELECT id, name, cpf FROM customers WHERE LOWER(name) LIKE LOWER('%${mysqlEscape(text)}%') OR LOWER(cpf) LIKE LOWER('%${mysqlEscape(text)}%') OR id LIKE '%${mysqlEscape(text)}%';`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function getCustomerInfoForModule(customerId, callback) {
+	conn.query(`
+			SELECT customers.name, desired_name, cpf, birthday, email, whatsapp, mobile,
+			district_id, districts.name AS district_name, districts.city_id, cities.name AS city_name, cities.uf AS uf, cep, street, complement, number, address_observation, secret_question_id,
+			secret_questions.question AS secret_question, allow_email, allow_whatsapp
+			FROM customers
+			LEFT JOIN secret_questions ON secret_questions.id = secret_question_id
+			LEFT JOIN districts ON districts.id = district_id
+			LEFT JOIN cities ON cities.id = districts.city_id
+			WHERE customers.id = ${mysqlEscape(customerId)};
+			`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no customer matches given id")
+		else callback(null, results[0]);
+	});
+}
+
 /* Cities */
 
 function getCitiesList(callback) {
@@ -941,6 +965,43 @@ function getConsultantsListForModule(callback) {
 	});
 }
 
+function addConsultant(name, code, callback) {
+
+	conn.query(`
+			INSERT INTO consultants(name, code)
+			VALUES ('${mysqlEscape(name)}', '${mysqlEscape(code)}');
+	   `, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
+		else callback(null, results.insertId);
+	});
+}
+
+function deleteConsultantById(consultantId, callback) {
+	conn.query(`DELETE FROM consultants WHERE id = '${mysqlEscape(consultantId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no consultant matches given id")
+		else callback(null, null);
+	});
+}
+
+function getConsultantInfo(consultantId, callback) {
+	conn.query(`SELECT name, code FROM consultants WHERE id = '${mysqlEscape(consultantId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no consultant matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateConsultantById(consultantId, name, code, callback) {
+	conn.query(`UPDATE consultants SET name='${mysqlEscape(name)}', code='${mysqlEscape(code)}'
+	 WHERE id = '${mysqlEscape(consultantId)}'`, (error, results, fields) => {
+		if (error) return callback(error)
+		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
+		else callback(null, results);
+	});
+}
+
 module.exports = {
 	getCategoriesList, getCategoriesListAll, addCategory, getCategoriesListForModule, deleteCategoryById, getCategoryInfo,
 		updateCategoryById,
@@ -954,7 +1015,7 @@ module.exports = {
 	getCustomerByLogin, getCustomerInfo, registerCustomer, getCustomerForResetPassword, resetCustomerPassword,
 		updateCustomerPersonalInfo, updateCustomerAddress, getCustomerForUpdatePassword, updateCustomerRecover,
 		updateCustomerNotification, getCustomerWishlist, deleteProductFromCustomerWishlist, addProductToCustomerWishlist,
-		getCustomerOrdersList, getCustomerOrderById,
+		getCustomerOrdersList, getCustomerOrderById, getCustomersListWithFilter, getCustomerInfoForModule,
 	getProductsForPreOrder, getDistrictForPreOrder, getCustomerInfoForOrder, createOrder, deleteOrder, startOrderByBoleto,
 		startOrderByCredit,
 	getCouponByCode,
@@ -962,5 +1023,5 @@ module.exports = {
 		updateUserPassword,
 	getProfilesList, addProfile, deleteProfileById, getProfileInfo, updateProfileById,
 	getCouponsListForModule, addCoupon, deleteCouponById, getCouponInfo, updateCouponById,
-	getConsultantsListForModule,
+	getConsultantsListForModule, addConsultant, deleteConsultantById, getConsultantInfo, updateConsultantById,
 }; 	
