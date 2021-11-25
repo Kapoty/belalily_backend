@@ -346,5 +346,82 @@ router.delete('/:id/images/:image_id', VerifyUserToken, GetUserProfile, function
 
 })
 
+router.get('/:id/inventory/module', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!(req.userProfile['product_inventory_module']))
+		return res.status(500).send({error: 'permission denied'});
+	db.getProductInventoryListForModule(req.params.id, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({inventory: results});
+	});
+});
+
+router.post('/:id/inventory/', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!req.userProfile['product_inventory_module'])
+		return res.status(500).send({error: 'permission denied'});
+
+	let status = String(req.body.status);
+	let reason = req.body.reason;
+
+	if (typeof req.body.size_id !== 'number' || req.body.size_id < 0)
+		return res.status(500).send({error: 'size invalid'});
+
+	if (['AVAILABLE', 'UNAVAILABLE'].indexOf(status) == -1)
+		return res.status(500).send({error: 'status invalid'});
+
+	if (reason == null || String(reason).length < 1)
+		return res.status(500).send({error:"reason too short"});
+	if (String(reason).length > 100)
+		return res.status(500).send({error:"reason too long"});
+
+	db.addProductInventory(req.params.id, req.body.size_id, status, reason, req.userId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error.code});
+		res.status(200).send({inventoryId: results.product_inventory_id});
+	});
+
+});
+
+router.get('/inventory/:id/events', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!(req.userProfile['product_inventory_module']))
+		return res.status(500).send({error: 'permission denied'});
+	db.getProductInventoryEvents(req.params.id, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({events: results});
+	});
+});
+
+router.get('/inventory/:id/', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!(req.userProfile['product_inventory_module']))
+		return res.status(500).send({error: 'permission denied'});
+	db.getProductInventoryInfo(req.params.id, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({productInventory: results});
+	});
+});
+
+router.patch('/inventory/:id/update-status', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!(req.userProfile['product_inventory_module']))
+		return res.status(500).send({error: 'permission denied'});
+
+	let status = String(req.body.status);
+	let reason = req.body.reason;
+
+	if (['AVAILABLE', 'UNAVAILABLE'].indexOf(status) == -1)
+		return res.status(500).send({error: 'status invalid'});
+
+	if (reason == null || String(reason).length < 1)
+		return res.status(500).send({error:"reason too short"});
+	if (String(reason).length > 100)
+		return res.status(500).send({error:"reason too long"});
+
+	db.updateProductInventoryStatus(req.params.id, status, reason, req.userId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({success: true});
+	});
+});
 
 module.exports = router;

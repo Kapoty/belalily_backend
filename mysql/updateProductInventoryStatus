@@ -1,0 +1,36 @@
+DROP PROCEDURE IF EXISTS updateProductInventoryStatus;
+
+DELIMITER $$
+
+CREATE PROCEDURE updateProductInventoryStatus ( product_inventory_id INT, status ENUM('AVAILABLE', 'UNAVAILABLE'), reason VARCHAR(100), user_id INT)
+
+BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE current_status ENUM('AVAILABLE', 'UNAVAILABLE', 'IN_ORDER', '') DEFAULT '';
+    
+    START TRANSACTION;
+    
+    SELECT product_inventory.status INTO current_status FROM product_inventory WHERE id = product_inventory_id;
+
+    IF ((current_status = 'AVAILABLE' OR current_status = 'UNAVAILABLE') AND current_status != status) THEN
+    	UPDATE `product_inventory` SET `status` = status WHERE id = product_inventory_id;
+
+	    INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`, `user_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', current_status, '\nPara: ', status, '\nMotivo: ', reason), product_inventory_id, user_id);
+
+	    SET success = TRUE; 
+	    COMMIT;
+    ELSE
+    	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'product_inventory not found';
+        ROLLBACK;
+    END IF;
+
+    
+    SELECT success, current_status;
+
+END; $$
+
+DELIMITER ;
+
+CALL updateProductInventoryStatus(1, 'AVAILABLE', 'teste', 1);

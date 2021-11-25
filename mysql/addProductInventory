@@ -1,0 +1,27 @@
+DROP PROCEDURE IF EXISTS addProductInventory;
+
+DELIMITER $$
+
+CREATE PROCEDURE addProductInventory ( product_id INT, size_id INT, status ENUM('AVAILABLE', 'UNAVAILABLE'), reason VARCHAR(100), user_id INT)
+
+BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE product_inventory_id INT DEFAULT 0;
+    
+    START TRANSACTION;
+        
+    INSERT INTO `product_inventory`(`product_id`, `size_id`, `status`) VALUES (product_id, size_id, status);
+
+    SET product_inventory_id = LAST_INSERT_ID();
+
+    INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`, `user_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('Estado inicial: ', status, '\nMotivo: ', reason), product_inventory_id, user_id);
+
+    SET success = TRUE; 
+    COMMIT;
+    
+    SELECT success, product_inventory_id;
+
+END; $$
+
+DELIMITER ;

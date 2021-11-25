@@ -265,6 +265,57 @@ function updateProductImages(productId, img_number, callback) {
 	});
 }
 
+function getProductInventoryListForModule(productId, callback) {
+	conn.query(`SELECT id, size_id, order_id, status FROM product_inventory WHERE product_id = '${mysqlEscape(productId)}' ORDER BY status, size_id, id ASC;`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addProductInventory(productId, size_id, status, reason, userId, callback) {
+	conn.query(`
+			CALL addProductInventory('${mysqlEscape(productId)}', '${mysqlEscape(size_id)}', '${mysqlEscape(status)}', '${mysqlEscape(reason)}', '${mysqlEscape(userId)}');
+	   `, (error, results, fields) => {
+		if (error) {
+			return callback(error.code)
+		}
+		if (results.length < 1) return callback("couldnt add product_inventory")
+		else callback(null, results[0][0]);
+	});
+}
+
+function getProductInventoryEvents(productInventoryId, callback) {
+	conn.query(`
+		SELECT product_inventory_events.*, users.username AS user_username
+		FROM product_inventory_events
+		LEFT JOIN users ON users.id = product_inventory_events.user_id
+		WHERE product_inventory_id = '${mysqlEscape(productInventoryId)}'
+		ORDER BY date DESC;
+		`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function getProductInventoryInfo(productInventoryId, callback) {
+	conn.query(`SELECT status FROM product_inventory WHERE id = '${mysqlEscape(productInventoryId)}'`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no product_inventory matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function updateProductInventoryStatus(productInventoryId, status, reason, userId, callback) {
+	conn.query(`
+			CALL updateProductInventoryStatus('${mysqlEscape(productInventoryId)}', '${mysqlEscape(status)}', '${mysqlEscape(reason)}', '${mysqlEscape(userId)}');
+	   `, (error, results, fields) => {
+		if (error) {
+			return callback(error.code)
+		}
+		if (results.length < 1 || !results[0][0].success) return callback("couldnt update product_inventory status")
+		else callback(null, results[0][0]);
+	});
+}
 
 /* Sizes */
 
@@ -1008,6 +1059,8 @@ module.exports = {
 	getProductsList, getProductById, getProductInventoryBySize, getProductsListWithFilter, addProduct,
 		deleteProductById, updateProductById, getProductCategories, addProductCategory, deleteProductCategory,
 		getProductSizes, addProductSize, deleteProductSize, getProductImages, existsProductById, updateProductImages,
+		getProductInventoryListForModule, addProductInventory, getProductInventoryEvents, getProductInventoryInfo,
+		updateProductInventoryStatus,
 	getSizesList, getSizesListForModule, addSize, deleteSizeById, getSizeInfo, updateSizeById,
 	getCitiesList, getCitiesListForModule, addCity, deleteCityById, getCityInfo, updateCityById,
 	getDistrictsList, getDistrictsListWithFilter, addDistrict, deleteDistrictById, getDistrictInfo, updateDistrictById,
