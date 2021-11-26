@@ -27,7 +27,7 @@ BEGIN
     END IF;
 
     
-    SELECT success, current_status;
+    SELECT success;
 
 END; $$
 

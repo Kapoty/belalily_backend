@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: 22-Nov-2021 às 19:43
+-- Generation Time: 26-Nov-2021 às 07:07
 -- Versão do servidor: 5.7.17
 -- PHP Version: 5.6.30
 
@@ -26,10 +26,35 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `cancelOrder` (`order_id` INT)  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addProductInventory` (`product_id` INT, `size_id` INT, `status` ENUM('AVAILABLE','UNAVAILABLE'), `reason` VARCHAR(100), `user_id` INT)  BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE product_inventory_id INT DEFAULT 0;
+    
+    START TRANSACTION;
+        
+    INSERT INTO `product_inventory`(`product_id`, `size_id`, `status`) VALUES (product_id, size_id, status);
+
+    SET product_inventory_id = LAST_INSERT_ID();
+
+    INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`, `user_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('Estado inicial: ', status, '\nMotivo: ', reason), product_inventory_id, user_id);
+
+    SET success = TRUE; 
+    COMMIT;
+    
+    SELECT success, product_inventory_id;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cancelOrder` (`order_id` INT, `reason` VARCHAR(100), `user_id` INT)  BEGIN
 
 	DECLARE success BOOLEAN DEFAULT FALSE;
     DECLARE coupon_id INT DEFAULT NULL;
+
+    DECLARE done TINYINT DEFAULT FALSE;
+    DECLARE product_inventory_id INT;
+    DECLARE c CURSOR FOR SELECT id FROM product_inventory WHERE product_inventory.order_id = order_id;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
     START TRANSACTION;
     
@@ -42,18 +67,33 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `cancelOrder` (`order_id` INT)  BEGI
                 WHERE
                     orders.id = order_id AND
                     orders.status = 'IN_PROGRESS' AND
-                    orders.payment_status = 'NOT_STARTED'
+                    orders.payment_status = 'CANCELED'
                 LIMIT 1
                 )
              THEN
-        UPDATE orders SET status = 'CANCELED' WHERE orders.id = order_id;
-        UPDATE product_inventory SET status = 'AVAILABLE', product_inventory.order_id = NULL WHERE product_inventory.order_id = order_id;
-        SELECT orders.coupon_id INTO coupon_id FROM orders WHERE orders.id = order_id;
-        IF coupon_id IS NOT NULL THEN
-            UPDATE coupons SET coupons.uses = (coupons.uses - 1) WHERE coupons.id = coupon_id;
-        END IF;
-        COMMIT;
-        SET success = TRUE;
+
+                UPDATE orders SET status = 'CANCELED' WHERE orders.id = order_id;
+
+                OPEN c;loop1: LOOP
+
+                    FETCH NEXT FROM c INTO product_inventory_id; 
+                    IF done THEN
+                        LEAVE loop1; 
+                    ELSE
+                        INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', 'IN_ORDER', '\nPara: ', 'AVAILABLE', '\nMotivo: ', 'Produto desvinculado do pedido id ', order_id, ' por cancelamento do pedido'), product_inventory_id);
+
+                        UPDATE product_inventory SET status = 'AVAILABLE', product_inventory.order_id = NULL WHERE product_inventory.id = product_inventory_id;
+                    END IF;
+
+                END LOOP;
+
+                SELECT orders.coupon_id INTO coupon_id FROM orders WHERE orders.id = order_id;
+                IF coupon_id IS NOT NULL THEN
+                    UPDATE coupons SET coupons.uses = (coupons.uses - 1) WHERE coupons.id = coupon_id;
+                END IF;
+                INSERT INTO `order_events`(`date`, `type`, `description`, `order_id`, `user_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', 'IN_PROGRESS', '\nPara: ', 'CANCELED', '\nMotivo: ', reason), order_id, user_id);
+                COMMIT;
+                SET success = TRUE;
     ELSE
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'order not found';
@@ -64,7 +104,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `cancelOrder` (`order_id` INT)  BEGI
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (`customer_id` INT, `subtotal` DECIMAL(10,2), `extra_amount` DECIMAL(10,2), `coupon_discount` DECIMAL(10,2), `shipping_cost` DECIMAL(10,2), `fees` DECIMAL(10,2), `total` DECIMAL(10,2), `shipping_type` ENUM('FREE','NORMAL','EXPRESS'), `shipping_district_id` INT, `shipping_cep` VARCHAR(8), `shipping_street` VARCHAR(15), `shipping_complement` VARCHAR(20), `shipping_number` VARCHAR(10), `shipping_address_observation` VARCHAR(50), `payment_status` ENUM('NOT_STARTED','STARTED'), `payment_method` ENUM('PIX','BOLETO','CREDIT'), `payment_installment_quantity` INT, `payment_in_cash` BOOLEAN, `payment_pagseguro` BOOLEAN, `coupon_id` INT, `products` VARCHAR(1000))  BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (`customer_id` INT, `subtotal` DECIMAL(10,2), `extra_amount` DECIMAL(10,2), `coupon_discount` DECIMAL(10,2), `shipping_cost` DECIMAL(10,2), `fees` DECIMAL(10,2), `total` DECIMAL(10,2), `shipping_type` ENUM('FREE','NORMAL','EXPRESS'), `shipping_district_id` INT, `shipping_cep` VARCHAR(8), `shipping_street` VARCHAR(15), `shipping_complement` VARCHAR(20), `shipping_number` VARCHAR(10), `shipping_address_observation` VARCHAR(50), `payment_method` ENUM('PIX','BOLETO','CREDIT'), `payment_installment_quantity` INT, `payment_in_cash` BOOLEAN, `payment_pagseguro` BOOLEAN, `coupon_id` INT, `products` VARCHAR(1000))  BEGIN
 
     DECLARE success BOOLEAN DEFAULT FALSE;
     DECLARE order_id INT DEFAULT 0;
@@ -79,6 +119,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (`customer_id` INT, `s
     DECLARE price_in_cash DECIMAL(10,2);
     
     DECLARE i INT default 0;
+    DECLARE j INT default 0;
+    DECLARE product_inventory_id INT;
+
+    DECLARE payment_status ENUM('NOT_STARTED', 'AWAITING_PAYMENT') DEFAULT 'NOT_STARTED';
+
+    IF payment_method = 'PIX' THEN
+        SET payment_status = 'AWAITING_PAYMENT';
+    END IF;
     
     START TRANSACTION;
     
@@ -134,8 +182,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `createOrder` (`customer_id` INT, `s
             SET quantity = JSON_EXTRACT(products, CONCAT("$.p", i, ".quantity"));
             SET price = JSON_EXTRACT(products, CONCAT("$.p", i, ".price"));
             SET price_in_cash = JSON_EXTRACT(products, CONCAT("$.p", i, ".price_in_cash"));
+
+            SET j = 1;loop4: WHILE j <= quantity DO
+
+                SELECT product_inventory.id INTO product_inventory_id FROM product_inventory WHERE product_inventory.product_id = product_id AND product_inventory.size_id = size_id AND product_inventory.status = 'AVAILABLE' LIMIT 1;
+
+                INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', 'AVAILABLE', '\nPara: ', 'IN_ORDER', '\nMotivo: ', 'Produto vinculado ao pedido id ', order_id), product_inventory_id);
             
-            UPDATE product_inventory SET `order_id`=order_id,`status`='IN_ORDER' WHERE product_inventory.product_id = product_id AND product_inventory.size_id = size_id AND product_inventory.status = 'AVAILABLE' LIMIT quantity;
+                UPDATE product_inventory SET `order_id`=order_id,`status`='IN_ORDER' WHERE id = product_inventory_id;
+
+                SET j = j + 1;
+            END WHILE loop4;
+
 
             SET i = i + 1;
         END WHILE loop3;
@@ -157,6 +215,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrder` (`order_id` INT)  BEGI
 
 	DECLARE success BOOLEAN DEFAULT FALSE;
     DECLARE coupon_id INT DEFAULT NULL;
+
+    DECLARE done TINYINT DEFAULT FALSE;
+    DECLARE product_inventory_id INT;
+    DECLARE c CURSOR FOR SELECT id FROM product_inventory WHERE product_inventory.order_id = order_id;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
     START TRANSACTION;
     
@@ -173,16 +236,28 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrder` (`order_id` INT)  BEGI
                 LIMIT 1
                 )
              THEN
-        SELECT orders.coupon_id INTO coupon_id FROM orders WHERE orders.id = order_id;
-        IF coupon_id IS NOT NULL THEN
-            UPDATE coupons SET coupons.uses = (coupons.uses - 1) WHERE coupons.id = coupon_id;
-        END IF;
-        DELETE FROM order_products WHERE order_products.order_id = order_id;
-        UPDATE product_inventory SET status = 'AVAILABLE', product_inventory.order_id = NULL WHERE product_inventory.order_id = order_id;
-        DELETE FROM orders WHERE orders.id = order_id;
-        
-        COMMIT;
-        SET success = TRUE;
+                SELECT orders.coupon_id INTO coupon_id FROM orders WHERE orders.id = order_id;
+                IF coupon_id IS NOT NULL THEN
+                    UPDATE coupons SET coupons.uses = (coupons.uses - 1) WHERE coupons.id = coupon_id;
+                END IF;
+                DELETE FROM order_products WHERE order_products.order_id = order_id;
+
+                OPEN c;loop1: LOOP
+
+                    FETCH NEXT FROM c INTO product_inventory_id; 
+                    IF done THEN
+                        LEAVE loop1; 
+                    ELSE
+                        INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', 'IN_ORDER', '\nPara: ', 'AVAILABLE', '\nMotivo: ', 'Produto desvinculado do pedido id ', order_id, ' por exclusão do pedido'), product_inventory_id);
+
+                        UPDATE product_inventory SET status = 'AVAILABLE', product_inventory.order_id = NULL WHERE product_inventory.id = product_inventory_id;
+                    END IF;
+
+                END LOOP;
+
+                DELETE FROM orders WHERE orders.id = order_id;
+                COMMIT;
+                SET success = TRUE;
     ELSE
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'order not found';
@@ -190,6 +265,126 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteOrder` (`order_id` INT)  BEGI
     END IF;
     
     SELECT success;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderPaymentStatus` (`order_id` INT, `payment_status` ENUM('AWAITING_PAYMENT','CONFIRMED','CANCELED'), `reason` VARCHAR(100), `user_id` INT)  BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE current_status VARCHAR(50);
+    DECLARE current_payment_status VARCHAR(50);
+    
+    START TRANSACTION;
+    
+    SELECT orders.status, orders.payment_status INTO current_status, current_payment_status FROM orders WHERE id = order_id;
+
+    IF (current_status = 'IN_PROGRESS' AND current_payment_status != payment_status) THEN
+
+	    UPDATE `orders` SET `payment_status` = payment_status WHERE id = order_id;
+
+        INSERT INTO `order_events`(`date`, `type`, `description`, `order_id`, `user_id`) VALUES (NOW(), 'PAYMENT_STATUS_UPDATE', concat('De: ', current_payment_status, '\nPara: ', payment_status, '\nMotivo: ', reason), order_id, user_id);
+
+	    SET success = TRUE; 
+	    COMMIT;
+    ELSE
+    	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'order not found';
+        ROLLBACK;
+    END IF;
+
+    
+    SELECT success;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderShippingStatus` (`order_id` INT, `shipping_status` ENUM('NOT_STARTED','IN_SEPARATION','READY_FOR_DELIVERY','OUT_TO_DELIVERY','DELIVERED','DELIVERY_FAILURE'), `reason` VARCHAR(100), `user_id` INT)  BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE current_status VARCHAR(50);
+    DECLARE current_shipping_status VARCHAR(50);
+    
+    START TRANSACTION;
+    
+    SELECT orders.status, orders.shipping_status INTO current_status, current_shipping_status FROM orders WHERE id = order_id;
+
+    IF (current_status = 'IN_PROGRESS' AND current_shipping_status != shipping_status) THEN
+
+	    UPDATE `orders` SET `shipping_status` = shipping_status WHERE id = order_id;
+
+        INSERT INTO `order_events`(`date`, `type`, `description`, `order_id`, `user_id`) VALUES (NOW(), 'SHIPPING_STATUS_UPDATE', concat('De: ', current_shipping_status, '\nPara: ', shipping_status, '\nMotivo: ', reason), order_id, user_id);
+
+	    SET success = TRUE; 
+	    COMMIT;
+    ELSE
+    	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'order not found';
+        ROLLBACK;
+    END IF;
+
+    
+    SELECT success;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateOrderStatus` (`order_id` INT, `status` ENUM('IN_PROGRESS','FINISHED','CANCELED'), `reason` VARCHAR(100), `user_id` INT)  BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE current_status ENUM('IN_PROGRESS', 'FINISHED', 'CANCELED', '') DEFAULT '';
+    DECLARE current_payment_status VARCHAR(50);
+    
+    START TRANSACTION;
+    
+    SELECT orders.status, orders.payment_status INTO current_status, current_payment_status FROM orders WHERE id = order_id;
+
+    IF ((status = 'FINISHED' AND current_status = 'IN_PROGRESS' AND current_payment_status = 'CONFIRMED') OR
+        (status = 'CANCELED' AND current_status = 'IN_PROGRESS' AND current_payment_status = 'CANCELED') OR
+        (status = 'IN_PROGRESS' AND current_status = 'FINISHED')) THEN
+
+        IF (status = 'CANCELED') THEN
+            CALL cancelOrder(order_id, reason, user_id);
+        ELSE
+    	   UPDATE `orders` SET `status` = status WHERE id = order_id;
+
+           INSERT INTO `order_events`(`date`, `type`, `description`, `order_id`, `user_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', current_status, '\nPara: ', status, '\nMotivo: ', reason), order_id, user_id);
+        END IF;
+
+	    SET success = TRUE; 
+	    COMMIT;
+    ELSE
+    	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'order not found';
+        ROLLBACK;
+    END IF;
+
+    
+    SELECT success, current_status;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateProductInventoryStatus` (`product_inventory_id` INT, `status` ENUM('AVAILABLE','UNAVAILABLE'), `reason` VARCHAR(100), `user_id` INT)  BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE current_status ENUM('AVAILABLE', 'UNAVAILABLE', 'IN_ORDER', '') DEFAULT '';
+    
+    START TRANSACTION;
+    
+    SELECT product_inventory.status INTO current_status FROM product_inventory WHERE id = product_inventory_id;
+
+    IF ((current_status = 'AVAILABLE' OR current_status = 'UNAVAILABLE') AND current_status != status) THEN
+    	UPDATE `product_inventory` SET `status` = status WHERE id = product_inventory_id;
+
+	    INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`, `user_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', current_status, '\nPara: ', status, '\nMotivo: ', reason), product_inventory_id, user_id);
+
+	    SET success = TRUE; 
+	    COMMIT;
+    ELSE
+    	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'product_inventory not found';
+        ROLLBACK;
+    END IF;
+
+    
+    SELECT success, current_status;
 
 END$$
 
@@ -248,7 +443,7 @@ INSERT INTO `cities` (`id`, `name`, `uf`) VALUES
 CREATE TABLE `consultants` (
   `id` int(11) NOT NULL,
   `name` varchar(50) COLLATE utf8_bin NOT NULL,
-  `code` varchar(10) COLLATE utf8_bin NOT NULL
+  `code` varchar(20) COLLATE utf8_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
@@ -256,7 +451,7 @@ CREATE TABLE `consultants` (
 --
 
 INSERT INTO `consultants` (`id`, `name`, `code`) VALUES
-(1, 'Pedro Henrique', 'pedrohenri');
+(1, 'Pedro Henrique', 'PEDROHENRI');
 
 -- --------------------------------------------------------
 
@@ -272,18 +467,20 @@ CREATE TABLE `coupons` (
   `minimum_amount` decimal(10,2) NOT NULL,
   `max_uses` int(11) NOT NULL,
   `uses` int(11) NOT NULL DEFAULT '0',
-  `max_units` int(11) NOT NULL
+  `max_units` int(11) NOT NULL,
+  `consultant_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
 -- Extraindo dados da tabela `coupons`
 --
 
-INSERT INTO `coupons` (`id`, `code`, `type`, `value`, `minimum_amount`, `max_uses`, `uses`, `max_units`) VALUES
-(1, '5PORCENTO', 'PERCENT', '5.00', '10.00', 1, 1, 4),
-(2, '10BRUTO', 'GROSS', '10.00', '50.00', 1, 0, 6),
-(3, '10DUPLO', 'TWO_PERCENT', '10.00', '0.00', 1, 0, 4),
-(4, '5DUPLO', 'TWO_GROSS', '5.00', '30.00', 1, 0, 6);
+INSERT INTO `coupons` (`id`, `code`, `type`, `value`, `minimum_amount`, `max_uses`, `uses`, `max_units`, `consultant_id`) VALUES
+(1, '5PORCENTO', 'PERCENT', '5.00', '10.00', 1, 1, 4, NULL),
+(2, '10BRUTO', 'GROSS', '10.00', '50.00', 1, 0, 6, NULL),
+(3, '10DUPLO', 'TWO_PERCENT', '10.00', '0.00', 1, 0, 4, NULL),
+(4, '5DUPLO', 'TWO_GROSS', '5.00', '30.00', 1, 0, 6, NULL),
+(8, 'TESTE1234', 'PERCENT', '5.00', '4.00', 3, 0, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -404,8 +601,8 @@ CREATE TABLE `orders` (
   `shipping_number` varchar(10) COLLATE utf8_bin NOT NULL,
   `shipping_address_observation` varchar(50) COLLATE utf8_bin NOT NULL,
   `status` enum('IN_PROGRESS','FINISHED','CANCELED') COLLATE utf8_bin NOT NULL,
-  `payment_status` enum('NOT_STARTED','STARTED','AWAITING_PAYMENT','CONFIRMED') COLLATE utf8_bin NOT NULL,
-  `shipping_status` enum('NOT_STARTED','IN_SEPARATION') COLLATE utf8_bin NOT NULL,
+  `payment_status` enum('NOT_STARTED','AWAITING_PAYMENT','CONFIRMED','CANCELED') COLLATE utf8_bin NOT NULL,
+  `shipping_status` enum('NOT_STARTED','IN_SEPARATION','READY_FOR_DELIVERY','OUT_TO_DELIVERY','DELIVERED','DELIVERY_FAILURE') COLLATE utf8_bin NOT NULL,
   `payment_method` enum('PIX','BOLETO','CREDIT') COLLATE utf8_bin NOT NULL,
   `payment_installment_quantity` int(11) DEFAULT NULL,
   `payment_in_cash` tinyint(1) DEFAULT NULL,
@@ -422,10 +619,16 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`id`, `customer_id`, `subtotal`, `extra_amount`, `coupon_discount`, `shipping_cost`, `fees`, `total`, `creation_datetime`, `shipping_type`, `shipping_district_id`, `shipping_cep`, `shipping_street`, `shipping_complement`, `shipping_number`, `shipping_address_observation`, `status`, `payment_status`, `shipping_status`, `payment_method`, `payment_installment_quantity`, `payment_in_cash`, `payment_pagseguro`, `payment_pagseguro_code`, `payment_pagseguro_reference`, `payment_boleto_link`, `coupon_id`) VALUES
 (9, 1, '25.00', '0.00', '0.00', '10.00', '4.31', '39.31', '2021-11-11 20:45:57', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'NOT_STARTED', 'CREDIT', 7, 0, 1, '4026E4EB-ED4B-4599-9FF2-C2A9404CA643', 'REF9', NULL, NULL),
-(10, 1, '35.00', '-5.00', '0.00', '10.00', '0.00', '40.00', '2021-11-11 20:48:18', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'NOT_STARTED', 'PIX', NULL, 1, 0, NULL, 'REF10', NULL, NULL),
-(11, 1, '35.00', '-5.00', '0.00', '10.00', '0.00', '40.00', '2021-11-11 20:48:38', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'CANCELED', 'AWAITING_PAYMENT', 'NOT_STARTED', 'BOLETO', NULL, 1, 1, '1F251DF5-E80F-4FF8-A2EF-B692EFF8CD50', 'REF11', 'https://sandbox.pagseguro.uol.com.br/checkout/payment/booklet/print.jhtml?c=120a06d59fadef3e9cf8b6e8b704e66b4241de2e4799e423733b2b86c531acf4294f639e687c9986', NULL),
+(10, 1, '35.00', '-5.00', '0.00', '10.00', '0.00', '40.00', '2021-11-11 20:48:18', 'FREE', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'NOT_STARTED', 'PIX', NULL, 1, 0, NULL, 'REF10', NULL, NULL),
+(11, 1, '35.00', '-5.00', '0.00', '10.00', '0.00', '40.00', '2021-11-11 20:48:38', 'NORMAL', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'CANCELED', 'AWAITING_PAYMENT', 'NOT_STARTED', 'BOLETO', NULL, 1, 1, '1F251DF5-E80F-4FF8-A2EF-B692EFF8CD50', 'REF11', 'https://sandbox.pagseguro.uol.com.br/checkout/payment/booklet/print.jhtml?c=120a06d59fadef3e9cf8b6e8b704e66b4241de2e4799e423733b2b86c531acf4294f639e687c9986', NULL),
 (12, 1, '35.00', '-5.00', '0.00', '10.00', '0.00', '40.00', '2021-11-11 20:50:33', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'FINISHED', 'CONFIRMED', 'IN_SEPARATION', 'BOLETO', NULL, 1, 1, 'F409407D-C7DF-4C14-A057-1A906FA35510', 'REF12', 'https://sandbox.pagseguro.uol.com.br/checkout/payment/booklet/print.jhtml?c=f6fa0fc229b28c002def0989bed3febb7c5811e7a8172d0a6c0ce820bbe2a8a6dbabd3803970bf31', NULL),
-(13, 1, '95.00', '-15.00', '4.00', '10.00', '0.00', '86.00', '2021-11-12 17:13:59', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'NOT_STARTED', 'PIX', NULL, 1, 0, NULL, 'REF13', NULL, 1);
+(13, 1, '95.00', '-15.00', '4.00', '10.00', '0.00', '86.00', '2021-11-12 17:13:59', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'NOT_STARTED', 'PIX', NULL, 1, 0, NULL, 'REF13', NULL, 1),
+(16, 1, '200.00', '-30.00', '0.00', '10.00', '0.00', '180.00', '2021-11-25 19:44:37', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'NOT_STARTED', 'PIX', NULL, 1, 0, NULL, 'REF16', NULL, NULL),
+(17, 1, '200.00', '-30.00', '0.00', '10.00', '0.00', '180.00', '2021-11-25 19:45:47', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'NOT_STARTED', 'PIX', NULL, 1, 0, NULL, 'REF17', NULL, NULL),
+(22, 1, '25.00', '-5.00', '0.00', '10.00', '0.00', '30.00', '2021-11-25 20:16:28', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'NOT_STARTED', 'BOLETO', NULL, 1, 1, '67B1DB70-58A0-4F96-8688-FB97F062B97E', 'REF22', 'https://sandbox.pagseguro.uol.com.br/checkout/payment/booklet/print.jhtml?c=82ac83fab168705d5fb68b69ab6cfd0ee46697161a789d1422c7acd4c21c0f581b18fd716862031f', NULL),
+(23, 1, '35.00', '-5.00', '0.00', '10.00', '0.00', '40.00', '2021-11-26 00:49:57', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'AWAITING_PAYMENT', 'DELIVERY_FAILURE', 'PIX', NULL, 1, 0, NULL, 'REF23', NULL, NULL),
+(24, 1, '35.00', '-5.00', '0.00', '10.00', '0.00', '40.00', '2021-11-26 00:50:17', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'IN_PROGRESS', 'CONFIRMED', 'DELIVERY_FAILURE', 'BOLETO', NULL, 1, 1, '825B1FCD-C842-447F-B6FB-9F15C5A556B4', 'REF24', 'https://sandbox.pagseguro.uol.com.br/checkout/payment/booklet/print.jhtml?c=475a23a9f11addc22c2159877d54710299d9631b4ae0d12657b7f1dae7e800e6d7d90cb84ce985d1', NULL),
+(25, 1, '35.00', '0.00', '0.00', '10.00', '6.26', '51.26', '2021-11-26 00:50:54', 'EXPRESS', 1, '74730190', 'Rua 11', 'Quadra 7 Lote 8', 's/n', 'Próximo a pizzaria Império da Pizza', 'FINISHED', 'CONFIRMED', 'DELIVERY_FAILURE', 'CREDIT', 8, 0, 1, '045D0DFD-F30D-4739-9704-AE5DF060CF1F', 'REF25', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -436,10 +639,37 @@ INSERT INTO `orders` (`id`, `customer_id`, `subtotal`, `extra_amount`, `coupon_d
 CREATE TABLE `order_events` (
   `id` int(11) NOT NULL,
   `date` datetime NOT NULL,
-  `name` varchar(30) COLLATE utf8_bin NOT NULL,
-  `description` varchar(200) COLLATE utf8_bin NOT NULL,
-  `order_id` int(11) NOT NULL
+  `type` enum('STATUS_UPDATE','PAYMENT_STATUS_UPDATE','SHIPPING_STATUS_UPDATE','OTHER') COLLATE utf8_bin NOT NULL,
+  `description` varchar(500) COLLATE utf8_bin NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Extraindo dados da tabela `order_events`
+--
+
+INSERT INTO `order_events` (`id`, `date`, `type`, `description`, `order_id`, `user_id`) VALUES
+(1, '2021-11-30 00:00:00', 'OTHER', 'teste', 25, 19),
+(2, '2021-11-26 02:50:24', 'STATUS_UPDATE', 'De: IN_PROGRESS\nPara: CANCELED\nMotivo: teste', 25, 1),
+(3, '2021-11-26 02:52:10', 'STATUS_UPDATE', 'De: IN_PROGRESS\nPara: FINISHED\nMotivo: teste', 24, 1),
+(4, '2021-11-26 02:52:46', 'STATUS_UPDATE', 'De: FINISHED\nPara: IN_PROGRESS\nMotivo: aaa', 24, 1),
+(5, '2021-11-26 02:59:27', 'STATUS_UPDATE', 'De: IN_PROGRESS\nPara: FINISHED\nMotivo: teste', 24, 1),
+(6, '2021-11-26 02:59:41', 'STATUS_UPDATE', 'De: FINISHED\nPara: IN_PROGRESS\nMotivo: agr', 24, 1),
+(7, '2021-11-26 03:00:02', 'STATUS_UPDATE', 'De: IN_PROGRESS\nPara: CANCELED\nMotivo: cancelar', 25, 1),
+(8, '2021-11-26 03:05:04', 'STATUS_UPDATE', 'De: IN_PROGRESS\nPara: CANCELED\nMotivo: sim', 25, 1),
+(9, '2021-11-26 03:13:28', 'STATUS_UPDATE', 'De: IN_PROGRESS\nPara: FINISHED\nMotivo: a', 25, 1),
+(10, '2021-11-26 03:40:25', 'PAYMENT_STATUS_UPDATE', 'De: CONFIRMED\nPara: AWAITING_PAYMENT\nMotivo: teste', 24, 1),
+(11, '2021-11-26 03:40:36', 'PAYMENT_STATUS_UPDATE', 'De: AWAITING_PAYMENT\nPara: CONFIRMED\nMotivo: aa', 24, 1),
+(12, '2021-11-26 03:40:53', 'PAYMENT_STATUS_UPDATE', 'De: CONFIRMED\nPara: CANCELED\nMotivo: q', 24, 1),
+(13, '2021-11-26 04:02:03', 'SHIPPING_STATUS_UPDATE', 'De: NOT_STARTED\nPara: IN_SEPARATION\nMotivo: teste', 24, 1),
+(14, '2021-11-26 04:02:23', 'SHIPPING_STATUS_UPDATE', 'De: IN_SEPARATION\nPara: READY_FOR_DELIVERY\nMotivo: teste', 24, 1),
+(15, '2021-11-26 04:02:49', 'PAYMENT_STATUS_UPDATE', 'De: CANCELED\nPara: CONFIRMED\nMotivo: a', 24, 1),
+(16, '2021-11-26 04:02:55', 'STATUS_UPDATE', 'De: IN_PROGRESS\nPara: FINISHED\nMotivo: a', 24, 1),
+(17, '2021-11-26 04:03:01', 'STATUS_UPDATE', 'De: FINISHED\nPara: IN_PROGRESS\nMotivo: a', 24, 1),
+(18, '2021-11-26 04:03:06', 'SHIPPING_STATUS_UPDATE', 'De: READY_FOR_DELIVERY\nPara: OUT_TO_DELIVERY\nMotivo: a', 24, 1),
+(19, '2021-11-26 04:03:17', 'SHIPPING_STATUS_UPDATE', 'De: NOT_STARTED\nPara: DELIVERY_FAILURE\nMotivo: a', 23, 1),
+(20, '2021-11-26 04:03:34', 'SHIPPING_STATUS_UPDATE', 'De: OUT_TO_DELIVERY\nPara: DELIVERY_FAILURE\nMotivo: a', 24, 1);
 
 -- --------------------------------------------------------
 
@@ -467,7 +697,17 @@ INSERT INTO `order_products` (`id`, `order_id`, `product_id`, `size_id`, `price`
 (14, 11, 1, 1, '35.00', '30.00', 1),
 (15, 12, 1, 1, '35.00', '30.00', 1),
 (16, 13, 2, 4, '25.00', '20.00', 1),
-(17, 13, 1, 1, '35.00', '30.00', 2);
+(17, 13, 1, 1, '35.00', '30.00', 2),
+(24, 16, 2, 4, '25.00', '20.00', 1),
+(25, 16, 1, 2, '35.00', '30.00', 2),
+(26, 16, 1, 3, '35.00', '30.00', 3),
+(27, 17, 2, 4, '25.00', '20.00', 1),
+(28, 17, 1, 2, '35.00', '30.00', 2),
+(29, 17, 1, 3, '35.00', '30.00', 3),
+(42, 22, 2, 4, '25.00', '20.00', 1),
+(43, 23, 1, 1, '35.00', '30.00', 1),
+(44, 24, 1, 1, '35.00', '30.00', 1),
+(45, 25, 1, 1, '35.00', '30.00', 1);
 
 -- --------------------------------------------------------
 
@@ -494,7 +734,7 @@ INSERT INTO `products` (`id`, `name`, `price`, `price_in_cash`, `description`, `
 (1, 'T-Shirt Exemplo', '35.00', '30.00', 'Exemplo de descrição', 1, 1, 1),
 (2, 'Cropped Exemplo', '25.00', '20.00', 'Exemplo de descrição<br/>pro cropped', 1, 2, 1),
 (5, 'Body Preto', '35.00', '34.00', 'Exemplo de descrição<br/>Com duas linhas<br/>Ou talvez três<br/><br/>Que tal cinco?', 1, 21, 1),
-(6, 'Body Rosa', '35.00', '33.00', 'Teste', 1, 123, 0);
+(6, 'Body Rosa', '35.00', '33.00', 'Teste', 1, 123, 1);
 
 -- --------------------------------------------------------
 
@@ -547,7 +787,111 @@ INSERT INTO `product_inventory` (`id`, `product_id`, `size_id`, `order_id`, `sta
 (4, 2, 4, 9, 'IN_ORDER'),
 (5, 2, 4, 13, 'IN_ORDER'),
 (6, 1, 1, 13, 'IN_ORDER'),
-(7, 1, 1, 13, 'IN_ORDER');
+(7, 1, 1, 13, 'IN_ORDER'),
+(14, 1, 4, NULL, 'AVAILABLE'),
+(15, 1, 1, 23, 'IN_ORDER'),
+(16, 1, 4, NULL, 'AVAILABLE'),
+(17, 1, 4, NULL, 'UNAVAILABLE'),
+(18, 1, 1, 24, 'IN_ORDER'),
+(19, 1, 1, NULL, 'AVAILABLE'),
+(20, 1, 1, NULL, 'AVAILABLE'),
+(21, 1, 1, NULL, 'AVAILABLE'),
+(22, 1, 2, NULL, 'AVAILABLE'),
+(23, 1, 2, NULL, 'AVAILABLE'),
+(24, 1, 3, NULL, 'AVAILABLE'),
+(25, 1, 3, NULL, 'AVAILABLE'),
+(26, 1, 3, NULL, 'AVAILABLE'),
+(27, 2, 4, 22, 'IN_ORDER');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `product_inventory_events`
+--
+
+CREATE TABLE `product_inventory_events` (
+  `id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `type` enum('STATUS_UPDATE','OTHER') COLLATE utf8_bin NOT NULL,
+  `description` varchar(500) COLLATE utf8_bin NOT NULL,
+  `product_inventory_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Extraindo dados da tabela `product_inventory_events`
+--
+
+INSERT INTO `product_inventory_events` (`id`, `date`, `type`, `description`, `product_inventory_id`, `user_id`) VALUES
+(1, '2021-11-10 00:00:00', 'STATUS_UPDATE', 'Alterado de A para B por C', 1, NULL),
+(5, '2021-11-25 02:01:00', 'STATUS_UPDATE', 'Unidade adicionada pelo usuário id 1\nEstado inicial: AVAILABLE', 14, 1),
+(6, '2021-11-25 02:11:12', 'STATUS_UPDATE', 'Unidade adicionada pelo usuário id 1\nEstado inicial: AVAILABLE', 15, 1),
+(7, '2021-11-25 02:12:20', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE', 16, 1),
+(8, '2021-11-25 02:48:00', 'STATUS_UPDATE', 'De: AVAILABLE Para: AVAILABLE', 1, 1),
+(9, '2021-11-25 02:48:43', 'STATUS_UPDATE', 'De: AVAILABLE Para: AVAILABLE', 1, 1),
+(10, '2021-11-25 02:49:30', 'STATUS_UPDATE', 'De:  Para: AVAILABLE', 1, 1),
+(13, '2021-11-25 02:51:50', 'STATUS_UPDATE', 'De: AVAILABLE Para: UNAVAILABLE', 14, 1),
+(14, '2021-11-25 02:52:29', 'STATUS_UPDATE', 'De: UNAVAILABLE Para: AVAILABLE', 14, NULL),
+(15, '2021-11-25 02:53:21', 'STATUS_UPDATE', 'De: AVAILABLE Para: UNAVAILABLE Motivo: motivo de teste', 14, 1),
+(16, '2021-11-25 02:53:59', 'STATUS_UPDATE', 'De: UNAVAILABLE Para: UNAVAILABLE Motivo: hahaha', 14, 1),
+(17, '2021-11-25 02:54:11', 'STATUS_UPDATE', 'De: UNAVAILABLE Para: AVAILABLE Motivo: hahahaha', 14, 1),
+(18, '2021-11-25 02:55:36', 'STATUS_UPDATE', 'De: AVAILABLE Para: UNAVAILABLE Motivo: 11', 14, 1),
+(19, '2021-11-25 02:57:00', 'STATUS_UPDATE', 'De: UNAVAILABLE Para: AVAILABLE Motivo: pq eu quis', 14, 1),
+(20, '2021-11-25 02:57:52', 'STATUS_UPDATE', 'Estado inicial: UNAVAILABLE', 17, 1),
+(21, '2021-11-25 02:58:31', 'STATUS_UPDATE', 'De: UNAVAILABLE Para: AVAILABLE Motivo: Unidade colocada no estoque', 17, 1),
+(22, '2021-11-25 02:58:48', 'STATUS_UPDATE', 'De: AVAILABLE Para: UNAVAILABLE Motivo: !@#E!@1- 1231 1´´', 17, 1),
+(23, '2021-11-25 02:59:26', 'STATUS_UPDATE', 'De: UNAVAILABLE Para: AVAILABLE Motivo: \'a\' or \'1\' \'', 17, 1),
+(24, '2021-11-25 03:04:52', 'STATUS_UPDATE', 'De: AVAILABLE Para: UNAVAILABLE\nMotivo: Exemplo de motivo', 17, 1),
+(25, '2021-11-25 03:07:23', 'STATUS_UPDATE', 'De: UNAVAILABLE\nPara: AVAILABLE\nMotivo: Outro exemplo de motivo', 17, 1),
+(26, '2021-11-25 03:29:29', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: UNAVAILABLE\nMotivo: teste', 17, 1),
+(27, '2021-11-25 03:49:27', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: UNAVAILABLE\nMotivo: aaa', 15, 1),
+(28, '2021-11-25 03:49:37', 'STATUS_UPDATE', 'De: UNAVAILABLE\nPara: AVAILABLE\nMotivo: bbbb', 15, 1),
+(29, '2021-11-25 04:00:36', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE', 18, 1),
+(30, '2021-11-25 04:00:47', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE', 19, 1),
+(31, '2021-11-25 04:05:58', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE', 20, 1),
+(32, '2021-11-25 04:06:08', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE', 21, 1),
+(33, '2021-11-25 04:19:20', 'STATUS_UPDATE', 'Estado inicial: UNAVAILABLE\nMotivo: Quis adicionar um M', 22, 1),
+(34, '2021-11-25 04:23:08', 'STATUS_UPDATE', 'De: UNAVAILABLE\nPara: AVAILABLE\nMotivo: a', 22, 1),
+(35, '2021-11-25 19:30:52', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE\nMotivo: teste', 23, 1),
+(36, '2021-11-25 19:30:59', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE\nMotivo: teste', 24, 1),
+(37, '2021-11-25 19:31:00', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE\nMotivo: teste', 25, 1),
+(38, '2021-11-25 19:31:03', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE\nMotivo: teste', 26, 1),
+(39, '2021-11-25 19:31:29', 'STATUS_UPDATE', 'Estado inicial: AVAILABLE\nMotivo: teste', 27, 1),
+(41, '2021-11-25 19:48:09', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 19', 27, NULL),
+(42, '2021-11-25 19:48:09', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 19', 22, NULL),
+(43, '2021-11-25 19:48:09', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 19', 23, NULL),
+(44, '2021-11-25 19:48:09', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 19', 24, NULL),
+(45, '2021-11-25 19:48:09', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 19', 25, NULL),
+(46, '2021-11-25 19:48:09', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 19', 26, NULL),
+(47, '2021-11-25 20:08:45', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 20', 27, NULL),
+(48, '2021-11-25 20:08:45', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 20', 22, NULL),
+(49, '2021-11-25 20:08:45', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 20', 23, NULL),
+(50, '2021-11-25 20:08:45', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 20', 24, NULL),
+(51, '2021-11-25 20:08:45', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 20', 25, NULL),
+(52, '2021-11-25 20:08:45', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 20', 26, NULL),
+(53, '2021-11-25 20:09:48', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 20 por cancelamento do pedido', 22, NULL),
+(54, '2021-11-25 20:09:48', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 20 por cancelamento do pedido', 23, NULL),
+(55, '2021-11-25 20:09:48', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 20 por cancelamento do pedido', 24, NULL),
+(56, '2021-11-25 20:09:48', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 20 por cancelamento do pedido', 25, NULL),
+(57, '2021-11-25 20:09:48', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 20 por cancelamento do pedido', 26, NULL),
+(58, '2021-11-25 20:09:48', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 20 por cancelamento do pedido', 27, NULL),
+(59, '2021-11-25 20:15:12', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 21', 27, NULL),
+(60, '2021-11-25 20:15:12', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 21', 22, NULL),
+(61, '2021-11-25 20:15:12', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 21', 23, NULL),
+(62, '2021-11-25 20:15:12', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 21', 24, NULL),
+(63, '2021-11-25 20:15:12', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 21', 25, NULL),
+(64, '2021-11-25 20:15:12', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 21', 26, NULL),
+(65, '2021-11-25 20:15:41', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 21 por exclusão do pedido', 22, NULL),
+(66, '2021-11-25 20:15:41', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 21 por exclusão do pedido', 23, NULL),
+(67, '2021-11-25 20:15:41', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 21 por exclusão do pedido', 24, NULL),
+(68, '2021-11-25 20:15:41', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 21 por exclusão do pedido', 25, NULL),
+(69, '2021-11-25 20:15:41', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 21 por exclusão do pedido', 26, NULL),
+(70, '2021-11-25 20:15:41', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 21 por exclusão do pedido', 27, NULL),
+(71, '2021-11-25 20:16:28', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 22', 27, NULL),
+(72, '2021-11-26 00:49:57', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 23', 15, NULL),
+(73, '2021-11-26 00:50:17', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 24', 18, NULL),
+(74, '2021-11-26 00:50:54', 'STATUS_UPDATE', 'De: AVAILABLE\nPara: IN_ORDER\nMotivo: Produto vinculado ao pedido id 25', 19, NULL),
+(75, '2021-11-26 03:00:02', 'STATUS_UPDATE', 'De: IN_ORDER\nPara: AVAILABLE\nMotivo: Produto desvinculado do pedido id 25 por cancelamento do pedido', 19, NULL);
 
 -- --------------------------------------------------------
 
@@ -571,6 +915,7 @@ INSERT INTO `product_sizes` (`id`, `product_id`, `size_id`) VALUES
 (3, 1, 3),
 (8, 1, 4),
 (4, 2, 4),
+(11, 5, 4),
 (10, 6, 1);
 
 -- --------------------------------------------------------
@@ -590,6 +935,9 @@ CREATE TABLE `profiles` (
   `product_inventory_module` tinyint(1) NOT NULL,
   `customers_module` tinyint(1) NOT NULL,
   `orders_module` tinyint(1) NOT NULL,
+  `change_order_status` tinyint(1) NOT NULL,
+  `change_order_payment_status` tinyint(1) NOT NULL,
+  `change_order_shipping_status` tinyint(1) NOT NULL,
   `cities_module` tinyint(1) NOT NULL,
   `districts_module` tinyint(1) NOT NULL,
   `coupons_module` tinyint(1) NOT NULL,
@@ -600,10 +948,10 @@ CREATE TABLE `profiles` (
 -- Extraindo dados da tabela `profiles`
 --
 
-INSERT INTO `profiles` (`id`, `name`, `users_module`, `profiles_module`, `products_module`, `product_categories_module`, `sizes_module`, `product_inventory_module`, `customers_module`, `orders_module`, `cities_module`, `districts_module`, `coupons_module`, `consultants_module`) VALUES
-(1, 'Administrador', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(2, 'Funcionario', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(14, 'Entregador', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+INSERT INTO `profiles` (`id`, `name`, `users_module`, `profiles_module`, `products_module`, `product_categories_module`, `sizes_module`, `product_inventory_module`, `customers_module`, `orders_module`, `change_order_status`, `change_order_payment_status`, `change_order_shipping_status`, `cities_module`, `districts_module`, `coupons_module`, `consultants_module`) VALUES
+(1, 'Administrador', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+(2, 'Funcionario', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(14, 'Entregador', 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -691,14 +1039,16 @@ ALTER TABLE `cities`
 -- Indexes for table `consultants`
 --
 ALTER TABLE `consultants`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
 
 --
 -- Indexes for table `coupons`
 --
 ALTER TABLE `coupons`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `code` (`code`);
+  ADD UNIQUE KEY `code` (`code`),
+  ADD KEY `consultant_id` (`consultant_id`);
 
 --
 -- Indexes for table `customers`
@@ -742,7 +1092,8 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `order_events`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `order_id` (`order_id`);
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `order_products`
@@ -776,6 +1127,14 @@ ALTER TABLE `product_inventory`
   ADD KEY `product_id` (`product_id`),
   ADD KEY `size_id` (`size_id`),
   ADD KEY `order_id` (`order_id`);
+
+--
+-- Indexes for table `product_inventory_events`
+--
+ALTER TABLE `product_inventory_events`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`product_inventory_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `product_sizes`
@@ -837,7 +1196,7 @@ ALTER TABLE `consultants`
 -- AUTO_INCREMENT for table `coupons`
 --
 ALTER TABLE `coupons`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `customers`
 --
@@ -857,17 +1216,17 @@ ALTER TABLE `districts`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `order_events`
 --
 ALTER TABLE `order_events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `order_products`
 --
 ALTER TABLE `order_products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 --
 -- AUTO_INCREMENT for table `products`
 --
@@ -882,17 +1241,22 @@ ALTER TABLE `product_categories`
 -- AUTO_INCREMENT for table `product_inventory`
 --
 ALTER TABLE `product_inventory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+--
+-- AUTO_INCREMENT for table `product_inventory_events`
+--
+ALTER TABLE `product_inventory_events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
 --
 -- AUTO_INCREMENT for table `product_sizes`
 --
 ALTER TABLE `product_sizes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `profiles`
 --
 ALTER TABLE `profiles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `secret_questions`
 --
@@ -911,6 +1275,12 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Limitadores para a tabela `coupons`
+--
+ALTER TABLE `coupons`
+  ADD CONSTRAINT `coupons_ibfk_1` FOREIGN KEY (`consultant_id`) REFERENCES `consultants` (`id`);
 
 --
 -- Limitadores para a tabela `customers`
@@ -946,7 +1316,8 @@ ALTER TABLE `orders`
 -- Limitadores para a tabela `order_events`
 --
 ALTER TABLE `order_events`
-  ADD CONSTRAINT `order_events_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
+  ADD CONSTRAINT `order_events_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `order_events_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Limitadores para a tabela `order_products`
@@ -969,6 +1340,13 @@ ALTER TABLE `product_categories`
 ALTER TABLE `product_inventory`
   ADD CONSTRAINT `product_inventory_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   ADD CONSTRAINT `product_inventory_ibfk_2` FOREIGN KEY (`size_id`) REFERENCES `sizes` (`id`);
+
+--
+-- Limitadores para a tabela `product_inventory_events`
+--
+ALTER TABLE `product_inventory_events`
+  ADD CONSTRAINT `product_inventory_events_ibfk_1` FOREIGN KEY (`product_inventory_id`) REFERENCES `product_inventory` (`id`),
+  ADD CONSTRAINT `product_inventory_events_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
 -- Limitadores para a tabela `product_sizes`

@@ -8,6 +8,11 @@ BEGIN
 
 	DECLARE success BOOLEAN DEFAULT FALSE;
     DECLARE coupon_id INT DEFAULT NULL;
+
+    DECLARE done TINYINT DEFAULT FALSE;
+    DECLARE product_inventory_id INT;
+    DECLARE c CURSOR FOR SELECT id FROM product_inventory WHERE product_inventory.order_id = order_id;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
     START TRANSACTION;
     
@@ -24,16 +29,30 @@ BEGIN
                 LIMIT 1
                 )
              THEN
-        SELECT orders.coupon_id INTO coupon_id FROM orders WHERE orders.id = order_id;
-        IF coupon_id IS NOT NULL THEN
-            UPDATE coupons SET coupons.uses = (coupons.uses - 1) WHERE coupons.id = coupon_id;
-        END IF;
-        DELETE FROM order_products WHERE order_products.order_id = order_id;
-        UPDATE product_inventory SET status = 'AVAILABLE', product_inventory.order_id = NULL WHERE product_inventory.order_id = order_id;
-        DELETE FROM orders WHERE orders.id = order_id;
-        
-        COMMIT;
-        SET success = TRUE;
+                SELECT orders.coupon_id INTO coupon_id FROM orders WHERE orders.id = order_id;
+                IF coupon_id IS NOT NULL THEN
+                    UPDATE coupons SET coupons.uses = (coupons.uses - 1) WHERE coupons.id = coupon_id;
+                END IF;
+                DELETE FROM order_products WHERE order_products.order_id = order_id;
+
+                OPEN c;
+
+                loop1: LOOP
+
+                    FETCH NEXT FROM c INTO product_inventory_id; 
+                    IF done THEN
+                        LEAVE loop1; 
+                    ELSE
+                        INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', 'IN_ORDER', '\nPara: ', 'AVAILABLE', '\nMotivo: ', 'Produto desvinculado do pedido id ', order_id, ' por exclusão do pedido'), product_inventory_id);
+
+                        UPDATE product_inventory SET status = 'AVAILABLE', product_inventory.order_id = NULL WHERE product_inventory.id = product_inventory_id;
+                    END IF;
+
+                END LOOP;
+
+                DELETE FROM orders WHERE orders.id = order_id;
+                COMMIT;
+                SET success = TRUE;
     ELSE
         SIGNAL SQLSTATE '45000'
         SET MESSAGE_TEXT = 'order not found';

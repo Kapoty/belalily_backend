@@ -2,7 +2,7 @@ DROP PROCEDURE IF EXISTS createOrder;
 
 DELIMITER $$
 
-CREATE PROCEDURE createOrder ( customer_id INT, subtotal DECIMAL(10,2), extra_amount DECIMAL(10,2), coupon_discount DECIMAL(10,2), shipping_cost DECIMAL(10,2), fees DECIMAL(10,2), total DECIMAL(10,2), shipping_type ENUM('FREE', 'NORMAL', 'EXPRESS'), shipping_district_id INT, shipping_cep VARCHAR(8), shipping_street VARCHAR(15), shipping_complement VARCHAR(20), shipping_number VARCHAR(10), shipping_address_observation VARCHAR(50), payment_status ENUM('NOT_STARTED','STARTED'), payment_method ENUM('PIX', 'BOLETO', 'CREDIT'), payment_installment_quantity INT, payment_in_cash BOOLEAN, payment_pagseguro BOOLEAN, coupon_id INT, products VARCHAR(1000) )
+CREATE PROCEDURE createOrder ( customer_id INT, subtotal DECIMAL(10,2), extra_amount DECIMAL(10,2), coupon_discount DECIMAL(10,2), shipping_cost DECIMAL(10,2), fees DECIMAL(10,2), total DECIMAL(10,2), shipping_type ENUM('FREE', 'NORMAL', 'EXPRESS'), shipping_district_id INT, shipping_cep VARCHAR(8), shipping_street VARCHAR(15), shipping_complement VARCHAR(20), shipping_number VARCHAR(10), shipping_address_observation VARCHAR(50), payment_method ENUM('PIX', 'BOLETO', 'CREDIT'), payment_installment_quantity INT, payment_in_cash BOOLEAN, payment_pagseguro BOOLEAN, coupon_id INT, products VARCHAR(1000) )
 
 BEGIN
 
@@ -19,6 +19,14 @@ BEGIN
     DECLARE price_in_cash DECIMAL(10,2);
     
     DECLARE i INT default 0;
+    DECLARE j INT default 0;
+    DECLARE product_inventory_id INT;
+
+    DECLARE payment_status ENUM('NOT_STARTED', 'AWAITING_PAYMENT') DEFAULT 'NOT_STARTED';
+
+    IF payment_method = 'PIX' THEN
+        SET payment_status = 'AWAITING_PAYMENT';
+    END IF;
     
     START TRANSACTION;
     
@@ -85,8 +93,19 @@ BEGIN
             SET quantity = JSON_EXTRACT(products, CONCAT("$.p", i, ".quantity"));
             SET price = JSON_EXTRACT(products, CONCAT("$.p", i, ".price"));
             SET price_in_cash = JSON_EXTRACT(products, CONCAT("$.p", i, ".price_in_cash"));
+
+            SET j = 1;
+            loop4: WHILE j <= quantity DO
+
+                SELECT product_inventory.id INTO product_inventory_id FROM product_inventory WHERE product_inventory.product_id = product_id AND product_inventory.size_id = size_id AND product_inventory.status = 'AVAILABLE' LIMIT 1;
+
+                INSERT INTO `product_inventory_events`(`date`, `type`, `description`, `product_inventory_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', 'AVAILABLE', '\nPara: ', 'IN_ORDER', '\nMotivo: ', 'Produto vinculado ao pedido id ', order_id), product_inventory_id);
             
-            UPDATE product_inventory SET `order_id`=order_id,`status`='IN_ORDER' WHERE product_inventory.product_id = product_id AND product_inventory.size_id = size_id AND product_inventory.status = 'AVAILABLE' LIMIT quantity;
+                UPDATE product_inventory SET `order_id`=order_id,`status`='IN_ORDER' WHERE id = product_inventory_id;
+
+                SET j = j + 1;
+            END WHILE loop4;
+
 
             SET i = i + 1;
         END WHILE loop3;

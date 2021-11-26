@@ -574,8 +574,8 @@ function getCustomerOrderById(customerId, orderId, callback) {
 		LEFT JOIN cities c on c.id = d.city_id
 		LEFT JOIN coupons cp on cp.id = o.coupon_id
 		WHERE
-			o.customer_id = ${mysqlEscape(customerId)} AND
-			o.id = ${mysqlEscape(orderId)};
+			o.customer_id = '${mysqlEscape(customerId)}' AND
+			o.id = '${mysqlEscape(orderId)}';
 	`, (error, results, fields) => {
 		if (error) return callback(error.code)
 		if (results.length < 1) return callback("no order matches given id")
@@ -759,13 +759,13 @@ function getCustomerInfoForOrder(customerId, callback) {
 
 function createOrder(customer_id, subtotal, extra_amount, coupon_discount, shipping_cost, fees,
 							total, shipping_type, shipping_district_id, shipping_cep, shipping_street,
-							shipping_complement, shipping_number, shipping_address_observation, payment_status,
+							shipping_complement, shipping_number, shipping_address_observation,
 							payment_method, payment_installment_quantity, payment_in_cash, payment_pagseguro,
 							coupon_id, products, callback) {
 	conn.query(`
 		CALL createOrder('${mysqlEscape(customer_id)}', '${mysqlEscape(subtotal)}', '${mysqlEscape(extra_amount)}', '${mysqlEscape(coupon_discount)}', '${mysqlEscape(shipping_cost)}', '${mysqlEscape(fees)}',
 							'${mysqlEscape(total)}', '${mysqlEscape(shipping_type)}', '${mysqlEscape(shipping_district_id)}', '${mysqlEscape(shipping_cep)}', '${mysqlEscape(shipping_street)}',
-							'${mysqlEscape(shipping_complement)}', '${mysqlEscape(shipping_number)}', '${mysqlEscape(shipping_address_observation)}', '${mysqlEscape(payment_status)}',
+							'${mysqlEscape(shipping_complement)}', '${mysqlEscape(shipping_number)}', '${mysqlEscape(shipping_address_observation)}',
 							'${mysqlEscape(payment_method)}',${typeof payment_installment_quantity == 'number' ? payment_installment_quantity : null}, ${payment_in_cash ? 1 : 0}, ${mysqlEscape(payment_pagseguro ? 1 : 0)},
 							${typeof coupon_id == 'number' ? coupon_id : null}, '${mysqlEscape(products)}');
 		`, (error, results, fields) => {
@@ -807,6 +807,107 @@ function startOrderByCredit(order_id, payment_pagseguro_code, callback) {
 		if (error) 
 			return callback(error.code)
 		else callback(null, true);
+	});
+}
+
+function getOrdersListWithFilter(customerInfo, orderId, status, payment_method, payment_status, callback) {
+	conn.query(`
+		SELECT orders.id AS id, total, status, payment_status, payment_method, creation_datetime,
+		payment_installment_quantity, customers.name AS customer_name, customers.cpf, customers.id AS customer_id
+		FROM orders
+		LEFT JOIN customers ON customers.id = orders.customer_id
+		WHERE (LOWER(customers.name) LIKE LOWER('%${mysqlEscape(customerInfo)}%') OR
+			LOWER(customers.cpf) LIKE LOWER('%${mysqlEscape(customerInfo)}%') OR
+			customers.id LIKE '%${mysqlEscape(customerInfo)}%') AND
+			orders.id LIKE '%${mysqlEscape(orderId)}%' AND
+			LOWER(status) LIKE LOWER('%${mysqlEscape(status)}%') AND
+			LOWER(payment_method) LIKE LOWER('%${mysqlEscape(payment_method)}%') AND
+			LOWER(payment_status) LIKE LOWER('%${mysqlEscape(payment_status)}%')
+		ORDER BY creation_datetime DESC;`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function getOrderInfo(orderId, callback) {
+	conn.query(`
+		SELECT o.id, o.total, o.subtotal, o.extra_amount, o.coupon_discount, o.shipping_cost, o.fees,
+		o.status, o.payment_status, o.payment_method,
+		o.creation_datetime, o.payment_installment_quantity,
+		o.shipping_status,
+		o.shipping_type, d.name AS shipping_district_name,
+		c.name AS shipping_city_name, c.uf AS shipping_city_uf,
+		o.shipping_cep, o.shipping_street, o.shipping_complement,
+		o.shipping_number, o.shipping_address_observation,
+		o.payment_boleto_link,
+		cp.code AS coupon_code,
+		cu.name AS customer_name, cu.id AS customer_id, cu.desired_name AS customer_desired_name, cu.cpf AS customer_cpf,
+		cu.birthday AS customer_birthday, cu.mobile AS customer_mobile, cu.whatsapp AS customer_whatsapp,
+		(SELECT GROUP_CONCAT(p.product_id) FROM order_products p WHERE p.order_id = o.id ORDER BY p.id ASC) AS products_product_id,
+		(SELECT GROUP_CONCAT(pp.name ORDER BY p.id ASC) FROM order_products p LEFT JOIN products pp ON pp.id = p.product_id WHERE p.order_id = o.id) AS products_product_name,
+		(SELECT GROUP_CONCAT(s.name ORDER BY p.id ASC) FROM order_products p LEFT JOIN sizes s ON s.id = p.size_id WHERE p.order_id = o.id) AS products_size_name,
+		(SELECT GROUP_CONCAT(p.price) FROM order_products p WHERE p.order_id = o.id ORDER BY p.id ASC) AS products_product_price,
+		(SELECT GROUP_CONCAT(p.quantity) FROM order_products p WHERE p.order_id = o.id ORDER BY p.id ASC) AS products_product_quantity
+		FROM orders o
+		LEFT JOIN districts d ON d.id = o.shipping_district_id
+		LEFT JOIN cities c ON c.id = d.city_id
+		LEFT JOIN coupons cp ON cp.id = o.coupon_id
+		LEFT JOIN customers cu ON cu.id = o.customer_id
+		WHERE
+			o.id = '${mysqlEscape(orderId)}';
+	`, (error, results, fields) => {
+		if (error) return callback(error.code)
+		if (results.length < 1) return callback("no order matches given id")
+		else callback(null, results[0]);
+	});
+}
+
+function getOrderEvents(orderId, callback) {
+	conn.query(`
+		SELECT order_events.*, users.username AS user_username
+		FROM order_events
+		LEFT JOIN users ON users.id = order_events.user_id
+		WHERE order_events.order_id = '${mysqlEscape(orderId)}'
+		ORDER BY date DESC;
+		`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function updateOrderStatus(orderId, status, reason, userId, callback) {
+	conn.query(`
+			CALL updateOrderStatus('${mysqlEscape(orderId)}', '${mysqlEscape(status)}', '${mysqlEscape(reason)}', '${mysqlEscape(userId)}');
+	   `, (error, results, fields) => {
+		if (error) {
+			return callback(error.code)
+		}
+		if (results.length < 1 || !results[0][0].success) return callback("couldnt update order status")
+		else callback(null, results[0][0]);
+	});
+}
+
+function updateOrderPaymentStatus(orderId, payment_status, reason, userId, callback) {
+	conn.query(`
+			CALL updateOrderPaymentStatus('${mysqlEscape(orderId)}', '${mysqlEscape(payment_status)}', '${mysqlEscape(reason)}', '${mysqlEscape(userId)}');
+	   `, (error, results, fields) => {
+		if (error) {
+			return callback(error.code)
+		}
+		if (results.length < 1 || !results[0][0].success) return callback("couldnt update order payment status")
+		else callback(null, results[0][0]);
+	});
+}
+
+function updateOrderShippingStatus(orderId, shipping_status, reason, userId, callback) {
+	conn.query(`
+			CALL updateOrderShippingStatus('${mysqlEscape(orderId)}', '${mysqlEscape(shipping_status)}', '${mysqlEscape(reason)}', '${mysqlEscape(userId)}');
+	   `, (error, results, fields) => {
+		if (error) {
+			return callback(error.code)
+		}
+		if (results.length < 1 || !results[0][0].success) return callback("couldnt update order shipping status")
+		else callback(null, results[0][0]);
 	});
 }
 
@@ -949,15 +1050,18 @@ function getProfilesList(callback) {
 }
 
 function addProfile(name, users_module, profiles_module, products_module, product_categories_module,
-sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+sizes_module, product_inventory_module, customers_module, orders_module, change_order_status,
+change_order_payment_status, change_order_shipping_status, cities_module,
 districts_module, coupons_module, consultants_module, callback) {
 
 	conn.query(`
 			INSERT INTO profiles(name, users_module, profiles_module, products_module, product_categories_module,
-			sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+			sizes_module, product_inventory_module, customers_module, orders_module, change_order_status,
+			change_order_payment_status, change_order_shipping_status, cities_module,
 			districts_module, coupons_module, consultants_module)
 			VALUES ('${mysqlEscape(name)}', ${Boolean(users_module)}, ${Boolean(profiles_module)}, ${Boolean(products_module)}, ${Boolean(product_categories_module)},
-			${Boolean(sizes_module)}, ${Boolean(product_inventory_module)}, ${Boolean(customers_module)}, ${Boolean(orders_module)}, ${Boolean(cities_module)},
+			${Boolean(sizes_module)}, ${Boolean(product_inventory_module)}, ${Boolean(customers_module)}, ${Boolean(orders_module)}, ${Boolean(change_order_status)},
+			${Boolean(change_order_payment_status)}, ${Boolean(change_order_shipping_status)}, ${Boolean(cities_module)},
 			${Boolean(districts_module)}, ${Boolean(coupons_module)}, ${Boolean(consultants_module)});
 	   `, (error, results, fields) => {
 		if (error) return callback(error)
@@ -976,7 +1080,8 @@ function deleteProfileById(profileId, callback) {
 
 function getProfileInfo(profileId, callback) {
 	conn.query(`SELECT name, users_module, profiles_module, products_module, product_categories_module,
-	sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+	sizes_module, product_inventory_module, customers_module, orders_module, change_order_status,
+	change_order_payment_status, change_order_shipping_status, cities_module,
 	districts_module, coupons_module, consultants_module FROM profiles WHERE id = '${mysqlEscape(profileId)}'`, (error, results, fields) => {
 		if (error) return callback(error.code)
 		if (results.length < 1) return callback("no profile matches given id")
@@ -985,11 +1090,12 @@ function getProfileInfo(profileId, callback) {
 }
 
 function updateProfileById(profileId, name, users_module, profiles_module, products_module, product_categories_module,
-sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+sizes_module, product_inventory_module, customers_module, orders_module, change_order_status,
+change_order_payment_status, change_order_shipping_status, cities_module,
 districts_module, coupons_module, consultants_module, callback) {
 	conn.query(`UPDATE profiles SET name='${mysqlEscape(name)}',users_module=${Boolean(users_module)},
 		profiles_module=${Boolean(profiles_module)},products_module=${Boolean(products_module)},product_categories_module=${Boolean(product_categories_module)},
-		sizes_module=${Boolean(sizes_module)},product_inventory_module=${Boolean(product_inventory_module)},customers_module=${Boolean(customers_module)},orders_module=${Boolean(orders_module)},cities_module=${Boolean(cities_module)},
+		sizes_module=${Boolean(sizes_module)},product_inventory_module=${Boolean(product_inventory_module)},customers_module=${Boolean(customers_module)},orders_module=${Boolean(orders_module)},change_order_status=${Boolean(change_order_status)},change_order_payment_status=${Boolean(change_order_payment_status)},change_order_shipping_status=${Boolean(change_order_shipping_status)},cities_module=${Boolean(cities_module)},
 		districts_module=${Boolean(districts_module)},coupons_module=${Boolean(coupons_module)},consultants_module=${Boolean(consultants_module)}
 	 WHERE id = '${mysqlEscape(profileId)}'`, (error, results, fields) => {
 		if (error) return callback(error)
@@ -1070,7 +1176,8 @@ module.exports = {
 		updateCustomerNotification, getCustomerWishlist, deleteProductFromCustomerWishlist, addProductToCustomerWishlist,
 		getCustomerOrdersList, getCustomerOrderById, getCustomersListWithFilter, getCustomerInfoForModule,
 	getProductsForPreOrder, getDistrictForPreOrder, getCustomerInfoForOrder, createOrder, deleteOrder, startOrderByBoleto,
-		startOrderByCredit,
+		startOrderByCredit, getOrdersListWithFilter, getOrderInfo, getOrderEvents, updateOrderStatus,
+		updateOrderPaymentStatus, updateOrderShippingStatus,
 	getCouponByCode,
 	getUserByLogin, getUserProfile, getUsersList, getUserForVerify, addUser, deleteUserById, getUserInfo, updateUserById,
 		updateUserPassword,

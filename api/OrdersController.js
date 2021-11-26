@@ -8,7 +8,9 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json({limit: '50mb'}));
 
-const VerifyCustomerToken = require('./VerifyCustomerToken')
+const VerifyCustomerToken = require('./VerifyCustomerToken');
+const VerifyUserToken = require('./VerifyUserToken');
+const GetUserProfile = require('./GetUserProfile');
 
 const config = require('../config'); 
 const pagseguro = config.pagseguro;
@@ -285,7 +287,6 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 	let _total = 0;
 	let coupon_id = null;
 	let productsForDb = {};
-	let payment_status = '';
 	let fees = 0;
 
 	let order_id = 0;
@@ -541,14 +542,10 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 						if (payment_method == 'PIX' || payment_method == 'BOLETO')
 							payment_in_cash = true;
 						else payment_in_cash = false;
-						if (payment_method == 'BOLETO' || payment_method == 'CREDIT') {
+						if (payment_method == 'BOLETO' || payment_method == 'CREDIT')
 							payment_pagseguro = true;
-							payment_status = 'NOT_STARTED';
-						}
-						else {
+						else
 							payment_pagseguro = false;
-							payment_status = 'STARTED';
-						}
 						if (payment_method == 'CREDIT')
 							payment_installment_quantity = req.body.installmentQuantity;
 					} catch(e) {
@@ -608,7 +605,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 
 						db.createOrder(customer.id, subtotal, extra_amount, _coupon_discount, shipping_cost, fees,
 							_total, shipping_type, customer.district_id, customer.cep, customer.street,
-							customer.complement, customer.number, customer.address_observation, payment_status,
+							customer.complement, customer.number, customer.address_observation,
 							payment_method, payment_installment_quantity, payment_in_cash, payment_pagseguro,
 							coupon_id, JSON.stringify(productsForDb), (error, results) => {
 							if (error) 
@@ -664,8 +661,6 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 								urlencoded.append("shippingAddressCountry", 'BRA');
 
 								urlencoded.append("shippingCost", shipping_cost.toFixed(2));
-
-								console.log(urlencoded);
 
 								fetch(`${pagseguro.APIUrl}v2/transactions?email=${pagseguro.Email}&token=${pagseguro.Token}`, {
 									method: 'POST',
@@ -779,8 +774,6 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 								urlencoded.append("billingAddressState", customer.city_uf);
 								urlencoded.append("billingAddressCountry", 'BRA');
 
-								console.log(urlencoded);
-
 								fetch(`${pagseguro.APIUrl}v2/transactions?email=${pagseguro.Email}&token=${pagseguro.Token}`, {
 									method: 'POST',
 									headers: {
@@ -847,6 +840,110 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 			return res.status(500).send({error: 'products invalid'});
 		}
 	});	
+});
+
+router.post('/with-filter', VerifyUserToken, GetUserProfile, function(req, res) {
+
+	if (!req.userProfile['orders_module'])
+		return res.status(500).send({error: 'permission denied'});
+
+	let customerInfo = String(req.body.customerInfo);
+	let orderId = String(req.body.orderId);
+	let status = String(req.body.status);
+	let payment_method = String(req.body.payment_method);
+	let payment_status = String(req.body.payment_status);
+
+	db.getOrdersListWithFilter(customerInfo, orderId, status, payment_method, payment_status, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({orders: results});
+	});
+});
+
+router.get('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!req.userProfile['orders_module'])
+		return res.status(500).send({error: 'permission denied'});
+	db.getOrderInfo(req.params.id ,(error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({order: results});
+	});
+});
+
+router.get('/:id/events', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!(req.userProfile['orders_module']))
+		return res.status(500).send({error: 'permission denied'});
+	db.getOrderEvents(req.params.id, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({events: results});
+	});
+});
+
+router.patch('/:id/update-status', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!(req.userProfile['change_order_status']))
+		return res.status(500).send({error: 'permission denied'});
+
+	let status = String(req.body.status);
+	let reason = req.body.reason;
+
+	if (['IN_PROGRESS', 'FINISHED', 'CANCELED'].indexOf(status) == -1)
+		return res.status(500).send({error: 'status invalid'});
+
+	if (reason == null || String(reason).length < 1)
+		return res.status(500).send({error:"reason too short"});
+	if (String(reason).length > 100)
+		return res.status(500).send({error:"reason too long"});
+
+	db.updateOrderStatus(req.params.id, status, reason, req.userId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({success: true});
+	});
+});
+
+router.patch('/:id/update-payment-status', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!(req.userProfile['change_order_payment_status']))
+		return res.status(500).send({error: 'permission denied'});
+
+	let payment_status = String(req.body.payment_status);
+	let reason = req.body.reason;
+
+	if (['AWAITING_PAYMENT', 'CONFIRMED', 'CANCELED'].indexOf(payment_status) == -1)
+		return res.status(500).send({error: 'payment_status invalid'});
+
+	if (reason == null || String(reason).length < 1)
+		return res.status(500).send({error:"reason too short"});
+	if (String(reason).length > 100)
+		return res.status(500).send({error:"reason too long"});
+
+	db.updateOrderPaymentStatus(req.params.id, payment_status, reason, req.userId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({success: true});
+	});
+});
+
+router.patch('/:id/update-shipping-status', VerifyUserToken, GetUserProfile, function(req, res) {
+	if (!(req.userProfile['change_order_shipping_status']))
+		return res.status(500).send({error: 'permission denied'});
+
+	let shipping_status = String(req.body.shipping_status);
+	let reason = req.body.reason;
+
+	if (['NOT_STARTED', 'IN_SEPARATION', 'READY_FOR_DELIVERY', 'OUT_TO_DELIVERY', 'DELIVERED', 'DELIVERY_FAILURE'].indexOf(shipping_status) == -1)
+		return res.status(500).send({error: 'shipping_status invalid'});
+
+	if (reason == null || String(reason).length < 1)
+		return res.status(500).send({error:"reason too short"});
+	if (String(reason).length > 100)
+		return res.status(500).send({error:"reason too long"});
+
+	db.updateOrderShippingStatus(req.params.id, shipping_status, reason, req.userId, (error, results) => {
+		if (error)
+			return res.status(500).send({error: error});
+		res.status(200).send({success: true});
+	});
 });
 
 module.exports = router;

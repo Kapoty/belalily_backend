@@ -1,0 +1,38 @@
+DROP PROCEDURE IF EXISTS updateOrderShippingStatus;
+
+DELIMITER $$
+
+CREATE PROCEDURE updateOrderShippingStatus ( order_id INT, shipping_status ENUM('NOT_STARTED', 'IN_SEPARATION', 'READY_FOR_DELIVERY', 'OUT_TO_DELIVERY', 'DELIVERED', 'DELIVERY_FAILURE'), reason VARCHAR(100), user_id INT)
+
+BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE current_status VARCHAR(50);
+    DECLARE current_shipping_status VARCHAR(50);
+    
+    START TRANSACTION;
+    
+    SELECT orders.status, orders.shipping_status INTO current_status, current_shipping_status FROM orders WHERE id = order_id;
+
+    IF (current_status = 'IN_PROGRESS' AND current_shipping_status != shipping_status) THEN
+
+	    UPDATE `orders` SET `shipping_status` = shipping_status WHERE id = order_id;
+
+        INSERT INTO `order_events`(`date`, `type`, `description`, `order_id`, `user_id`) VALUES (NOW(), 'SHIPPING_STATUS_UPDATE', concat('De: ', current_shipping_status, '\nPara: ', shipping_status, '\nMotivo: ', reason), order_id, user_id);
+
+	    SET success = TRUE; 
+	    COMMIT;
+    ELSE
+    	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'order not found';
+        ROLLBACK;
+    END IF;
+
+    
+    SELECT success;
+
+END; $$
+
+DELIMITER ;
+
+CALL updateOrderShippingStatus(1, 'CONFIRMED', 'teste', 1);

@@ -1,0 +1,44 @@
+DROP PROCEDURE IF EXISTS updateOrderStatus;
+
+DELIMITER $$
+
+CREATE PROCEDURE updateOrderStatus ( order_id INT, status ENUM('IN_PROGRESS', 'FINISHED', 'CANCELED'), reason VARCHAR(100), user_id INT)
+
+BEGIN
+
+    DECLARE success BOOLEAN DEFAULT FALSE;
+    DECLARE current_status ENUM('IN_PROGRESS', 'FINISHED', 'CANCELED', '') DEFAULT '';
+    DECLARE current_payment_status VARCHAR(50);
+    
+    START TRANSACTION;
+    
+    SELECT orders.status, orders.payment_status INTO current_status, current_payment_status FROM orders WHERE id = order_id;
+
+    IF ((status = 'FINISHED' AND current_status = 'IN_PROGRESS' AND current_payment_status = 'CONFIRMED') OR
+        (status = 'CANCELED' AND current_status = 'IN_PROGRESS' AND current_payment_status = 'CANCELED') OR
+        (status = 'IN_PROGRESS' AND current_status = 'FINISHED')) THEN
+
+        IF (status = 'CANCELED') THEN
+            CALL cancelOrder(order_id, reason, user_id);
+        ELSE
+    	   UPDATE `orders` SET `status` = status WHERE id = order_id;
+
+           INSERT INTO `order_events`(`date`, `type`, `description`, `order_id`, `user_id`) VALUES (NOW(), 'STATUS_UPDATE', concat('De: ', current_status, '\nPara: ', status, '\nMotivo: ', reason), order_id, user_id);
+        END IF;
+
+	    SET success = TRUE; 
+	    COMMIT;
+    ELSE
+    	SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'order not found';
+        ROLLBACK;
+    END IF;
+
+    
+    SELECT success;
+
+END; $$
+
+DELIMITER ;
+
+CALL updateOrderStatus(1, 'AVAILABLE', 'teste', 1);

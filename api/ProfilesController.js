@@ -37,6 +37,9 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 	let product_inventory_module = req.body.product_inventory_module;
 	let customers_module = req.body.customers_module;
 	let orders_module = req.body.orders_module;
+	let change_order_status = req.body.change_order_status;
+	let change_order_payment_status = req.body.change_order_payment_status;
+	let change_order_shipping_status = req.body.change_order_shipping_status;
 	let cities_module = req.body.cities_module;
 	let districts_module = req.body.districts_module;
 	let coupons_module = req.body.coupons_module;
@@ -63,13 +66,17 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 	product_inventory_module = Boolean(product_inventory_module);
 	customers_module = Boolean(customers_module);
 	orders_module = Boolean(orders_module);
+	change_order_status = Boolean(change_order_status);
+	change_order_payment_status = Boolean(change_order_payment_status);
+	change_order_shipping_status = Boolean(change_order_shipping_status);
 	cities_module = Boolean(cities_module);
 	districts_module = Boolean(districts_module);
 	coupons_module = Boolean(coupons_module);
 	consultants_module = Boolean(consultants_module);
 
 	db.addProfile(String(name), users_module, profiles_module, products_module, product_categories_module,
-	sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+	sizes_module, product_inventory_module, customers_module, orders_module, change_order_status,
+	change_order_payment_status, change_order_shipping_status, cities_module,
 	districts_module, coupons_module, consultants_module, (error, results) => {
 
 		if (error) {
@@ -114,6 +121,9 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 	let product_inventory_module = req.body.product_inventory_module;
 	let customers_module = req.body.customers_module;
 	let orders_module = req.body.orders_module;
+	let change_order_status = req.body.change_order_status;
+	let change_order_payment_status = req.body.change_order_payment_status;
+	let change_order_shipping_status = req.body.change_order_shipping_status;
 	let cities_module = req.body.cities_module;
 	let districts_module = req.body.districts_module;
 	let coupons_module = req.body.coupons_module;
@@ -144,9 +154,13 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 	districts_module = Boolean(districts_module);
 	coupons_module = Boolean(coupons_module);
 	consultants_module = Boolean(consultants_module);
+	change_order_status = Boolean(change_order_status);
+	change_order_payment_status = Boolean(change_order_payment_status);
+	change_order_shipping_status = Boolean(change_order_shipping_status);
 
 	db.updateProfileById(req.params.id, String(name), users_module, profiles_module, products_module, product_categories_module,
-	sizes_module, product_inventory_module, customers_module, orders_module, cities_module,
+	sizes_module, product_inventory_module, customers_module, orders_module, change_order_status,
+	change_order_payment_status, change_order_shipping_status, cities_module,
 	districts_module, coupons_module, consultants_module, (error, results) => {
 
 		if (error) {
