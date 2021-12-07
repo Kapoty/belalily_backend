@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"Err",
+				"error"
+			],
+			[
+				"st",
+				"status"
+			],
+			[
 				"updateOrde",
 				"updateOrderPaymentStatus"
 			],
@@ -506,14 +514,6 @@
 			[
 				"getPr",
 				"getProductInventory"
-			],
-			[
-				"pro",
-				"productId"
-			],
-			[
-				"mysq",
-				"mysqlEscape"
 			]
 		]
 	},
@@ -523,7 +523,16 @@
 			"file": "app.js",
 			"settings":
 			{
-				"buffer_size": 2068,
+				"buffer_size": 2066,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "api/PagseguroController.js",
+			"settings":
+			{
+				"buffer_size": 2022,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -613,16 +622,8 @@
 			"file": "api/OrdersController.js",
 			"settings":
 			{
-				"buffer_size": 34897,
+				"buffer_size": 34921,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "pagseguro/PagseguroController.js",
-			"settings":
-			{
-				"buffer_size": 6641,
 				"line_ending": "Unix"
 			}
 		},
@@ -630,7 +631,7 @@
 			"file": "db.js",
 			"settings":
 			{
-				"buffer_size": 51811,
+				"buffer_size": 52410,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -847,6 +848,17 @@
 	},
 	"file_history":
 	[
+		"/C/Users/to/Desktop/PRV/Programming/backend/pagseguro/PagseguroController.js",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/config/Config.js",
+		"/C/Users/to/Desktop/PRV/Programming/static-servers/ecommerce-server.js",
+		"/C/Users/to/Desktop/PRV/Programming/static-servers/package.json",
+		"/C/Users/to/Desktop/PRV/Programming/backend/package.json",
+		"/C/Users/to/Desktop/PRV/Programming/erp/package.json",
+		"/C/Users/to/Desktop/PRV/Programming/erp/erp-server.js",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/ecommerce-server.js",
+		"/C/Users/to/Desktop/PRV/Programming/backend/server.js",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/erp-server.js",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/server.js",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/OrdersDialog.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/erp/src/App.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/mysql/createOrder",
@@ -892,22 +904,18 @@
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/CustomAppBar.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/routes/MainRoute.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/config.js",
-		"/C/Users/to/Desktop/PRV/Programming/backend/server.js",
 		"/C/Users/to/Desktop/PRV/Programming/backend/util.js",
 		"/C/Users/to/Desktop/PRV/Programming/backend/api/CatalogController.js",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/Catalog.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/app.js",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/routes/SoonRoute.jsx",
-		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/config/Config.js",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/App.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/BagProduct.jsx",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/config/Config.js",
 		"/C/Users/to/Desktop/PRV/Programming/site/src/components/FAQ.jsx",
-		"/C/Users/to/Desktop/PRV/Programming/backend/pagseguro/PagseguroController.js",
 		"/C/www/provador/index.html",
 		"/C/Users/to/Desktop/PRV/boletoerro.json",
 		"/C/Users/to/Desktop/PRV/boleto gerado.json",
-		"/C/Users/to/Desktop/PRV/Programming/backend/package.json",
 		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/package.json",
 		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/webpack.config.js",
 		"/C/Users/to/Desktop/PRV/Programming/pagseguro_frontend/src/index.html",
@@ -967,18 +975,11 @@
 		"/C/Users/to/Desktop/AxieEnergyCalculator/assets/css/general.css",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/package-lock.json",
 		"/C/Users/to/Desktop/Patins e Cia/BackEnd/package.json",
-		"/C/Users/to/Desktop/a.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/matchhistory.js",
-		"/C/Users/to/Desktop/TRASH/lol data analysis/leaguepedia.js",
-		"/C/Users/to/Desktop/comando/build.js",
-		"/C/Users/to/Desktop/new keyboard/static/script.js",
-		"/C/Users/to/Desktop/new keyboard/static/index.html",
-		"/C/Users/to/Desktop/new keyboard/index.js",
-		"/C/Users/to/Desktop/lolalytics/server.js"
+		"/C/Users/to/Desktop/a.js"
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 43.0
 	},
 	"find_in_files":
 	{
@@ -992,6 +993,11 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"updateOrderPay",
+			"getOrder",
+			"getOrderBy",
+			"notifica",
+			"pagseguro",
 			"console.log",
 			"payment",
 			"updateOrderPay",
@@ -1114,12 +1120,7 @@
 			"getCategor",
 			"updateProfile",
 			"getCate",
-			"getProfileInfo",
-			"getCategoriesL",
-			"getCategoriesListComplete",
-			"getCateg",
-			"deleteProfileBy",
-			"getCategories"
+			"getProfileInfo"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1202,7 +1203,7 @@
 	"groups":
 	[
 		{
-			"selected": 12,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -1211,15 +1212,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2068,
+						"buffer_size": 2066,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								975,
-								975
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1227,14 +1228,43 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 152.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
+					"file": "api/PagseguroController.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2022,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1688,
+								1688
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 370.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
 					"file": "api/UsersController.js",
 					"semi_transient": false,
 					"settings":
@@ -1259,11 +1289,11 @@
 						"translation.y": 1390.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 26,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 3,
 					"file": "api/ProfilesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1288,11 +1318,11 @@
 						"translation.y": 1017.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "api/ProductsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1317,11 +1347,11 @@
 						"translation.y": 5930.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 5,
 					"file": "api/VerifyUserToken.js",
 					"semi_transient": false,
 					"settings":
@@ -1347,11 +1377,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 6,
 					"file": "api/CitiesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1376,11 +1406,11 @@
 						"translation.y": 855.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 26,
+					"stack_index": 27,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 7,
 					"file": "api/DistrictsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1405,11 +1435,11 @@
 						"translation.y": 56.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 8,
 					"file": "api/VerifyCustomerToken.js",
 					"semi_transient": false,
 					"settings":
@@ -1435,11 +1465,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 27,
+					"stack_index": 28,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 9,
 					"file": "api/CustomersController.js",
 					"semi_transient": false,
 					"settings":
@@ -1464,11 +1494,11 @@
 						"translation.y": 972.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 10,
 					"file": "config.js",
 					"semi_transient": false,
 					"settings":
@@ -1480,8 +1510,8 @@
 						"selection":
 						[
 							[
-								154,
-								154
+								71,
+								111
 							]
 						],
 						"settings":
@@ -1492,53 +1522,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "api/OrdersController.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 34897,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								34264,
-								34353
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 13675.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
 					"buffer": 11,
-					"file": "pagseguro/PagseguroController.js",
+					"file": "api/OrdersController.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6641,
+						"buffer_size": 34921,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								28,
-								2
+								33955,
+								33748
 							]
 						],
 						"settings":
@@ -1547,10 +1548,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 13497.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
@@ -1559,15 +1560,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 51811,
+						"buffer_size": 52410,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								38296,
-								38296
+								38839,
+								38839
 							]
 						],
 						"settings":
@@ -1577,10 +1578,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 13240.0,
+						"translation.y": 13520.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -1610,7 +1611,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
@@ -1640,7 +1641,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
@@ -1670,7 +1671,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
@@ -1692,13 +1693,15 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -1728,7 +1731,7 @@
 						"translation.y": 405.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
@@ -1758,7 +1761,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
@@ -1788,7 +1791,7 @@
 						"translation.y": 1587.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
@@ -1818,7 +1821,7 @@
 						"translation.y": 405.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
@@ -1847,7 +1850,7 @@
 						"translation.y": 4955.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
@@ -1876,7 +1879,7 @@
 						"translation.y": 716.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
@@ -1904,7 +1907,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
@@ -1933,7 +1936,7 @@
 						"translation.y": 491.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
@@ -1961,7 +1964,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
@@ -1990,7 +1993,7 @@
 						"translation.y": 563.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
@@ -2019,7 +2022,7 @@
 						"translation.y": 335.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
@@ -2048,7 +2051,7 @@
 						"translation.y": 1316.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 24,
 					"type": "text"
 				}
 			]

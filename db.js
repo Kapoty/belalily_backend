@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const logger = require('./logger');
 
-var config =
+/*var config =
 {
 	host: '127.0.0.1',
 	user: 'root',
@@ -10,7 +10,8 @@ var config =
 	port: 3306,
 	ssl: false,
 	multipleStatements: true
-};
+};*/
+const config = require('./db-config');
 
 var conn;
 
@@ -911,6 +912,18 @@ function updateOrderShippingStatus(orderId, shipping_status, reason, userId, cal
 	});
 }
 
+function updateOrderPaymentStatusByRef(ref, payment_status, reason, callback) {
+	conn.query(`
+			CALL updateOrderPaymentStatus((SELECT id FROM orders WHERE payment_pagseguro_reference = '${mysqlEscape(ref)}' LIMIT 1), '${mysqlEscape(payment_status)}', '${mysqlEscape(reason)}', null);
+	   `, (error, results, fields) => {
+		if (error) {
+			return callback(error.code)
+		}
+		if (results.length < 1 || !results[0][0].success) return callback("couldnt update order payment status")
+		else callback(null, results[0][0]);
+	});
+}
+
 /* Coupon */
 
 function getCouponByCode(code, callback) {
@@ -1177,7 +1190,7 @@ module.exports = {
 		getCustomerOrdersList, getCustomerOrderById, getCustomersListWithFilter, getCustomerInfoForModule,
 	getProductsForPreOrder, getDistrictForPreOrder, getCustomerInfoForOrder, createOrder, deleteOrder, startOrderByBoleto,
 		startOrderByCredit, getOrdersListWithFilter, getOrderInfo, getOrderEvents, updateOrderStatus,
-		updateOrderPaymentStatus, updateOrderShippingStatus,
+		updateOrderPaymentStatus, updateOrderShippingStatus, updateOrderPaymentStatusByRef,
 	getCouponByCode,
 	getUserByLogin, getUserProfile, getUsersList, getUserForVerify, addUser, deleteUserById, getUserInfo, updateUserById,
 		updateUserPassword,

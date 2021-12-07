@@ -640,7 +640,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 									urlencoded.append("itemQuantity"+(i+1), products[i].desiredQuantity);
 								}
 
-								urlencoded.append("notificationURL", "https://sualoja.com.br/notifica.html");
+								urlencoded.append("notificationURL", "http://138.197.73.233/api/pagseguro/notification");
 								urlencoded.append("reference", payment_pagseguro_reference);
 
 								urlencoded.append("senderName", customer.name.substr(0, 50));
@@ -731,7 +731,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 									urlencoded.append("itemQuantity"+(i+1), products[i].desiredQuantity);
 								}
 
-								urlencoded.append("notificationURL", "https://sualoja.com.br/notifica.html");
+								urlencoded.append("notificationURL", "http://138.197.73.233/api/pagseguro/notification");
 								urlencoded.append("reference", payment_pagseguro_reference);
 
 								urlencoded.append("senderName", customer.name.substr(0, 50));

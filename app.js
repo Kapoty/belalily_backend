@@ -17,7 +17,7 @@ var UsersController = require(__root + 'api/UsersController');
 var ProfilesController = require(__root + 'api/ProfilesController');
 var CouponsController = require(__root + 'api/CouponsController');
 var ConsultantsController = require(__root + 'api/ConsultantsController');
-var PagseguroController = require(__root + 'pagseguro/PagseguroController');
+var PagseguroController = require(__root + 'api/PagseguroController');
 
 function errorLogger(error, req, res, next) {
 	logger.error(error);
@@ -42,7 +42,7 @@ app.use('/api/users/', UsersController);
 app.use('/api/profiles/', ProfilesController);
 app.use('/api/coupons/', CouponsController);
 app.use('/api/consultants/', ConsultantsController);
-app.use('/pagseguro/', PagseguroController);
+app.use('/api/pagseguro/', PagseguroController);
 
 app.use('/media', express.static(__dirname + '/media'));
 app.use('/', express.static(__dirname + '/frontend'));

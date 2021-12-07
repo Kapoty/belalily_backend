@@ -2,3 +2,4 @@ node_modules
 media/
 error.log
 info.log
+frontend/
