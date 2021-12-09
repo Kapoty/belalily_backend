@@ -933,12 +933,36 @@ function getCouponByCode(code, callback) {
 	});
 }
 
-function addCoupon(code, type, value, minimum_amount, max_uses, max_units, consultant_id, callback) {
+function getCouponByCodeForPreOrder(code, customerId, callback) {
+	 conn.query(`
+
+	 	SELECT coupons.*,
+		EXISTS
+			(
+				SELECT
+					id
+				FROM
+					orders
+				WHERE
+					orders.customer_id = '${mysqlEscape(customerId)}' AND orders.coupon_id = coupons.id
+					AND (orders.status = 'IN_PROGRESS' OR orders.status = 'FINISHED')
+				LIMIT 1
+			) AS already_used
+		FROM coupons
+		WHERE LOWER(code) = LOWER('${mysqlEscape(code)}');
+
+	 	`, (error, results, fields) => {
+		if (error) callback(error.code)
+		else callback(null, results);
+	});
+}
+
+function addCoupon(code, type, value, minimum_amount, max_uses, max_units, single_use, consultant_id, callback) {
 
 	conn.query(`
-			INSERT INTO coupons(code, type, value, minimum_amount, max_uses, max_units, consultant_id)
+			INSERT INTO coupons(code, type, value, minimum_amount, max_uses, max_units, single_use, consultant_id)
 			VALUES ('${mysqlEscape(code)}', '${mysqlEscape(type)}', ${mysqlEscape(value)}, ${mysqlEscape(minimum_amount)},
-			${mysqlEscape(max_uses)}, ${mysqlEscape(max_units)}, ${(consultant_id == null) ? 'null' : mysqlEscape(consultant_id)});
+			${mysqlEscape(max_uses)}, ${mysqlEscape(max_units)}, ${Boolean(single_use)}, ${(consultant_id == null) ? 'null' : mysqlEscape(consultant_id)});
 	   `, (error, results, fields) => {
 		if (error) return callback(error)
 		if (results.length < 1) return callback({code: 'UNEXPECTED', message: "unexpected"})
@@ -955,17 +979,17 @@ function deleteCouponById(couponId, callback) {
 }
 
 function getCouponInfo(couponId, callback) {
-	conn.query(`SELECT code, type, value, minimum_amount, max_uses, max_units, consultant_id FROM coupons WHERE id = '${mysqlEscape(couponId)}'`, (error, results, fields) => {
+	conn.query(`SELECT code, type, value, minimum_amount, max_uses, max_units, single_use, consultant_id FROM coupons WHERE id = '${mysqlEscape(couponId)}'`, (error, results, fields) => {
 		if (error) return callback(error.code)
 		if (results.length < 1) return callback("no coupon matches given id")
 		else callback(null, results[0]);
 	});
 }
 
-function updateCouponById(couponId, code, type, value, minimum_amount, max_uses, max_units, consultant_id, callback) {
+function updateCouponById(couponId, code, type, value, minimum_amount, max_uses, max_units, single_use, consultant_id, callback) {
 	conn.query(`UPDATE coupons SET code='${mysqlEscape(code)}', type='${mysqlEscape(type)}', value=${mysqlEscape(value)},
 		 minimum_amount=${mysqlEscape(minimum_amount)}, max_uses=${mysqlEscape(max_uses)}, max_units=${mysqlEscape(max_units)},
-		 consultant_id=${(consultant_id == null) ? 'null' : mysqlEscape(consultant_id)}
+		 single_use=${Boolean(single_use)}, consultant_id=${(consultant_id == null) ? 'null' : mysqlEscape(consultant_id)}
 	 WHERE id = '${mysqlEscape(couponId)}'`, (error, results, fields) => {
 		if (error) return callback(error)
 		if (results.affectedRows == 0) return callback({code: 'UNEXPECTED', message: "unexpected"});
@@ -1191,7 +1215,7 @@ module.exports = {
 	getProductsForPreOrder, getDistrictForPreOrder, getCustomerInfoForOrder, createOrder, deleteOrder, startOrderByBoleto,
 		startOrderByCredit, getOrdersListWithFilter, getOrderInfo, getOrderEvents, updateOrderStatus,
 		updateOrderPaymentStatus, updateOrderShippingStatus, updateOrderPaymentStatusByRef,
-	getCouponByCode,
+	getCouponByCode, getCouponByCodeForPreOrder,
 	getUserByLogin, getUserProfile, getUsersList, getUserForVerify, addUser, deleteUserById, getUserInfo, updateUserById,
 		updateUserPassword,
 	getProfilesList, addProfile, deleteProfileById, getProfileInfo, updateProfileById,

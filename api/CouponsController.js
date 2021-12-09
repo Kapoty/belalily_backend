@@ -31,6 +31,7 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 	let minimum_amount = req.body.minimum_amount;
 	let max_uses = req.body.max_uses;
 	let max_units = req.body.max_units;
+	let single_use = req.body.single_use;
 	let consultant_id = req.body.consultant_id;
 
 	// validações
@@ -69,12 +70,16 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 	max_uses = Math.floor(max_uses);
 	max_units = Math.floor(max_units);
 
+	//single_use
+
+	single_use = Boolean(single_use);
+
 	//consultant_id
 
 	if (consultant_id !== null && ( isNaN(parseInt(consultant_id)) || consultant_id < 0 ))
 		return res.status(500).send({error:"consultant invalid"});
 
-	db.addCoupon(String(code), String(type), value, minimum_amount, max_uses, max_units, consultant_id, (error, results) => {
+	db.addCoupon(String(code), String(type), value, minimum_amount, max_uses, max_units, single_use, consultant_id, (error, results) => {
 
 		if (error) {
 			if (/(^ER_DUP_ENTRY)[\s\S]+('code'$)/g.test(error.message))
@@ -116,6 +121,7 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 	let max_uses = req.body.max_uses;
 	let max_units = req.body.max_units;
 	let consultant_id = req.body.consultant_id;
+	let single_use = req.body.single_use;
 
 	// validações
 
@@ -152,12 +158,16 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 	max_uses = Math.floor(max_uses);
 	max_units = Math.floor(max_units);
 
+	//single_use
+
+	single_use = Boolean(single_use);
+
 	//consultant_id
 
 	if (consultant_id !== null && ( isNaN(parseInt(consultant_id)) || consultant_id < 0 ))
 		return res.status(500).send({error:"consultant invalid"});
 
-	db.updateCouponById(req.params.id, String(code), String(type), value, minimum_amount, max_uses, max_units, consultant_id, (error, results) => {
+	db.updateCouponById(req.params.id, String(code), String(type), value, minimum_amount, max_uses, max_units, single_use, consultant_id, (error, results) => {
 
 		if (error) {
 			if (/(^ER_DUP_ENTRY)[\s\S]+('code'$)/g.test(error.message))

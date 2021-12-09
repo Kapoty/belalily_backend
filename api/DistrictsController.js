@@ -50,7 +50,7 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 
 	if (name == null || String(name).length < 1)
 		return res.status(500).send({error:"name too short"});
-	if (String(name).length > 30)
+	if (String(name).length > 70)
 		return res.status(500).send({error:"name too long"});
 
 	//city_id
@@ -62,7 +62,7 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 
 	if (api_name == null || String(api_name).length < 1)
 		return res.status(500).send({error:"api_name too short"});
-	if (String(api_name).length > 30)
+	if (String(api_name).length > 70)
 		return res.status(500).send({error:"api_name too long"});
 
 	//shipping_normal_price shipping_express_price
@@ -128,7 +128,7 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 
 	if (name == null || String(name).length < 1)
 		return res.status(500).send({error:"name too short"});
-	if (String(name).length > 30)
+	if (String(name).length > 70)
 		return res.status(500).send({error:"name too long"});
 
 	//city_id
@@ -140,7 +140,7 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 
 	if (api_name == null || String(api_name).length < 1)
 		return res.status(500).send({error:"api_name too short"});
-	if (String(api_name).length > 30)
+	if (String(api_name).length > 70)
 		return res.status(500).send({error:"api_name too long"});
 
 	//shipping_normal_price shipping_express_price

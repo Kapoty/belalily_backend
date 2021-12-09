@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"customer",
+				"customerId"
+			],
+			[
+				"alread",
+				"already_used"
+			],
+			[
+				"coupon_a",
+				"coupon_already_used"
+			],
+			[
+				"getCou",
+				"getCouponByCode"
+			],
+			[
+				"r_cou",
+				"r_coupon_already_used"
+			],
+			[
+				"res",
+				"results"
+			],
+			[
+				"r_coupon_a",
+				"r_coupon_already_used"
+			],
+			[
+				"r_co",
+				"r_coupon"
+			],
+			[
 				"Err",
 				"error"
 			],
@@ -240,10 +272,6 @@
 				"payment_pagseguro"
 			],
 			[
-				"res",
-				"result"
-			],
-			[
 				"produc",
 				"productsUnique"
 			],
@@ -316,10 +344,6 @@
 				"r_products_units"
 			],
 			[
-				"r_cou",
-				"r_coupon_applied"
-			],
-			[
 				"le",
 				"length"
 			],
@@ -330,10 +354,6 @@
 			[
 				"r_c",
 				"r_coupon"
-			],
-			[
-				"r_co",
-				"r_coupon_discount"
 			],
 			[
 				"r_tota",
@@ -494,26 +514,6 @@
 			[
 				"mysql",
 				"mysqlEscape"
-			],
-			[
-				"str",
-				"stringToEscape"
-			],
-			[
-				"getCu",
-				"getCustomerBasicInfo"
-			],
-			[
-				"customer",
-				"customerId"
-			],
-			[
-				"prod",
-				"product_id"
-			],
-			[
-				"getPr",
-				"getProductInventory"
 			]
 		]
 	},
@@ -524,15 +524,6 @@
 			"settings":
 			{
 				"buffer_size": 2066,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "api/PagseguroController.js",
-			"settings":
-			{
-				"buffer_size": 2022,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -622,7 +613,7 @@
 			"file": "api/OrdersController.js",
 			"settings":
 			{
-				"buffer_size": 34921,
+				"buffer_size": 35360,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -631,7 +622,7 @@
 			"file": "db.js",
 			"settings":
 			{
-				"buffer_size": 52410,
+				"buffer_size": 53084,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -712,7 +703,7 @@
 			"file": "/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/OrdersDialog.jsx",
 			"settings":
 			{
-				"buffer_size": 16241,
+				"buffer_size": 16290,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
@@ -765,7 +756,7 @@
 			"file": "api/CouponsController.js",
 			"settings":
 			{
-				"buffer_size": 5660,
+				"buffer_size": 5864,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -848,11 +839,17 @@
 	},
 	"file_history":
 	[
-		"/C/Users/to/Desktop/PRV/Programming/backend/pagseguro/PagseguroController.js",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/webpack.config.js",
+		"/C/Users/to/Desktop/PRV/Programming/erp/webpack.config.js",
+		"/C/Users/to/Desktop/PRV/Programming/backend/api/PagseguroController.js",
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/components/AddDistrictDialog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/erp/src/components/EditDistrictDialog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/LoginDialog.jsx",
+		"/C/Users/to/Desktop/PRV/Programming/backend/package.json",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/config/Config.js",
+		"/C/Users/to/Desktop/PRV/Programming/backend/pagseguro/PagseguroController.js",
 		"/C/Users/to/Desktop/PRV/Programming/static-servers/ecommerce-server.js",
 		"/C/Users/to/Desktop/PRV/Programming/static-servers/package.json",
-		"/C/Users/to/Desktop/PRV/Programming/backend/package.json",
 		"/C/Users/to/Desktop/PRV/Programming/erp/package.json",
 		"/C/Users/to/Desktop/PRV/Programming/erp/erp-server.js",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/ecommerce-server.js",
@@ -885,7 +882,6 @@
 		"/C/Users/to/Desktop/Patins e Cia/BackEnd/db.js",
 		"/C/Users/to/Desktop/PRV/Programming/backend/api/CustomersController.js",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/ProfileDialog.jsx",
-		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/LoginDialog.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/site/src/data/CatalogData.json",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/ProductDialog.jsx",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/components/AddOrderComponent.jsx",
@@ -896,7 +892,6 @@
 		"/C/Users/to/Desktop/PRV/Programming/site/src/components/BagProduct.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/site/src/components/Bag.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/backend/logger.js",
-		"/C/Users/to/Desktop/PRV/Programming/ecommerce/webpack.config.js",
 		"/C/Users/to/Desktop/PRV/Programming/ecommerce/src/index.html",
 		"/C/Users/to/Desktop/PRV/Programming/backend/.gitignore",
 		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/src/routes/LoginRoute.jsx",
@@ -923,7 +918,6 @@
 		"/C/Users/to/Desktop/PRV/Programming/site/src/routes/MainRoute.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/site/src/components/FilterDialog.jsx",
 		"/C/Users/to/Desktop/PRV/Programming/site/src/App.jsx",
-		"/C/Users/to/Desktop/PRV/Programming/backend/api/PagseguroController.js",
 		"/C/Users/to/Desktop/PRV/Programming/backend/db.js",
 		"/C/Users/to/Desktop/PRV/Programming/backend/api/VerifyAdmin.js",
 		"/C/Users/to/Desktop/PRV/Programming/site/src/components/AboutUs.jsx",
@@ -972,14 +966,11 @@
 		"/C/Users/to/Desktop/AxieEnergyCalculator/index.html",
 		"/C/Users/to/Desktop/AxieEnergyCalculator/calculator.js",
 		"/C/www/axie/general.css",
-		"/C/Users/to/Desktop/AxieEnergyCalculator/assets/css/general.css",
-		"/C/Users/to/Desktop/Patins e Cia/FrontEnd/package-lock.json",
-		"/C/Users/to/Desktop/Patins e Cia/BackEnd/package.json",
-		"/C/Users/to/Desktop/a.js"
+		"/C/Users/to/Desktop/AxieEnergyCalculator/assets/css/general.css"
 	],
 	"find":
 	{
-		"height": 43.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -993,6 +984,17 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"getCoupon",
+			"EXISTS",
+			"exists",
+			"customerId",
+			"getCouponByCode",
+			"single_use",
+			"addProfile",
+			"addCoupon",
+			"30",
+			"district",
+			"images",
 			"updateOrderPay",
 			"getOrder",
 			"getOrderBy",
@@ -1109,18 +1111,7 @@
 			"getSizeList",
 			"getSiz",
 			"updateCateg",
-			"getSiz",
-			"getCategoryInfo",
-			"getSiz",
-			"deleteCateg",
-			"getSiz",
-			"addCatego",
-			"/* Siz",
-			"addCate",
-			"getCategor",
-			"updateProfile",
-			"getCate",
-			"getProfileInfo"
+			"getSiz"
 		],
 		"highlight": false,
 		"in_selection": false,
@@ -1203,7 +1194,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 10,
 			"sheets":
 			[
 				{
@@ -1219,8 +1210,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								1261,
+								1261
 							]
 						],
 						"settings":
@@ -1228,43 +1219,14 @@
 							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 135.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "api/PagseguroController.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2022,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1688,
-								1688
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 370.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
 					"file": "api/UsersController.js",
 					"semi_transient": false,
 					"settings":
@@ -1293,7 +1255,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 2,
 					"file": "api/ProfilesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1315,14 +1277,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1017.0,
+						"translation.y": 1872.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
+					"buffer": 3,
 					"file": "api/ProductsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1334,8 +1296,8 @@
 						"selection":
 						[
 							[
-								13269,
-								13269
+								9045,
+								9045
 							]
 						],
 						"settings":
@@ -1344,14 +1306,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5930.0,
+						"translation.y": 3860.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 12,
+					"stack_index": 7,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
+					"buffer": 4,
 					"file": "api/VerifyUserToken.js",
 					"semi_transient": false,
 					"settings":
@@ -1377,11 +1339,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 21,
+					"stack_index": 9,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 5,
 					"file": "api/CitiesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1410,7 +1372,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 6,
 					"file": "api/DistrictsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1422,8 +1384,8 @@
 						"selection":
 						[
 							[
-								580,
-								978
+								5200,
+								5200
 							]
 						],
 						"settings":
@@ -1432,14 +1394,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 56.0,
+						"translation.y": 1940.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 22,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 7,
 					"file": "api/VerifyCustomerToken.js",
 					"semi_transient": false,
 					"settings":
@@ -1451,8 +1413,8 @@
 						"selection":
 						[
 							[
-								524,
-								511
+								277,
+								293
 							]
 						],
 						"settings":
@@ -1465,11 +1427,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 28,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
+					"buffer": 8,
 					"file": "api/CustomersController.js",
 					"semi_transient": false,
 					"settings":
@@ -1494,11 +1456,11 @@
 						"translation.y": 972.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 16,
+					"stack_index": 20,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
+					"buffer": 9,
 					"file": "config.js",
 					"semi_transient": false,
 					"settings":
@@ -1522,24 +1484,24 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 11,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
+					"buffer": 10,
 					"file": "api/OrdersController.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 34921,
+						"buffer_size": 35360,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								33955,
-								33748
+								14852,
+								14852
 							]
 						],
 						"settings":
@@ -1548,27 +1510,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 13497.0,
+						"translation.y": 4786.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
-					"buffer": 12,
+					"buffer": 11,
 					"file": "db.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 52410,
+						"buffer_size": 53084,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								38839,
-								38839
+								39637,
+								39637
 							]
 						],
 						"settings":
@@ -1578,14 +1540,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 13520.0,
+						"translation.y": 13820.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 13,
+					"buffer": 12,
 					"file": "mysql/updateOrderShippingStatus",
 					"semi_transient": false,
 					"settings":
@@ -1611,11 +1573,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 12,
 					"type": "text"
 				},
 				{
-					"buffer": 14,
+					"buffer": 13,
 					"file": "mysql/updateOrderPaymentStatus",
 					"semi_transient": false,
 					"settings":
@@ -1641,11 +1603,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 13,
 					"type": "text"
 				},
 				{
-					"buffer": 15,
+					"buffer": 14,
 					"file": "mysql/updateOrderStatus",
 					"semi_transient": false,
 					"settings":
@@ -1671,11 +1633,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 7,
+					"stack_index": 14,
 					"type": "text"
 				},
 				{
-					"buffer": 16,
+					"buffer": 15,
 					"file": "mysql/updateProductInventoryStatus",
 					"semi_transient": false,
 					"settings":
@@ -1701,11 +1663,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 15,
 					"type": "text"
 				},
 				{
-					"buffer": 17,
+					"buffer": 16,
 					"file": "mysql/cancelOrder",
 					"semi_transient": false,
 					"settings":
@@ -1731,11 +1693,11 @@
 						"translation.y": 405.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
+					"stack_index": 17,
 					"type": "text"
 				},
 				{
-					"buffer": 18,
+					"buffer": 17,
 					"file": "mysql/addProductInventory",
 					"semi_transient": false,
 					"settings":
@@ -1761,11 +1723,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 19,
+					"stack_index": 23,
 					"type": "text"
 				},
 				{
-					"buffer": 19,
+					"buffer": 18,
 					"file": "mysql/createOrder",
 					"semi_transient": false,
 					"settings":
@@ -1791,11 +1753,11 @@
 						"translation.y": 1587.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 18,
+					"stack_index": 22,
 					"type": "text"
 				},
 				{
-					"buffer": 20,
+					"buffer": 19,
 					"file": "mysql/deleteOrder",
 					"semi_transient": false,
 					"settings":
@@ -1821,16 +1783,16 @@
 						"translation.y": 405.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 16,
 					"type": "text"
 				},
 				{
-					"buffer": 21,
+					"buffer": 20,
 					"file": "/C/Users/to/Desktop/PRV/Programming/ecommerce/src/components/OrdersDialog.jsx",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16241,
+						"buffer_size": 16290,
 						"regions":
 						{
 						},
@@ -1847,14 +1809,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 220.0,
-						"translation.y": 4955.0,
+						"translation.y": 5.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 10,
 					"type": "text"
 				},
 				{
-					"buffer": 22,
+					"buffer": 21,
 					"file": "api/ConsultantsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1879,11 +1841,11 @@
 						"translation.y": 716.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 17,
+					"stack_index": 21,
 					"type": "text"
 				},
 				{
-					"buffer": 23,
+					"buffer": 22,
 					"file": "api/GetUserProfile.js",
 					"semi_transient": false,
 					"settings":
@@ -1907,11 +1869,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 15,
+					"stack_index": 19,
 					"type": "text"
 				},
 				{
-					"buffer": 24,
+					"buffer": 23,
 					"file": "util.js",
 					"semi_transient": false,
 					"settings":
@@ -1936,11 +1898,11 @@
 						"translation.y": 491.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 14,
+					"stack_index": 18,
 					"type": "text"
 				},
 				{
-					"buffer": 25,
+					"buffer": 24,
 					"file": "api/SecretQuestionsController.js",
 					"semi_transient": false,
 					"settings":
@@ -1964,11 +1926,11 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 23,
+					"stack_index": 25,
 					"type": "text"
 				},
 				{
-					"buffer": 26,
+					"buffer": 25,
 					"file": "api/SizesController.js",
 					"semi_transient": false,
 					"settings":
@@ -1993,24 +1955,24 @@
 						"translation.y": 563.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 20,
+					"stack_index": 24,
 					"type": "text"
 				},
 				{
-					"buffer": 27,
+					"buffer": 26,
 					"file": "api/CouponsController.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5660,
+						"buffer_size": 5864,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								950,
-								914
+								4105,
+								4105
 							]
 						],
 						"settings":
@@ -2019,14 +1981,14 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 335.0,
+						"translation.y": 1414.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 25,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 28,
+					"buffer": 27,
 					"file": "api/CategoriesController.js",
 					"semi_transient": false,
 					"settings":
@@ -2048,10 +2010,10 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1316.0,
+						"translation.y": 1277.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 24,
+					"stack_index": 3,
 					"type": "text"
 				}
 			]

@@ -36,6 +36,7 @@ router.post('/me/pre-order', VerifyCustomerToken, function(req, res) {
 	let r_coupon_discount = 0;
 	let r_coupon_discount_in_cash = 0;
 	let r_coupon_error = '';
+	let r_coupon_already_used = false;
 
 	let r_total_in_cash = 0;
 	let r_total = 0;
@@ -150,7 +151,7 @@ router.post('/me/pre-order', VerifyCustomerToken, function(req, res) {
 			if (typeof req.body.coupon != 'string')
 				req.body.coupon = '';
 
-			db.getCouponByCode(req.body.coupon, (error, results) => {
+			db.getCouponByCodeForPreOrder(req.body.coupon, req.customerId, (error, results) => {
 
 				if (error || results.length == 0) {
 					if (req.body.coupon != '')
@@ -162,7 +163,9 @@ router.post('/me/pre-order', VerifyCustomerToken, function(req, res) {
 						value: results[0].value,
 						minimum_amount: results[0].minimum_amount,
 						max_units: results[0].max_units,
+						single_use: results[0].single_use,
 					};
+					r_coupon_already_used = results[0].already_used;
 				}
 
 				// aplicar cupom
@@ -174,6 +177,8 @@ router.post('/me/pre-order', VerifyCustomerToken, function(req, res) {
 						r_coupon_error = 'coupon maximum usage reached';
 					else if (results[0].max_units < r_products_units)
 						r_coupon_error = 'coupon maximum units exceeded';
+					else if (results[0].single_use && r_coupon_already_used)
+						r_coupon_error = 'coupon already used';
 					else {
 						switch(r_coupon.type) {
 							case 'PERCENT':
@@ -270,6 +275,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 	let coupon_applied = false;
 	let coupon_discount = 0;
 	let coupon_discount_in_cash = 0;
+	let coupon_already_used = false;
 
 	let total = 0;
 	let total_in_cash = 0;
@@ -428,7 +434,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 					return res.status(500).send({error: 'coupon invalid'});
 				}
 
-				db.getCouponByCode(req.body.coupon.code, (error, results) => {
+				db.getCouponByCodeForPreOrder(req.body.coupon.code, req.customerId, (error, results) => {
 
 					if (error || (results.length == 0 && req.body.coupon_applied))
 						return res.status(500).send({error: 'coupon invalid'});
@@ -441,6 +447,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 							minimum_amount: results[0].minimum_amount,
 							max_units: results[0].max_units,
 						};
+						coupon_already_used = results[0].already_used;
 					}
 
 					// aplicar cupom
@@ -448,7 +455,8 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 
 						if (products_total < results[0].minimum_amount ||
 							results[0].uses >= results[0].max_uses ||
-							results[0].max_units < products_units)
+							results[0].max_units < products_units ||
+							results[0].single_use && coupon_already_used)
 							return res.status(500).send({error: 'coupon invalid'});
 						else {
 							switch(coupon.type) {
@@ -640,7 +648,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 									urlencoded.append("itemQuantity"+(i+1), products[i].desiredQuantity);
 								}
 
-								urlencoded.append("notificationURL", "http://138.197.73.233/api/pagseguro/notification");
+								urlencoded.append("notificationURL", "https://belalily.com.br/api/pagseguro/notification");
 								urlencoded.append("reference", payment_pagseguro_reference);
 
 								urlencoded.append("senderName", customer.name.substr(0, 50));
@@ -731,7 +739,7 @@ router.post('/me/create-order', VerifyCustomerToken, function(req, res) {
 									urlencoded.append("itemQuantity"+(i+1), products[i].desiredQuantity);
 								}
 
-								urlencoded.append("notificationURL", "http://138.197.73.233/api/pagseguro/notification");
+								urlencoded.append("notificationURL", "https://belalily.com.br/api/pagseguro/notification");
 								urlencoded.append("reference", payment_pagseguro_reference);
 
 								urlencoded.append("senderName", customer.name.substr(0, 50));
