@@ -68,7 +68,7 @@ router.post('/', VerifyUserToken, GetUserProfile, function(req, res) {
 
 	if (name == null || String(name).length < 1)
 		return res.status(500).send({error:"name too short"});
-	if (String(name).length > 30)
+	if (String(name).length > 50)
 		return res.status(500).send({error:"name too long"});
 
 	//description
@@ -127,7 +127,7 @@ router.patch('/:id', VerifyUserToken, GetUserProfile, function(req, res) {
 
 	if (name == null || String(name).length < 1)
 		return res.status(500).send({error:"name too short"});
-	if (String(name).length > 30)
+	if (String(name).length > 50)
 		return res.status(500).send({error:"name too long"});
 
 	//description

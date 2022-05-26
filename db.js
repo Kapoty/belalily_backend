@@ -124,7 +124,9 @@ function getProductsList(callback) {
 		(SELECT GROUP_CONCAT(c.category_id) FROM product_categories c WHERE c.product_id = products.id)
 		 AS categories,
 		 (SELECT GROUP_CONCAT(s.size_id) FROM product_sizes s WHERE s.product_id = products.id)
-		 AS sizes
+		 AS sizes,
+		 (SELECT EXISTS (SELECT pi.id FROM product_inventory pi WHERE pi.product_id = products.id AND status = 'AVAILABLE' LIMIT 1))
+         as available
 		 FROM products WHERE visible = 1;`, (error, results, fields) => {
 		if (error) callback(error.code)
 		else callback(null, results);
